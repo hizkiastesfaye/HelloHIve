@@ -1,0 +1,10 @@
+{
+    "id": "test_id",
+    "uId": "test_uid",
+    "username": "TestUser",
+    "phone": "1234567890",
+    "firstName": "Test",
+    "lastName": "User",
+    "photoUrl": "https://example.com/profile.jpg",
+    "description": "This is a test user profile."
+}

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "632621782298",
+    "project_id": "hellohive",
+    "storage_bucket": "hellohive.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:632621782298:android:e426f8497f53cb99ce48a3",
+        "android_client_info": {
+          "package_name": "com.example.hellohive"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA0VIT3epLcvWlRZlgUB8cb4RgW9ugEgqg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
