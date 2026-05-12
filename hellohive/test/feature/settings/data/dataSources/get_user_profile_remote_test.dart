@@ -54,13 +54,13 @@ void main(){
     photoUrl: tUserProfileJson['photoUrl'],
   );
   final tUserProfParams = UserProfParams(
-    tUserProfileJson['uId'],
-    tUserProfileJson['username'],
-    tUserProfileJson['phone'],
-    tUserProfileJson['firstName'],
-    tUserProfileJson['lastName'],
-    tUserProfileJson['description'],
-    tUserProfileJson['photoUrl'],
+    uId: tUserProfileJson['uId'],
+    username: tUserProfileJson['username'],
+    phone: tUserProfileJson['phone'],
+    firstName: tUserProfileJson['firstName'],
+    lastName: tUserProfileJson['lastName'],
+    description: tUserProfileJson['description'],
+    photoUrl: tUserProfileJson['photoUrl'],
   );
 test('should return UserProfileModels when user exists', () async {
   // Arrange

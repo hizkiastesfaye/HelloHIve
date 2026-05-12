@@ -54,13 +54,13 @@ void main(){
   );
   final UserProfileEntities tUserProfileEntities = tUserProfileModel;
   final tUserProfParams = UserProfParams(
-    tUserProfileJson['uId'],
-    tUserProfileJson['username'],
-    tUserProfileJson['phone'],
-    tUserProfileJson['firstName'],
-    tUserProfileJson['lastName'],
-    tUserProfileJson['description'],
-    tUserProfileJson['photoUrl'],
+    uId:tUserProfileJson['uId'],
+    username:tUserProfileJson['username'],
+    phone: tUserProfileJson['phone'],
+    firstName: tUserProfileJson['firstName'],
+    lastName: tUserProfileJson['lastName'],
+    description: tUserProfileJson['description'],
+    photoUrl: tUserProfileJson['photoUrl'],
   );
   void getSetup(){
     when(mockNetworkInfo.isConnected).thenAnswer((_) async => true);
