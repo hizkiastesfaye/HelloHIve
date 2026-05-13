@@ -308,8 +308,8 @@ class _UserProfilePageState extends State<UserProfilePage> {
                           //       ? FileImage(_profileImage!) as ImageProvider
                           //       : const AssetImage('assets/images/allstar.jpg'),
                           // ),
-                          (_imagePath != null && _imagePath!.isNotEmpty) 
-                            ? ProfilePhotoDisplayWidget(photoUrl: _imagePath!) 
+                          (_imagePath.isNotEmpty) 
+                            ? ProfilePhotoDisplayWidget(photoUrl: _imagePath) 
                             : ProfilePhotoDisplayWidget(photoUrl: 'assets/images/allstar.jpg'),
                           if (_isEditingProfilePic)
                             Positioned(
