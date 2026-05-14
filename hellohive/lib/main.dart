@@ -9,6 +9,7 @@ import 'package:hellohive/feature/auth/presentation/pages/sign_up_page.dart';
 import 'package:hellohive/home_page.dart';
 import 'package:hellohive/feature/settings/presentation/pages/userProfile_pages.dart';
 import 'feature/auth/presentation/bloc/bloc/auth_bloc.dart';
+import 'feature/friends/presentation/bloc/friends_bloc.dart';
 import 'feature/settings/presentation/bloc/user_profile_bloc_bloc.dart';
 import 'firebase_options.dart';
 import 'injection_container.dart' as di;
@@ -37,7 +38,8 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => di.sl<AuthBloc>()),
-        BlocProvider(create:(context) => di.sl<UserProfileBlocBloc>())
+        BlocProvider(create:(context) => di.sl<UserProfileBlocBloc>()),
+        BlocProvider(create: (context) => di.sl<FriendsBloc>())
       ],
       child: MaterialApp(
         // title: 'Hello Hive',

@@ -8,6 +8,12 @@ import 'package:hellohive/feature/auth/data/repositories/auth_repositories_impl.
 import 'package:hellohive/feature/auth/domain/repositories/auth_repositories.dart';
 import 'package:hellohive/feature/auth/domain/usecases/auth_usecases.dart';
 import 'package:hellohive/feature/auth/presentation/bloc/bloc/auth_bloc.dart';
+import 'package:hellohive/feature/friends/data/datasources/friends_local_DS.dart';
+import 'package:hellohive/feature/friends/data/datasources/friends_remote_DS.dart';
+import 'package:hellohive/feature/friends/data/repositories/friends_repo_impl.dart';
+import 'package:hellohive/feature/friends/domain/repositories/friends_repo.dart';
+import 'package:hellohive/feature/friends/domain/usecases/friends_usecases.dart';
+import 'package:hellohive/feature/friends/presentation/bloc/friends_bloc.dart';
 import 'package:hellohive/feature/settings/data/dataSources/user_profile_local.dart';
 import 'package:hellohive/feature/settings/data/dataSources/user_profile_remote.dart';
 import 'package:hellohive/feature/settings/data/repositories/user_profile_repo_iml.dart';
@@ -15,6 +21,7 @@ import 'package:hellohive/feature/settings/domain/repositories/user_profile_repo
 import 'package:hellohive/feature/settings/domain/usecases/user_profile_useCase.dart';
 import 'package:hellohive/feature/settings/presentation/bloc/user_profile_bloc_bloc.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final sl = GetIt.I;
 
@@ -28,6 +35,8 @@ Future<void> init() async{
   sl.registerLazySingleton(()=>FirebaseAuth.instance);
   sl.registerLazySingleton(()=>FirebaseFirestore.instance);
   sl.registerLazySingleton(()=>FirebaseDatabase.instance);
+  final sharedInstance = await SharedPreferences.getInstance();
+  sl.registerLazySingleton<SharedPreferences>(()=>sharedInstance);
 
   //! Features - Auth
   //? Auth Bloc
@@ -106,4 +115,27 @@ Future<void> init() async{
   sl.registerLazySingleton<UserProfileLocal>(
     ()=>UserProfileLocalImpl()
   );
+
+
+  
+  //! Features - Friends
+  
+  //? Friends Bloc
+  sl.registerFactory(()=>FriendsBloc(
+    getFriendsUseCases: sl(), 
+    getRandomFriendsUseCases: sl()));
+
+  //? Friends Usecases
+  sl.registerLazySingleton(()=>GetFriendsUseCases(sl()));
+  sl.registerLazySingleton(()=>GetRandomFriendsUseCases(sl()));
+
+  //? Friends Repositories
+  sl.registerLazySingleton<FriendsRepo>(()=>FriendsRepoImpl(
+    networkInfo: sl(), 
+    friendsLocal: sl(), 
+    friendsRemote: sl()));
+
+  //? Friends Data Sources
+  sl.registerLazySingleton<FriendsLocalDS>(()=>FriendsLocalDsImpl(sharedPreferences: sl()));
+  sl.registerLazySingleton<FriendsRemoteDS>(()=>FriendsRemoteDsImpl(sl()));
 }

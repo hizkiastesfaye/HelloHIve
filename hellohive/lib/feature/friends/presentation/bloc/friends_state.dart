@@ -7,6 +7,8 @@ sealed class FriendsState extends Equatable{
 }
 
 final class FriendsInitial extends FriendsState {}
+final class FriendsLoading extends FriendsState {}
+
 final class FriendsLoaded extends FriendsState{
   final List<FriendsEntities> friends;
   FriendsLoaded(this.friends);
