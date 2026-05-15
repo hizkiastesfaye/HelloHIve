@@ -1,14 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hellohive/feature/friends/presentation/bloc/friends_bloc.dart';
-
-class FriendsPage extends StatelessWidget {
+import '../widgets/widgets.dart';
+class FriendsPage extends StatefulWidget {
   const FriendsPage({super.key});
+  
+  @override
+  _FriendsPageState createState() => _FriendsPageState();
+}
+class _FriendsPageState extends State<FriendsPage> {
 
+
+  @override
+  void initState(){
+    super.initState();
+    Future.microtask(() {
+      context.read<FriendsBloc>().add(GetRandomFriendsEvent());
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Friends')),
       body: SingleChildScrollView(
         child: Center(
           child: BlocBuilder<FriendsBloc, FriendsState>(
@@ -20,7 +32,12 @@ class FriendsPage extends StatelessWidget {
                 return Column(
                   children: state.friends.map((friend){
                     return ListTile(
-                      title: Text(friend.username)
+                      leading: FriendPhotoDisplayWidget(photoUrl:friend.photoUrl),
+                      title: Text('${friend.firstName} ${friend.lastName}'),
+                      subtitle: Text('@${friend.username}'),
+                      onTap: (){
+                        Navigator.pushNamed(context, '/addUserProfile');
+                      },
                     );
                   }).toList(),
                 );

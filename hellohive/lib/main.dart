@@ -6,6 +6,7 @@ import 'package:hellohive/feature/auth/presentation/pages/auth_verify_page.dart'
 import 'package:hellohive/feature/auth/presentation/pages/forgot_password_page.dart';
 import 'package:hellohive/feature/auth/presentation/pages/sign_in_page.dart';
 import 'package:hellohive/feature/auth/presentation/pages/sign_up_page.dart';
+import 'package:hellohive/feature/settings/presentation/pages/add_profile_pages.dart';
 import 'package:hellohive/home_page.dart';
 import 'package:hellohive/feature/settings/presentation/pages/userProfile_pages.dart';
 import 'feature/auth/presentation/bloc/bloc/auth_bloc.dart';
@@ -87,6 +88,7 @@ class MyApp extends StatelessWidget {
             },
           '/resetPassword' :(context)=> const ForgotPasswordPage(),
           '/userProfile':(context) => UserProfilePage(),
+          '/addUserProfile':(context)=> AddProfilePages(),
         },
       ),
     );

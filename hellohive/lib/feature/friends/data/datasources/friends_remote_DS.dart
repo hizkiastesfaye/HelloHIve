@@ -47,9 +47,25 @@ class FriendsRemoteDsImpl implements FriendsRemoteDS {
       }
 
       final querySnapshot = await query.get();
-      return querySnapshot.docs
-        .map((doc) => FriendsModel.fromJson(doc.data()))
-        .toList();
+      // return querySnapshot.docs
+      //   .map((doc) => FriendsModel.fromJson(doc.data()))
+      //   .toList();
+      final result = querySnapshot.docs
+        .where((doc) {
+          final data = doc.data();
+
+          return data['username'] != null &&
+              data['username'].toString().trim().isNotEmpty &&
+              data['firstName'] != null &&
+              data['firstName'].toString().trim().isNotEmpty &&
+              data['lastName'] != null &&
+              data['lastName'].toString().trim().isNotEmpty;
+        })
+        .map((friend) => FriendsModel.fromJson({
+          ...friend.data(),
+          'uId': friend.id,
+          })).toList();
+      return result;
     } on ServerException catch (e){
       throw ServerException(e.message);
     } catch (e){
@@ -63,14 +79,29 @@ class FriendsRemoteDsImpl implements FriendsRemoteDS {
         .collection('users')
         .limit(20)
         .get();
+
       final result = querySnapshot.docs
-        .map((friend)=> FriendsModel.fromJson(friend.data()))
-        .toList();
+        .where((doc) {
+          final data = doc.data();
+
+          return data['username'] != null &&
+              data['username'].toString().trim().isNotEmpty &&
+              data['firstName'] != null &&
+              data['firstName'].toString().trim().isNotEmpty &&
+              data['lastName'] != null &&
+              data['lastName'].toString().trim().isNotEmpty;
+        })
+        .map((friend) => FriendsModel.fromJson({
+          ...friend.data(),
+          'uId': friend.id,
+          })).toList();
       result.shuffle();
       return result;
     } on ServerException catch (e){
+      
       throw ServerException(e.message);
     } catch (e){
+      print(e.toString());
       throw UnknownException();
     }
   }

@@ -42,7 +42,7 @@ class _AuthVerifyState extends State<AuthVerifyPage> {
             }
             if (state is EmailVerifiedState) {
               print('----------------ssssss-------------------');
-              Navigator.pushNamed(context, '/');
+              Navigator.pushNamed(context, '/addUserProfile');
             }
           },
           builder: (context, state) {

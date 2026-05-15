@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:hellohive/feature/settings/domain/entities/user_profile_entities.dart';
 
-class ProfilePhotoDisplayWidget extends StatelessWidget {
+class FriendPhotoDisplayWidget extends StatelessWidget {
   final String photoUrl;
-  const ProfilePhotoDisplayWidget({super.key, required this.photoUrl});
+  const FriendPhotoDisplayWidget({super.key, required this.photoUrl});
 
   @override
   Widget build(BuildContext context) {
     TextTheme _textTheme = Theme.of(context).textTheme;
-    print('-----------------------ProfilePhotoDisplayWidget--------------------');
+    print('-----------------------FriendPhotoDisplayWidget--------------------');
     print('Profile Photo URL: $photoUrl');
-    print('-----------------------ProfilePhotoDisplayWidget--------------------');
+    print('-----------------------FriendPhotoDisplayWidget--------------------');
 
 
     return GestureDetector(
@@ -37,8 +37,8 @@ class ProfilePhotoDisplayWidget extends StatelessWidget {
         child: Image.asset(
           // 'assets/images/allstar.jpg',
           photoUrl,
-          height: 120,
-          width: 120,
+          height: 40,
+          width: 40,
           fit: BoxFit.cover,
         ),
       ),

@@ -36,6 +36,7 @@ class FriendsBloc extends Bloc<FriendsEvent, FriendsState> {
     on<GetRandomFriendsEvent>((event, emit) async{
       emit(FriendsLoading());
       final friendsResult = await getRandomFriendsUseCases(NoParams());
+    
       friendsResult.fold(
         (failure) async => emit(FriendsStateError(_mapFailureToMessage(failure))),
         (friends) async => emit(RandomFriendsLoaded(friends))
