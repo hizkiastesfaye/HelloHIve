@@ -42,7 +42,6 @@ class UserProfileModels extends UserProfileEntities{
       description: json['description']
     );
   }
-{((),);}
   Map<String,dynamic> toJson(){
     return {
       'id':id,
