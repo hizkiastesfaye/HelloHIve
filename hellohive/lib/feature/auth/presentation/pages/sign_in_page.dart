@@ -42,7 +42,7 @@ class _SignInPageState extends State<SignInPage> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: SafeArea(
-        child: BlocConsumer<AuthBloc, AuthState>(
+        child: BlocListener<AuthBloc, AuthState>(
           listener: (context, state) {
             if(state is AuthError){
               setState(() {
@@ -69,116 +69,136 @@ class _SignInPageState extends State<SignInPage> {
               }
             }
           },
-          builder: (context, state) {
-            if(state is AuthLoading){
-              print('----------Loading-------------================');
-              return const Center(child: CircularProgressIndicator());
-            }
-            return SingleChildScrollView(
-              child: Center(
-                child: Padding(
-                  padding: EdgeInsets.all(30),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.15,
-                      ),
-                      Text(
-                        'Hello Hive',
-                        style: Theme.of(context).textTheme.headlineLarge,
-                      ),
-                      Text(
-                        'Welcome back, Sign In',
-                        style: Theme.of(context).textTheme.bodyLarge,
-                      ),
-                      SizedBox(height: 60),
-                      TextField(
-                        controller: _emailController,
-                        cursorColor: Theme.of(context).secondaryHeaderColor,
-                        decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            borderSide: BorderSide(color: Colors.grey),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            borderSide: BorderSide(
-                              color: Theme.of(context).secondaryHeaderColor,
-                            ),
-                          ),
-                          labelText: 'Email',
-                          floatingLabelStyle: TextStyle(
-                            color: Theme.of(context).secondaryHeaderColor,
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      TextField(
-                        controller: _passwordController,
-                        cursorColor: Theme.of(context).secondaryHeaderColor,
-                        decoration: InputDecoration(
-                          labelText: 'password',
-                          floatingLabelStyle: TextStyle(
-                            color: Theme.of(context).secondaryHeaderColor,
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            borderSide: BorderSide(color: Colors.grey),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            borderSide: BorderSide(
-                              color: Theme.of(context).secondaryHeaderColor,
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      Text(
-                        _errorMessage,
-                        style:Theme.of(context).textTheme.bodySmall,
-                      ),
-                      SizedBox(height: 10),
-                      TextButton(
-                        onPressed: ()=>Navigator.pushNamed(context, '/resetPassword'), 
-                        child: Text("Forget password?")),
-                      SizedBox(height: 5),
-                      Row(
+          child: BlocListener<UserProfileBlocBloc, UserProfileBlocState>(
+            listener: (context, state) {
+              if(state is UserProfileLoaded){
+                final profile = state.userProfiles;
+                final hasAllFields = profile.username.isNotEmpty == true &&
+                            profile.phone.isNotEmpty ==true &&
+                             profile.firstName.isNotEmpty == true &&
+                             profile.lastName.isNotEmpty == true &&
+                             profile.description.isNotEmpty == true;
+                if(hasAllFields){
+                  Navigator.pushNamed(context, '/');
+                }
+                else{
+                  Navigator.pushNamed(context, '/addUserProfile');
+                }
+              }
+            },
+            child: BlocBuilder<AuthBloc, AuthState>(
+              builder: (context, state) {
+                if(state is AuthLoading){
+                  print('----------Loading-------------================');
+                  return const Center(child: CircularProgressIndicator());
+                }
+                return SingleChildScrollView(
+                  child: Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(30),
+                      child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,
-                        spacing: 2,
                         children: [
-                          Text("Don't have an account?"),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.15,
+                          ),
+                          Text(
+                            'Hello Hive',
+                            style: Theme.of(context).textTheme.headlineLarge,
+                          ),
+                          Text(
+                            'Welcome back, Sign In',
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          ),
+                          SizedBox(height: 60),
+                          TextField(
+                            controller: _emailController,
+                            cursorColor: Theme.of(context).secondaryHeaderColor,
+                            decoration: InputDecoration(
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15),
+                                borderSide: BorderSide(color: Colors.grey),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15),
+                                borderSide: BorderSide(
+                                  color: Theme.of(context).secondaryHeaderColor,
+                                ),
+                              ),
+                              labelText: 'Email',
+                              floatingLabelStyle: TextStyle(
+                                color: Theme.of(context).secondaryHeaderColor,
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          TextField(
+                            controller: _passwordController,
+                            cursorColor: Theme.of(context).secondaryHeaderColor,
+                            decoration: InputDecoration(
+                              labelText: 'password',
+                              floatingLabelStyle: TextStyle(
+                                color: Theme.of(context).secondaryHeaderColor,
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15),
+                                borderSide: BorderSide(color: Colors.grey),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15),
+                                borderSide: BorderSide(
+                                  color: Theme.of(context).secondaryHeaderColor,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            _errorMessage,
+                            style:Theme.of(context).textTheme.bodySmall,
+                          ),
+                          SizedBox(height: 10),
                           TextButton(
-                            onPressed: ()=>Navigator.pushNamed(context,'/signup'), 
-                            child: Text('Sign Up')),
+                            onPressed: ()=>Navigator.pushNamed(context, '/resetPassword'), 
+                            child: Text("Forget password?")),
+                          SizedBox(height: 5),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            spacing: 2,
+                            children: [
+                              Text("Don't have an account?"),
+                              TextButton(
+                                onPressed: ()=>Navigator.pushNamed(context,'/signup'), 
+                                child: Text('Sign Up')),
+                            ],
+                          ),
+                          SizedBox(height: 20),
+                          SizedBox(
+                            height: 60,
+                            width: MediaQuery.of(context).size.width,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Theme.of(
+                                  context,
+                                ).secondaryHeaderColor,
+                              ),
+                              onPressed: _SignInButtonPressed,
+                              child: Text(
+                                'Sign In',
+                                style: Theme.of(context).textTheme.headlineMedium,
+                              ),
+                            ),
+                          ),
                         ],
                       ),
-                      SizedBox(height: 20),
-                      SizedBox(
-                        height: 60,
-                        width: MediaQuery.of(context).size.width,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Theme.of(
-                              context,
-                            ).secondaryHeaderColor,
-                          ),
-                          onPressed: _SignInButtonPressed,
-                          child: Text(
-                            'Sign In',
-                            style: Theme.of(context).textTheme.headlineMedium,
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                ),
-              ),
-            );
-          },
-        ),
-      ),
+                );
+              },
+            )
+          )
+        )
+      )
     );
   }
 }
