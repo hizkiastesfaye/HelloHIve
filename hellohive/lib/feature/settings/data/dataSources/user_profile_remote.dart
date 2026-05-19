@@ -30,9 +30,9 @@ class UserProfileRemoteImpl implements UserProfileRemote{
   Future<UserProfileModels>getUserProfileRemote(String uId)async{
     try{
       final user = FirebaseAuth.instance.currentUser;
-      // print("#############################@@@@@@@@@@@@@@@@");
+      print("########################11111@@@@@@@@@@@@@@@@");
 
-      // print('${user?.uid} ${user?.email}'); // should not be null
+      print('${user?.uid} ${user?.email}'); // should not be null
 
       final userDoc = await firebaseFirestore.collection('users').doc(user?.uid).get();
       if(!userDoc.exists){
@@ -40,42 +40,51 @@ class UserProfileRemoteImpl implements UserProfileRemote{
       }
 
       final data = userDoc.data()!;
-      // data.forEach((key, value) {
-      //   print('$key: $value');
-      // });
+      data.forEach((key, value) {
+        print('$key: $value');
+      });
       final userProfile = UserProfileModels(
-        id: uId,
-        uId: uId, 
-        phone: data['phone'],
-        username: data['username'],
-        firstName: data['firstName'],
-        lastName: data['lastName'],
-        photoUrl: data['photoUrl'],
-        description: data['description'],
+        id: user?.uid ?? '',
+        uId: user?.uid ?? '', 
+        phone: data['phone'] ?? '',
+        username: data['username'] ?? '',
+        firstName: data['firstName'] ?? '',
+        lastName: data['lastName'] ?? '',
+        photoUrl: data['photoUrl'] ?? '',
+        description: data['description'] ?? '',
       );
       // print("#############################@@@@@@@@@@@@@@@@");
       // print("#############################@@@@@@@@@@@@@@@@");
       return userProfile;
     } on ServerException catch(e){
+            print("#############serException##@@@@@@@@@@@@@@@@");
+            print(e.message);
+      print("#####################serException@@@@@@@@@@@@@@@@");
       throw ServerException(e.message);
     }catch (e){
-      // print("#############################@@@@@@@@@@@@@@@@");
-      // print("#############################@@@@@@@@@@@@@@@@");
-      // print("#############################@@@@@@@@@@@@@@@@");
-      // print("#############################@@@@@@@@@@@@@@@@");
-      // print(e.toString());
-      // print("#############################@@@@@@@@@@@@@@@@");
-      // print("#############################@@@@@@@@@@@@@@@@");
-      // print("#############################@@@@@@@@@@@@@@@@");
-      // print("#############################@@@@@@@@@@@@@@@@");
+      print("#############################@@@@@@@@@@@@@@@@");
+      print("#############################@@@@@@@@@@@@@@@@");
+      print("#############################@@@@@@@@@@@@@@@@");
+      print("#############################@@@@@@@@@@@@@@@@");
+      print(e.toString());
+      print("#############################@@@@@@@@@@@@@@@@");
+      print("#############################@@@@@@@@@@@@@@@@");
+      print("#############################@@@@@@@@@@@@@@@@");
+      print("#############################@@@@@@@@@@@@@@@@");
       throw UnknownException();
     }
   }
   @override
   Future<Unit> addUserProfileRemote(UserProfParams params)async{
     try{
-      await firebaseFirestore.collection('users').doc(params.uId).set({
-        'uId':params.uId,
+      final user = FirebaseAuth.instance.currentUser;
+
+      String photoUrl= 'assets/images/allstar.jpg';
+      print('_________++++++++++++++________adduser+++++++++)');
+      print('${user?.uid} ${params.phone} ${params.username} ${params.firstName} ${params.lastName} ${photoUrl} ${params.description} ');
+      print('_________++++++++++++++________adduser+++++++++)');
+      await firebaseFirestore.collection('users').doc(user?.uid).set({
+        'uId':user?.uid,
         'phone':params.phone,
         'username':params.username,
         'firstName':params.firstName,
@@ -87,22 +96,38 @@ class UserProfileRemoteImpl implements UserProfileRemote{
       });
       return Future.value(unit);
       
-    } on FirebaseException catch(_){
+    } on FirebaseException catch(e){
+      print('_________++++++++++++++________servexce+++++++++)');
+      print('_________++++++++++++++________servexce+++++++++)');
+      print(e.message);
+      print('_________++++++++++++++________servexce+++++++++)');
+      print('_________++++++++++++++________servexce+++++++++)');
+      print('_________++++++++++++++________servexce+++++++++)');
+
       throw ServerException(('failed to add. Try again'));
-    } catch(_){
+    } catch(e){
+      print('_________++++++++++++++________servexce+++++++++)');
+      print('_________++++++++++++++________servexce+++++++++)');
+      print(e.toString());
+      print('_________++++++++++++++________servexce+++++++++)');
+      print('_________++++++++++++++________servexce+++++++++)');
+      print('_________++++++++++++++________servexce+++++++++)');
+
       throw UnknownException();
     }
   }
   @override
   Future<Unit> updateSingleUserProfileRemote(UserSingleParams params) async{
     try{
-      await firebaseFirestore.collection('users').doc(params.uId).update({
+      final user = FirebaseAuth.instance.currentUser;
+      await firebaseFirestore.collection('users').doc(user?.uid).update({
         params.fieldName: params.value,
         'updatedAt':FieldValue.serverTimestamp()
       });
       return Future.value(unit);
       
     } on FirebaseException catch(_){
+
       throw ServerException('Failed to update. Try again');
     } catch(_){
       throw UnknownException();
@@ -111,7 +136,8 @@ class UserProfileRemoteImpl implements UserProfileRemote{
   @override
   Future<Unit> updateUserProfileRemote(UserProfParams params)async{
     try{
-      await firebaseFirestore.collection('users').doc(params.uId).update({
+      final user = FirebaseAuth.instance.currentUser;
+      await firebaseFirestore.collection('users').doc(user?.uid).update({
         'phone':params.phone,
         'username':params.username,
         'firstName':params.firstName,
@@ -130,7 +156,9 @@ class UserProfileRemoteImpl implements UserProfileRemote{
   @override
   Future<Unit> deleteUserProfileRemote(UserProfParams params)async {
     try{
-      await firebaseFirestore.collection('users').doc(params.uId).delete();
+      final user = FirebaseAuth.instance.currentUser;
+
+      await firebaseFirestore.collection('users').doc(user?.uid).delete();
       return Future.value(unit);
       
     } on FirebaseException catch(_){
@@ -141,7 +169,9 @@ class UserProfileRemoteImpl implements UserProfileRemote{
   }
   @override
 Stream<UserStatusModels> getUserStatusRemote(String uId) {
-  final userStatusRef = firebaseDatabase.ref("status/$uId");
+  final user = FirebaseAuth.instance.currentUser;
+  final uid = user?.uid;
+  final userStatusRef = firebaseDatabase.ref("status/$uid");
   final connectedRef = firebaseDatabase.ref(".info/connected");
 
   // Listen to connection state to manage presence

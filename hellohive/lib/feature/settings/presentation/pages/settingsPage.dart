@@ -21,9 +21,6 @@ class __SettingsPageStateState extends State<SettingsPage> {
           if(state is UserProfileLoading){
             return Center(child: CircularProgressIndicator());
           }
-          else if(state is UserProfileGetError){
-            return Text('Error: ${state.message}', style: _textTheme.bodyMedium);
-          }
           else if(state is UserProfileLoaded){
             final profile = state.userProfiles;
             return SingleChildScrollView(
@@ -48,6 +45,8 @@ class __SettingsPageStateState extends State<SettingsPage> {
                 ),
               ),
             );
+          }else if(state is UserProfileGetError){
+            return Text('Error: ${state.message}', style: _textTheme.bodyMedium);
           }else{
             return Text('Error occured.', style: _textTheme.bodyMedium);
 

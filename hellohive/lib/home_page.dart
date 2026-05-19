@@ -54,42 +54,50 @@ class _HomePageState extends State<HomePage> {
     Color friendsSelectedColor = _isfriendsSelected
         ? Colors.blue
         : const Color.fromARGB(255, 59, 59, 59);
-    return BlocListener<UserProfileBlocBloc, UserProfileBlocState>(
+    return BlocConsumer<UserProfileBlocBloc, UserProfileBlocState>(
       listener: (context, state) {
-        if(state is UserProfileUpdateError){
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message))
-          );
-        }
-        else if(state is UserProfileLoaded){
+        // if(state is UserProfileUpdateError){
+        //   ScaffoldMessenger.of(context).showSnackBar(
+        //     SnackBar(content: Text(state.message))
+        //   );
+        // }
+        if(state is UserProfileLoaded){
           print('-----------------user profile loaded in home page------------------');
           print('-----------------user profile loaded in home page------------------');
           print('-----------------user profile loaded in home page------------------');
           print('User Profile: ${state.userProfiles.firstName} ${state.userProfiles.lastName}');
           print('-----------------user profile loaded in home page------------------');
           print('-----------------user profile loaded in home page------------------');
-          final hasAllFields1 = state.userProfiles.firstName != null &&
-              state.userProfiles.lastName != null &&
-              state.userProfiles.username != null &&
-              state.userProfiles.photoUrl != null &&
-              state.userProfiles.description != null;
+
           final hasAllFields2 = state.userProfiles.firstName.isNotEmpty &&
               state.userProfiles.lastName.isNotEmpty &&
               state.userProfiles.username.isNotEmpty &&
               state.userProfiles.photoUrl.isNotEmpty &&
               state.userProfiles.description.isNotEmpty;
-          if (!hasAllFields1 || !hasAllFields2) {
+          if (!hasAllFields2) {
             print('-----------------user profile is incomplete------------------');
             print('-----------------user profile is incomplete------------------');
             print('-----------------user profile is incomplete------------------');
             Navigator.pushNamed(context, '/addUserProfile');
           }
-          else{
-            Navigator.pushNamed(context, '/');
-          }
+          // else{
+          //   Navigator.pushNamed(context, '/');
+          // }
         }
       },
-      child: Scaffold(
+      builder: (context, state) {
+        if (state is UserProfileLoading){
+          return Container(
+            color: Colors.white,
+            child: const Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        }
+        else if(state is UserProfileGetError){
+          return Text('User Profile get error');
+        }
+        return Scaffold(
         appBar: AppBar(
           leading: IconButton(icon: Icon(Icons.more_vert), onPressed: () {}),
           title: Row(children: [SizedBox(width: 8), Text('Hello Hive')]),
@@ -219,7 +227,8 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         ),
-      ),
+      );
+      }
     );
   }
 }

@@ -118,7 +118,8 @@ class _AddProfilePageState extends State<AddProfilePages> {
       body: BlocConsumer<UserProfileBlocBloc, UserProfileBlocState>(
         listener: (context, state) {
           if(state is UserProfileAdded){
-            Navigator.pushNamed(context, '/home');
+            context.read<UserProfileBlocBloc>().add(GetUserProfileEvent('uId'));
+            Navigator.pushNamed(context, '/');
           }
           else if(state is UserProfileAddError){
             _errorMessage = state.message;
@@ -126,7 +127,7 @@ class _AddProfilePageState extends State<AddProfilePages> {
         },
         builder: (context, state) {
           if(state is UserProfileLoading){
-            return CircularProgressIndicator();
+            return Center(child: CircularProgressIndicator());
           }
 
           return Center(
@@ -142,9 +143,9 @@ class _AddProfilePageState extends State<AddProfilePages> {
                     _firstNameController,
                   ),
                   _buildEditableFieldRow(
-                    'First Name',
+                    'Last Name',
                     true,
-                    _firstNameController,
+                    _lastNameController,
                   ),
                   _buildEditableFieldRow('Phone', true, _phoneController),
                   _buildEditableFieldRow(

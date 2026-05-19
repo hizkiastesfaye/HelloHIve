@@ -88,16 +88,36 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource{
     } on TimeoutException catch (_){
         throw AuthException();
     } on FirebaseAuthException catch (e) {
+        print('-------------+++++++fireba-----------------');
+        print('-------------+++++++fireba-----------------');
+        print(e.message);
+        print('-------------+++++++fireba-----------------');
+        print('-------------+++++++fireba-----------------');
+        print('-------------+++++++fireba-----------------');
+
       switch(e.code){
         case 'email-already-in-use':
           throw AuthException('email already in use.');
         default:
           throw AuthException('Authentication failed. try again');
       }
-    } on FirebaseException catch (_) {
+    } on FirebaseException catch (e) {
+        print('-------------+++++++authfireba-----------------');
+        print('-------------+++++++authfireba-----------------');
+        print('-------------+++++++authfireba-----------------');
+        print('-------------+++++++authfireba-----------------');
+        print(e.message);
+        print('-------------+++++++authfireba-----------------');
+        print('-------------+++++++authfireba-----------------');
+        print('-------------+++++++authfireba-----------------');
       throw ServerException('Failed. try again');
     } 
     catch (e) {
+      print('-------------+++++++authunknow-----------------');
+      print('-------------+++++++authunknow-----------------');
+      print(e.toString());
+      print('-------------+++++++authunknow-----------------');
+      print('-------------+++++++authunknow-----------------');
       throw UnknownException(e.toString());
     }
 
@@ -114,7 +134,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource{
       
       final user = userCredential.user;
       if(user == null){
-        throw AuthException('Sign in failed');
+        throw AuthException('Account not Found.');
         }
       // if(!user.emailVerified){
       //   throw VerifyException('Email not verified');
@@ -125,11 +145,16 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource{
         email: user.email ?? '', 
         isEmailVerified: user.emailVerified
       );
+    }on AuthException catch (e){
+      throw AuthException(e.message);
     } on FirebaseAuthException catch (e) {
+      print('---=-=-------------fireexce---=-=-=-');
+      print('---=-=-------------fireexce---=-=-=-');
+      print(e.toString());
+      print('---=-=-------------fireexce---=-=-=-');
+      print('---=-=-------------fireexce---=-=-=-');
       switch(e.code){
-        case 'INVALID_LOGIN_CREDENTIALS':
-          throw AuthException('Wrong email or password');
-        case 'wrong-password':
+        case 'invalid-credential':
           throw AuthException('Wrong email or password');
         default:
           throw AuthException('Authentication failed. try again');
