@@ -19,68 +19,95 @@ class _FriendsPageState extends State<FriendsPage> {
   }
 
   bool _isSearchBox = false;
-
+  final TextEditingController _searchText = TextEditingController();
+  void _onSubmitSearch(){
+    String searchText = _searchText.text;
+    if(_searchText.text.isEmpty || _searchText.text == '' || _searchText.text == ' ' ){
+      setState(() {
+        _isSearchBox = false;
+      });
+    }
+    else{
+      // context.read<FriendsBloc>().add(GetFriendsEvent(
+      //   value: searchText
+      // ));
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SizedBox(width: 20,),
-                Expanded(
-                  child: SizedBox(
-                    height: 40,
-                    child: TextField(
-                      
-                      decoration: InputDecoration(
-                        isDense: true,
-                        filled: true,
-                        fillColor: Colors.grey[150],
-                        
-                        hintText: 'search',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20), // smaller radius
-                          borderSide: BorderSide(
-                            width: 1, // thinner border
-                            color: Colors.grey,
+            SizedBox(
+              height: 60,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SizedBox(width: 20,),
+                  Expanded(
+                    child: SizedBox(
+                      height: 40,
+                      width: MediaQuery.of(context).size.width* 0.7,
+                      child: _isSearchBox 
+              
+                        ? TextField(
+                          controller: _searchText,                       
+                          decoration: InputDecoration(
+                            isDense: true,
+                            filled: true,
+                            fillColor: Colors.grey[150],
+                            
+                            hintText: 'search',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20), // smaller radius
+                              borderSide: BorderSide(
+                                width: 1, // thinner border
+                                color: Colors.grey,
+                              ),
                           ),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20),
-                        borderSide: BorderSide(
-                          width: 1,
-                          color: Colors.grey[800]!,
-                        ),
-                      ),
-                      contentPadding: EdgeInsets.symmetric(horizontal: 12,vertical: 5),
-                      suffixIcon: IconButton(
-                          icon: Icon(Icons.arrow_forward),
-                          onPressed: () {
-                            print('you entered');
-                          },
-                      ),
-                      ),
-                    
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            borderSide: BorderSide(
+                              width: 1,
+                              color: Colors.grey[800]!,
+                            ),
+                          ),
+                          contentPadding: EdgeInsets.symmetric(horizontal: 12,vertical: 5),
+                          suffixIcon: IconButton(
+                              icon: Icon(Icons.arrow_forward),
+                              onPressed: () {
+                                setState(() {
+                                  _isSearchBox = false;
+                                });
+                                
+                                print('you entered');
+                              },
+                          ),
+                          ),                   
+                        ) 
+              
+                      : SizedBox()
                     ),
                   ),
-                ),
-                Container(
-                  padding: EdgeInsets.only(right: 10),
-                  alignment: Alignment.centerRight,
-                  child: IconButton(
-                    onPressed: (){
-                      _isSearchBox = true;
-                    },
-                    icon: Icon(
-                      Icons.search,
-                      color: Colors.grey[00],
-                      ),
+                  !_isSearchBox ? Container(
+                    padding: EdgeInsets.only(right: 10),
+                    alignment: Alignment.centerRight,
+                    child: IconButton(
+                      onPressed: (){
+                        setState(() {
+                                  _isSearchBox = true;
+                                });
+                      },
+                      icon: Icon(
+                        Icons.search,
+                        color: Colors.grey[00],
+                        ),
+                    )
                   )
-                ),
-              ],
+                  : SizedBox(width: 40,)
+                ],
+              ),
             ),
             Center(
               child: BlocBuilder<FriendsBloc, FriendsState>(
