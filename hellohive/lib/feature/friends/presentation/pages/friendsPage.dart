@@ -19,18 +19,31 @@ class _FriendsPageState extends State<FriendsPage> {
   }
 
   bool _isSearchBox = false;
+  String _selectedField = 'username';
+  bool _isGetFriends = false;
+    final List<String> fields = [
+    'name',
+    'username',
+  ];
+
   final TextEditingController _searchText = TextEditingController();
   void _onSubmitSearch(){
     String searchText = _searchText.text;
     if(_searchText.text.isEmpty || _searchText.text == '' || _searchText.text == ' ' ){
       setState(() {
         _isSearchBox = false;
+        _selectedField = 'username';
+        _isGetFriends = false;
       });
     }
     else{
-      // context.read<FriendsBloc>().add(GetFriendsEvent(
-      //   value: searchText
-      // ));
+      setState(() {
+        _isGetFriends = true;
+      });
+      context.read<FriendsBloc>().add(GetFriendsEvent(
+        fieldName: _selectedField,
+        value: searchText
+      ));
     }
   }
   @override
@@ -39,6 +52,7 @@ class _FriendsPageState extends State<FriendsPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
+
             SizedBox(
               height: 60,
               child: Row(
@@ -76,28 +90,87 @@ class _FriendsPageState extends State<FriendsPage> {
                           contentPadding: EdgeInsets.symmetric(horizontal: 12,vertical: 5),
                           suffixIcon: IconButton(
                               icon: Icon(Icons.arrow_forward),
-                              onPressed: () {
-                                setState(() {
-                                  _isSearchBox = false;
-                                });
-                                
-                                print('you entered');
-                              },
+                              onPressed: _onSubmitSearch,
                           ),
                           ),                   
                         ) 
               
                       : SizedBox()
                     ),
+
                   ),
+                  if (_isSearchBox)
+                  Container(
+                    height: 60,
+                    width: 50,
+
+                    // decoration: BoxDecoration(
+                    //   color: Colors.grey[200],
+                    //   borderRadius: BorderRadius.circular(10),
+                    // ),
+
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+
+                      children: [
+
+                        PopupMenuButton<String>(
+
+                          padding: EdgeInsets.zero,
+
+                          constraints: const BoxConstraints(),
+
+                          position: PopupMenuPosition.under,
+
+                          offset: const Offset(30, 0),
+
+                          onSelected: (value) {
+                            setState(() {
+                              _selectedField = value;
+                            });
+                          },
+
+                          itemBuilder: (context) {
+                            return fields.map((field) {
+
+                              return PopupMenuItem<String>(
+                                value: field,
+                                child: Text(field),
+                              );
+
+                            }).toList();
+                          },
+
+                          child: const Icon(
+                            Icons.filter_list,
+                            size: 14,
+                          ),
+                        ),
+
+                        const SizedBox(height: 1),
+
+                        Flexible(
+                          child: Text(
+                            _selectedField,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontSize: 9,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
                   !_isSearchBox ? Container(
                     padding: EdgeInsets.only(right: 10),
                     alignment: Alignment.centerRight,
                     child: IconButton(
                       onPressed: (){
                         setState(() {
-                                  _isSearchBox = true;
-                                });
+                          _isSearchBox = true;
+                        });
                       },
                       icon: Icon(
                         Icons.search,
@@ -109,7 +182,53 @@ class _FriendsPageState extends State<FriendsPage> {
                 ],
               ),
             ),
-            Center(
+            _isSearchBox ? Align(
+              alignment: Alignment.centerRight,
+            child:SizedBox(
+              height: 20,
+              child: IconButton(
+                icon: Icon(Icons.close) ,
+                onPressed: (){
+                  setState(() {
+                    _isGetFriends = false;
+                    _isSearchBox = false;
+                  });
+                  _selectedField = 'username';
+                  _searchText.text = '';
+                  context.read<FriendsBloc>().add(GetRandomFriendsEvent());
+                },
+                ),
+            )
+            )       
+              : SizedBox(),
+
+            _isGetFriends ? Center(
+              child: BlocBuilder<FriendsBloc, FriendsState>(
+                builder: (context, state) {
+                  if(state is FriendsLoading){
+                    return Center(child: CircularProgressIndicator());
+                  }
+                  else if(state is FriendsLoaded){
+                    return Column(
+                      children: state.friends.map((friend){
+                        return ListTile(
+                          leading: FriendPhotoDisplayWidget(photoUrl:friend.photoUrl),
+                          title: Text('${friend.firstName} ${friend.lastName}'),
+                          subtitle: Text('@${friend.username}'),
+                          onTap: (){
+                            Navigator.pushNamed(context, '/addUserProfile');
+                          },
+                        );
+                      }).toList(),
+                    );
+                  }
+                  else{
+                    return Text('some Error');
+                  }
+                },
+              ),
+            ) 
+            : Center(
               child: BlocBuilder<FriendsBloc, FriendsState>(
                 builder: (context, state) {
                   if(state is FriendsLoading){
