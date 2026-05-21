@@ -120,7 +120,9 @@ class _FriendsPageState extends State<FriendsPage> {
                           padding: EdgeInsets.zero,
 
                           constraints: const BoxConstraints(),
-
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20)
+                          ),
                           position: PopupMenuPosition.under,
 
                           offset: const Offset(30, 0),
@@ -136,33 +138,38 @@ class _FriendsPageState extends State<FriendsPage> {
 
                               return PopupMenuItem<String>(
                                 value: field,
-                                child: Text(field),
+                                height: 30,
+                                
+                                child: Text(field, style: TextStyle(color:Colors.blue[900]),),
+
                               );
 
                             }).toList();
                           },
 
                           child: const Icon(
-                            Icons.filter_list,
-                            size: 14,
+                            Icons.tune,
+                            size: 24,
                           ),
                         ),
 
                         const SizedBox(height: 1),
 
                         Flexible(
-                          child: Text(
-                            _selectedField,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              fontSize: 9,
+                          child: Container(
+                            decoration: BoxDecoration(),
+                            child: Text(
+                              _selectedField,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontSize: 9,
+                              ),
                             ),
                           ),
                         ),
                       ],
                     ),
                   ),
-
                   !_isSearchBox ? Container(
                     padding: EdgeInsets.only(right: 10),
                     alignment: Alignment.centerRight,
@@ -184,24 +191,26 @@ class _FriendsPageState extends State<FriendsPage> {
             ),
             _isSearchBox ? Align(
               alignment: Alignment.centerRight,
-            child:SizedBox(
-              height: 20,
-              child: IconButton(
-                icon: Icon(Icons.close) ,
-                onPressed: (){
-                  setState(() {
-                    _isGetFriends = false;
-                    _isSearchBox = false;
-                  });
-                  _selectedField = 'username';
-                  _searchText.text = '';
-                  context.read<FriendsBloc>().add(GetRandomFriendsEvent());
-                },
+              child:Padding(
+                padding: const EdgeInsets.only(right: 30),
+                child: SizedBox(
+                  height: 20,
+                  child: IconButton(
+                    icon: Icon(Icons.close),
+                    onPressed: (){
+                      setState(() {
+                        _isGetFriends = false;
+                        _isSearchBox = false;
+                      });
+                      _selectedField = 'username';
+                      _searchText.text = '';
+                      context.read<FriendsBloc>().add(GetRandomFriendsEvent());
+                    },
+                    ),
                 ),
-            )
+              )
             )       
               : SizedBox(),
-
             _isGetFriends ? Center(
               child: BlocBuilder<FriendsBloc, FriendsState>(
                 builder: (context, state) {
