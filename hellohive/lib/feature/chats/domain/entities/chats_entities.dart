@@ -4,65 +4,57 @@ class ChatsEntities extends Equatable{
   final String id;
   final String userAId;
   final String userBId;
-  final String? lastMessageId;
-  final String? lastMessageText;
-  final DateTime? lastMessageTime;
-
   final Map<String, int> unreadCount;
   final Map<String, bool> mutedBy;
   final Map<String, bool> deletedBy;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final String? lastMessageId;
+  final String? lastMessageText;
+  final DateTime? lastMessageTime;
 
   ChatsEntities({
     required this.id,
     required this.userAId,
     required this.userBId,
-    this.lastMessageId,
-    this.lastMessageText,
-    this.lastMessageTime,
     required this.unreadCount,
     required this.mutedBy,
     required this.deletedBy,
     required this.createdAt,
-    required this.updatedAt
+    required this.updatedAt,
+    this.lastMessageId,
+    this.lastMessageText,
+    this.lastMessageTime,
   });
   @override
   List<Object?> get props => [
     id,
     userAId,
     userBId,
-    lastMessageId,
-    lastMessageText,
-    lastMessageTime,
     unreadCount,
     mutedBy,
     deletedBy,
     createdAt,
-    updatedAt
+    updatedAt,
+    lastMessageId,
+    lastMessageText,
+    lastMessageTime,
   ];
 }
 
 class ChatMessageEntities extends Equatable{
   final String id;
   final String chatId;
-
   final String senderId;
   final String receiverId;
-
-  final String type;
-
+  final MessageType type;
+  final MessageStatus status;
+  final Map<String, bool> deletedBy;
+  final DateTime createdAt;
+  final DateTime updatedAt;
   final String? text;
   final String? mediaUrl;
-
   final String? repliedMessageId;
-
-  final DateTime createdAt;
-  final DateTime? updatedAt;
-
-  final MessageStatus status;
-
-  final Map<String, bool> deletedBy;
 
   @override
   ChatMessageEntities({
@@ -71,13 +63,15 @@ class ChatMessageEntities extends Equatable{
     required this.senderId,
     required this.receiverId,
     required this.type,
+    required this.status,
+    required this.deletedBy,
+    required this.createdAt,
+    required this.updatedAt,
     this.text,
     this.mediaUrl,
     this.repliedMessageId,
-    required this.createdAt,
-    this.updatedAt,
-    required this.status,
-    required this.deletedBy
+    
+
   });
 
   @override
@@ -87,18 +81,28 @@ class ChatMessageEntities extends Equatable{
     senderId,
     receiverId,
     type,
+    status,
+    deletedBy,
+    createdAt,
+    updatedAt,
     text,
     mediaUrl,
     repliedMessageId,
-    createdAt,
-    updatedAt,
-    status,
-    deletedBy
+
   ];
 }
 
 enum MessageStatus{
+  pending,
   sent,
   read,
   failed
+}
+
+enum MessageType{
+  text,
+  video,
+  image,
+  audio,
+  file,
 }
