@@ -24,6 +24,14 @@ class ChatUserIdParams extends Equatable{
   List<Object> get props => [userId];
 }
 
+class ChatIdParams extends Equatable{
+  final String chatId;
+  ChatIdParams({
+    required this.chatId
+  });
+  @override
+  List<Object> get props => [chatId];
+}
 class MuteChatParams extends Equatable{
   final String currentUserId;
   final String userBId;
@@ -37,3 +45,69 @@ class MuteChatParams extends Equatable{
   @override
   List<Object> get props => [currentUserId,userBId,isMuted];
 }
+
+
+class SendMessageParams extends Equatable{
+  final String senderId;
+  final String receiverId;
+  final MessageType type;
+  final String? text;
+  final String? mediaUrl;
+  final String? repliedMessageId;
+
+  @override
+  SendMessageParams({
+    required this.senderId,
+    required this.receiverId,
+    required this.type,
+    this.text,
+    this.mediaUrl,
+    this.repliedMessageId,
+    
+    
+
+  });
+
+  @override
+  List<Object?> get props => [
+    senderId,
+    receiverId,
+    type,
+    text,
+    mediaUrl,
+    repliedMessageId,
+  ];
+}
+
+enum MessageType{
+  text,
+  video,
+  image,
+  audio,
+  file,
+}
+
+class MessageIdParams extends Equatable{
+  final String messageId;
+
+  MessageIdParams({
+    required this.messageId,
+  });
+
+  @override 
+  List<Object> get props => [messageId];
+}
+
+class EditMessageParams extends Equatable{
+  final String messageId;
+  final String text;
+
+  EditMessageParams({
+    required this.messageId,
+    required this.text
+  });
+
+  @override 
+  List<Object> get props => [messageId,text];
+}
+
