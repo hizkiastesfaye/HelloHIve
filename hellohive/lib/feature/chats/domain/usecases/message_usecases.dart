@@ -16,22 +16,22 @@ class SendMessageUseCase extends UseCase<Unit,SendMessageParams>{
         return messageRepo.sendMessage(params);
     }
 }
-class ListenMessagesUseCase extends UseCase<List<ChatMessageEntities>,ChatIdParams>{
+class ListenMessagesUseCase extends UseCaseStream<List<ChatMessageEntities>,ChatIdParams>{
     final MessageRepo messageRepo;
     ListenMessagesUseCase(this.messageRepo);
 
     @override 
     Stream<Either<Failure,List<ChatMessageEntities>>> call(ChatIdParams params){
-        return MessageRepo.listenMessage(params);
+        return messageRepo.listenMessage(params);
     }
 }
-class GetLastMessageUseCase extends UseCase<Unit,NoParams>{
+class GetLastMessageUseCase extends UseCase<ChatMessageEntities,NoParams>{
     final MessageRepo messageRepo;
     GetLastMessageUseCase(this.messageRepo);
 
     @override 
     Future<Either<Failure,ChatMessageEntities>> call(NoParams noParams){
-        return messageRepo.getLastMessage(noParmas);
+        return messageRepo.getLastMessage(noParams);
     }
 }
 class EditMessageUseCase extends UseCase<Unit, EditMessageParams>{
