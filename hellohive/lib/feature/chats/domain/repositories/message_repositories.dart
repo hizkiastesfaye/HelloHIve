@@ -8,11 +8,8 @@ import 'package:hellohive/feature/chats/domain/entities/message_entities.dart';
 abstract class MessageRepo {
   Future<Either<Failure,Unit>> sendMessage(SendMessageParams params);
   Stream<Either<Failure,List<ChatMessageEntities>>> listenMessage(ChatIdParams params);
-  Future<Either<Failure,ChatMessageEntities>> getLastMessage(NoParams noParams);
+  Future<Either<Failure,ChatMessageEntities>> getLastMessage(ChatIdParams params);
   Future<Either<Failure,Unit>> editMessage(EditMessageParams params);
   Future<Either<Failure,Unit>> deleteMessage(MessageIdParams params);
   Future<Either<Failure,Unit>> markMessageAsRead(MessageIdParams params);
-  
-  
-
 }

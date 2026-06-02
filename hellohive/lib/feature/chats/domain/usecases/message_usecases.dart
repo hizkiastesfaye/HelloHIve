@@ -25,13 +25,13 @@ class ListenMessagesUseCase extends UseCaseStream<List<ChatMessageEntities>,Chat
         return messageRepo.listenMessage(params);
     }
 }
-class GetLastMessageUseCase extends UseCase<ChatMessageEntities,NoParams>{
+class GetLastMessageUseCase extends UseCase<ChatMessageEntities,ChatIdParams>{
     final MessageRepo messageRepo;
     GetLastMessageUseCase(this.messageRepo);
 
     @override 
-    Future<Either<Failure,ChatMessageEntities>> call(NoParams noParams){
-        return messageRepo.getLastMessage(noParams);
+    Future<Either<Failure,ChatMessageEntities>> call(ChatIdParams params){
+        return messageRepo.getLastMessage(params);
     }
 }
 class EditMessageUseCase extends UseCase<Unit, EditMessageParams>{
@@ -43,15 +43,6 @@ class EditMessageUseCase extends UseCase<Unit, EditMessageParams>{
         return messageRepo.editMessage(params);
     }
 }
-class MarkMessageAsReadUseCase extends UseCase<Unit, MessageIdParams>{
-    final MessageRepo messageRepo;
-    MarkMessageAsReadUseCase(this.messageRepo);
-
-    @override 
-    Future<Either<Failure,Unit>> call(MessageIdParams params){
-        return messageRepo.markMessageAsRead(params);
-    }
-}
 class DeleteMessageUseCase extends UseCase<Unit,MessageIdParams>{
     final MessageRepo messageRepo;
     DeleteMessageUseCase(this.messageRepo);
@@ -61,6 +52,16 @@ class DeleteMessageUseCase extends UseCase<Unit,MessageIdParams>{
         return messageRepo.deleteMessage(params);
     }
 }
+class MarkMessageAsReadUseCase extends UseCase<Unit, MessageIdParams>{
+    final MessageRepo messageRepo;
+    MarkMessageAsReadUseCase(this.messageRepo);
+
+    @override 
+    Future<Either<Failure,Unit>> call(MessageIdParams params){
+        return messageRepo.markMessageAsRead(params);
+    }
+}
+
 
 
 
