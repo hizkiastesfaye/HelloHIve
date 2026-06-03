@@ -20,29 +20,44 @@ class ChatsRepoImpl implements ChatRepository {
   });
 
   @override
-  Future<Either<Failure,Unit>> createChat(UsersChatParams params) async {
-    if (await networkInfo.isConnected) {
-      try{
-        
-      } catch (e) {
-        return Left(ServerFailure(e.toString()));
+  Future<Either<Failure, Unit>> createChat(
+    UsersChatParams params,
+  ) async {
+    try {
+      if (await networkInfo.isConnected) {
+        await remoteDatasource.createChat(params);
+      } else {
+        await localDatasource.createPendingChat(params);
       }
+
+      return Right(unit);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
     }
   }
 
   @override
-  Stream<Either<Failure,List<ChatsEntities>>> watchChats(ChatUserIdParams params) async* {
+  Stream<Either<Failure, List<ChatsEntities>>> watchChats(
+    ChatUserIdParams params,
+  ) async* {
     try {
-      yield* remoteDatasource.watchChats(params.userId).map((chats) => Right(chats.map((chat) => chat.toEntity()).toList()));
+      yield* localDatasource
+          .watchChats(params.userId)
+          .map((chats) => Right(chats));
     } catch (e) {
       yield Left(ServerFailure(e.toString()));
     }
   }
 
   @override
-  Future<Either<Failure,Unit>> deleteChat(UsersChatParams params) async {
+  Future<Either<Failure,Unit>> deleteChat(ChatIdUserIdParams params) async {
     try {
-      await remoteDatasource.deleteChat(chatId: params.chatId, userId: params.userId);
+      if (await networkInfo.isConnected) {
+        await remoteDatasource.deleteChat(params);
+      } else {
+        await localDatasource.deleteChat(params);
+      }
+
       return Right(unit);
     } catch (e) {
       return Left(ServerFailure(e.toString()));

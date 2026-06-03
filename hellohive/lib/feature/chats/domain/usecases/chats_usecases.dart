@@ -28,13 +28,13 @@ class WatchChatsUseCase extends UseCaseStream<List<ChatsEntities>, ChatUserIdPar
 
 }
 
-class DeleteChatUseCase extends UseCase<Unit, UsersChatParams>{
+class DeleteChatUseCase extends UseCase<Unit, ChatIdUserIdParams>{
   final ChatRepository chatRepository;
 
   DeleteChatUseCase(this.chatRepository);
 
   @override
-  Future<Either<Failure,Unit>> call(UsersChatParams params){
+  Future<Either<Failure,Unit>> call(ChatIdUserIdParams params){
     return chatRepository.deleteChat(params);
   }
 }

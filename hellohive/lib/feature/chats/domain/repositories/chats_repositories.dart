@@ -11,7 +11,7 @@ abstract class ChatRepository {
 
   Stream<Either<Failure,List<ChatsEntities>>> watchChats(ChatUserIdParams params);
 
-  Future<Either<Failure,Unit>> deleteChat(UsersChatParams params);
+  Future<Either<Failure,Unit>> deleteChat(ChatIdUserIdParams params);
 
   Future<Either<Failure,Unit>> muteChat(MuteChatParams params);
 }

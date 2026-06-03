@@ -1,7 +1,15 @@
+import 'package:hellohive/feature/chats/chats_core/chats_core.dart';
 import 'package:hellohive/feature/chats/data/models/chats_model.dart';
 import 'package:hellohive/feature/chats/data/models/message_model.dart';
 
 abstract class ChatLocalDatasource {
+
+    Future<void> createPendingChat(
+    UsersChatParams params,
+  );
+  
+  Stream<List<ChatModel>> watchChats(String userId,);
+
   Future<void> cacheChat(ChatModel chat);
 
   Future<void> cacheChats(List<ChatModel> chats);
@@ -12,7 +20,7 @@ abstract class ChatLocalDatasource {
 
   Future<void> updateChat(ChatModel chat);
 
-  Future<void> deleteChat(String chatId);
+  Future<void> deleteChat(ChatIdUserIdParams params);
 
   Future<void> muteChat({
     required String chatId,

@@ -1,4 +1,5 @@
 
+import 'package:hellohive/feature/chats/chats_core/chats_core.dart';
 import 'package:hellohive/feature/chats/data/models/chats_model.dart';
 
 import '../models/message_model.dart';
@@ -7,17 +8,14 @@ import '../models/message_model.dart';
 abstract class ChatRemoteDatasource {
 
   Future<void> createChat(
-    ChatModel chat,
+    UsersChatParams params,
   );
 
   Stream<List<ChatModel>> watchChats(
     String userId,
   );
 
-  Future<void> deleteChat({
-    required String chatId,
-    required String userId,
-  });
+  Future<void> deleteChat(ChatIdUserIdParams params);
 
   Future<void> muteChat({
     required String chatId,

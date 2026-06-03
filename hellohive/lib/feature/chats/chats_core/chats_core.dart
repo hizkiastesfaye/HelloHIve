@@ -32,6 +32,20 @@ class ChatIdParams extends Equatable{
   @override
   List<Object> get props => [chatId];
 }
+
+class ChatIdUserIdParams extends Equatable{
+  final String chatId;
+  final String userId;
+
+  ChatIdUserIdParams({
+    required this.chatId,
+    required this.userId,
+  });
+
+  @override
+  List<Object> get props => [chatId,userId];
+}
+
 class MuteChatParams extends Equatable{
   final String currentUserId;
   final String userBId;
