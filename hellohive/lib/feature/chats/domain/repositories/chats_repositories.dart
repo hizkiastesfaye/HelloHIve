@@ -7,11 +7,11 @@ import 'package:hellohive/feature/chats/chats_core/chats_core.dart';
 import '../entities/chats_entities.dart';
 
 abstract class ChatRepository {
-  Future<Either<Failure,Unit>> createChat(UsersChatParams params);
+  Future<Either<Failure,ActionStatus>> createChat(UsersChatParams params);
 
   Stream<Either<Failure,List<ChatsEntities>>> watchChats(ChatUserIdParams params);
 
-  Future<Either<Failure,Unit>> deleteChat(ChatIdUserIdParams params);
+  Future<Either<Failure,ActionStatus>> deleteChat(ChatIdUserIdParams params);
 
-  Future<Either<Failure,Unit>> muteChat(MuteChatParams params);
+  Future<Either<Failure,ActionStatus>> muteChat(MuteChatParams params);
 }

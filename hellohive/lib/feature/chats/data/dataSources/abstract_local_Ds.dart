@@ -4,31 +4,28 @@ import 'package:hellohive/feature/chats/data/models/message_model.dart';
 
 abstract class ChatLocalDatasource {
 
-    Future<void> createPendingChat(
+    Future<ActionStatus> createPendingChat(
     UsersChatParams params,
   );
   
   Stream<List<ChatModel>> watchChats(String userId,);
 
-  Future<void> cacheChat(ChatModel chat);
+  Future<ActionStatus> cacheChat(ChatModel chat);
 
-  Future<void> cacheChats(List<ChatModel> chats);
+  Future<ActionStatus> cacheChats(List<ChatModel> chats);
 
+  Future<ChatModel> getChat(UsersChatParams params);
   Future<List<ChatModel>> getChats(String userId);
 
   Future<ChatModel?> getChatById(String chatId);
 
-  Future<void> updateChat(ChatModel chat);
+  Future<ActionStatus> updateChat(ChatModel chat);
 
-  Future<void> deleteChat(ChatIdUserIdParams params);
+  Future<ActionStatus> deleteChat(ChatIdUserIdParams params);
 
-  Future<void> muteChat({
-    required String chatId,
-    required String userId,
-    required bool isMuted,
-  });
+  Future<ActionStatus> muteChat(MuteChatParams params);
 
-  // Future<void> clearChats(
+  // Future<ActionStatus> clearChats(
   //   String userId,
   // );
 }
@@ -37,11 +34,14 @@ abstract class ChatLocalDatasource {
 
 abstract class MessageLocalDatasource {
 
-  Future<void> cacheMessage(
+  Future<ActionStatus> sendMessage(SendMessageParams params,);
+
+  Future<ActionStatus> cacheMessage(
     ChatMessageModel message,
   );
 
-  Future<void> cacheMessages(
+
+  Future<ActionStatus> cacheMessages(
     List<ChatMessageModel> messages,
   );
 
@@ -53,19 +53,19 @@ abstract class MessageLocalDatasource {
     String chatId,
   );
 
-  Future<void> updateMessage(
+  Future<ActionStatus> updateMessage(
     ChatMessageModel message,
   );
 
-  Future<void> deleteMessage({
+  Future<ActionStatus> deleteMessage({
     required String messageId,
   });
 
-  Future<void> markMessageAsRead({
+  Future<ActionStatus> markMessageAsRead({
     required String messageId,
   });
 
-  Future<void> clearChatMessages(
+  Future<ActionStatus> clearChatMessages(
     String chatId,
   );
 }

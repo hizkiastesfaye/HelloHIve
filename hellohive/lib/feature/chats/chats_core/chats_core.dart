@@ -1,6 +1,13 @@
 
 import 'package:equatable/equatable.dart';
 
+enum ActionStatus{
+  pending,
+  success,
+  failed,
+}
+
+
 class UsersChatParams extends Equatable{
   final String currentUserId;
   final String userBId;
@@ -12,6 +19,7 @@ class UsersChatParams extends Equatable{
   @override
   List<Object> get props => [currentUserId,userBId];
 }
+
 
 class ChatUserIdParams extends Equatable{
   final String userId;
@@ -48,16 +56,16 @@ class ChatIdUserIdParams extends Equatable{
 
 class MuteChatParams extends Equatable{
   final String currentUserId;
-  final String userBId;
+  final String chatId;
   final bool isMuted;
 
   MuteChatParams({
     required this.currentUserId,
-    required this.userBId,
+    required this.chatId,
     required this.isMuted,
   });
   @override
-  List<Object> get props => [currentUserId,userBId,isMuted];
+  List<Object> get props => [currentUserId,chatId,isMuted];
 }
 
 

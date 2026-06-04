@@ -20,17 +20,30 @@ class ChatsRepoImpl implements ChatRepository {
   });
 
   @override
-  Future<Either<Failure, Unit>> createChat(
+  Future<Either<Failure, ActionStatus>> createChat(
     UsersChatParams params,
   ) async {
     try {
       if (await networkInfo.isConnected) {
         await remoteDatasource.createChat(params);
+        return Right(ActionStatus.success);
       } else {
         await localDatasource.createPendingChat(params);
+        return Right(ActionStatus.pending);
       }
 
-      return Right(unit);
+      
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+  @override
+  Future<Either<Failure, List<ChatsEntities>>> getChat(
+    ChatIdUserIdParams params,
+  ) async {
+    try {
+        final result = await localDatasource.getChats(params);
+        return Right(result);
     } catch (e) {
       return Left(ServerFailure(e.toString()));
     }
@@ -50,25 +63,30 @@ class ChatsRepoImpl implements ChatRepository {
   }
 
   @override
-  Future<Either<Failure,Unit>> deleteChat(ChatIdUserIdParams params) async {
+  Future<Either<Failure,ActionStatus>> deleteChat(ChatIdUserIdParams params) async {
     try {
       if (await networkInfo.isConnected) {
         await remoteDatasource.deleteChat(params);
+        return Right(ActionStatus.success);
       } else {
         await localDatasource.deleteChat(params);
+        return Right(ActionStatus.pending);
       }
-
-      return Right(unit);
     } catch (e) {
       return Left(ServerFailure(e.toString()));
     }
   }
 
   @override
-  Future<Either<Failure,Unit>> muteChat(MuteChatParams params) async {
+  Future<Either<Failure,ActionStatus>> muteChat(MuteChatParams params) async {
     try {
-      await remoteDatasource.muteChat(chatId: params.chatId, userId: params.userId, isMuted: params.isMuted);
-      return Right(unit);
+      if (await networkInfo.isConnected) {
+        await remoteDatasource.muteChat(params);
+        return Right(ActionStatus.success);
+      } else {
+        await localDatasource.muteChat(params);
+        return Right(ActionStatus.pending);
+      }
     } catch (e) {
       return Left(ServerFailure(e.toString()));
     }

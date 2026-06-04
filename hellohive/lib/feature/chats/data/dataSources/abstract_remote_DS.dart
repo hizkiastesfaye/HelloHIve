@@ -7,7 +7,7 @@ import '../models/message_model.dart';
 
 abstract class ChatRemoteDatasource {
 
-  Future<void> createChat(
+  Future<ActionStatus> createChat(
     UsersChatParams params,
   );
 
@@ -15,21 +15,15 @@ abstract class ChatRemoteDatasource {
     String userId,
   );
 
-  Future<void> deleteChat(ChatIdUserIdParams params);
+  Future<ActionStatus> deleteChat(ChatIdUserIdParams params);
 
-  Future<void> muteChat({
-    required String chatId,
-    required String userId,
-    required bool isMuted,
-  });
+  Future<ActionStatus> muteChat(MuteChatParams params);
 }
 
 
 abstract class MessageRemoteDatasource {
 
-  Future<void> sendMessage(
-    ChatMessageModel message,
-  );
+  Future<ActionStatus> sendMessage(SendMessageParams params);
 
   Stream<List<ChatMessageModel>>
     listenMessages(
@@ -40,17 +34,17 @@ abstract class MessageRemoteDatasource {
     String chatId,
   );
 
-  Future<void> editMessage({
+  Future<ActionStatus> editMessage({
     required String messageId,
     required String text,
   });
 
-  Future<void> deleteMessage({
+  Future<ActionStatus> deleteMessage({
     required String messageId,
     required String userId,
   });
 
-  Future<void> markMessageAsRead({
+  Future<ActionStatus> markMessageAsRead({
     required String messageId,
   });
 
