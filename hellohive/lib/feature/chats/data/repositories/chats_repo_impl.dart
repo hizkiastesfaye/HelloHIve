@@ -38,8 +38,19 @@ class ChatsRepoImpl implements ChatRepository {
     }
   }
   @override
-  Future<Either<Failure, List<ChatsEntities>>> getChat(
-    ChatIdUserIdParams params,
+  Future<Either<Failure, ChatsEntities>> getChat(
+    UsersChatParams params,
+  ) async {
+    try {
+        final result = await localDatasource.getChat(params);
+        return Right(result);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+   @override
+  Future<Either<Failure, List<ChatsEntities>>> getChats(
+    UserIdParams params,
   ) async {
     try {
         final result = await localDatasource.getChats(params);
@@ -51,11 +62,11 @@ class ChatsRepoImpl implements ChatRepository {
 
   @override
   Stream<Either<Failure, List<ChatsEntities>>> watchChats(
-    ChatUserIdParams params,
+    UserIdParams params,
   ) async* {
     try {
       yield* localDatasource
-          .watchChats(params.userId)
+          .watchChats(params)
           .map((chats) => Right(chats));
     } catch (e) {
       yield Left(ServerFailure(e.toString()));

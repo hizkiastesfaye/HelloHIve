@@ -9,7 +9,7 @@ import '../entities/chats_entities.dart';
 abstract class ChatRepository {
   Future<Either<Failure,ActionStatus>> createChat(UsersChatParams params);
 
-  Stream<Either<Failure,List<ChatsEntities>>> watchChats(ChatUserIdParams params);
+  Stream<Either<Failure,List<ChatsEntities>>> watchChats(UserIdParams params);
 
   Future<Either<Failure,ActionStatus>> deleteChat(ChatIdUserIdParams params);
 

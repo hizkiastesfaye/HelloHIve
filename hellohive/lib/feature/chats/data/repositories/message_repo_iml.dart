@@ -4,6 +4,7 @@ import 'package:hellohive/core/errors/failure.dart';
 import 'package:hellohive/core/network/netowork_info.dart';
 import 'package:hellohive/feature/chats/data/dataSources/abstract_local_Ds.dart';
 import 'package:hellohive/feature/chats/data/dataSources/abstract_remote_DS.dart';
+import 'package:hellohive/feature/chats/domain/entities/message_entities.dart';
 
 import '../../chats_core/chats_core.dart';
 import '../../domain/repositories/message_repositories.dart';
@@ -37,24 +38,29 @@ class MessageRepoImpl implements MessageRepo{
   @override
   Stream<Either<Failure,List<ChatMessageEntities>>> listenMessage(ChatIdParams params) {
     // Implementation for listening to messages
+    throw '';
   }
 
   @override
   Future<Either<Failure,ChatMessageEntities>> getLastMessage(ChatIdParams params) {
     // Implementation for getting the last message
+    throw '';
   }
 
   @override
-  Future<Either<Failure,Unit>> editMessage(EditMessageParams params) {
+  Future<Either<Failure,ActionStatus>> editMessage(EditMessageParams params) {
     // Implementation for editing a message
+    throw '';
   }
 
   @override
-  Future<Either<Failure,Unit>> deleteMessage(MessageIdParams params) {
+  Future<Either<Failure,ActionStatus>> deleteMessage(MessageIdParams params) {
     // Implementation for deleting a message
+    throw '';
   }
   @override
-  Future<Either<Failure,Unit>> markMessageAsRead(MessageIdParams params) {
+  Future<Either<Failure,ActionStatus>> markMessageAsRead(MessageIdParams params) {
     // Implementation for marking a message as read
+    throw '';
   }
 }

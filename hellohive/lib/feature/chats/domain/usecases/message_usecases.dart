@@ -7,12 +7,12 @@ import 'package:hellohive/feature/chats/chats_core/chats_core.dart';
 
 import '../repositories/message_repositories.dart';
 
-class SendMessageUseCase extends UseCase<Unit,SendMessageParams>{
+class SendMessageUseCase extends UseCase<ActionStatus,SendMessageParams>{
     final MessageRepo messageRepo;
     SendMessageUseCase(this.messageRepo);
 
     @override 
-    Future<Either<Failure,Unit>> call(SendMessageParams params){
+    Future<Either<Failure,ActionStatus>> call(SendMessageParams params){
         return messageRepo.sendMessage(params);
     }
 }
@@ -34,30 +34,30 @@ class GetLastMessageUseCase extends UseCase<ChatMessageEntities,ChatIdParams>{
         return messageRepo.getLastMessage(params);
     }
 }
-class EditMessageUseCase extends UseCase<Unit, EditMessageParams>{
+class EditMessageUseCase extends UseCase<ActionStatus, EditMessageParams>{
     final MessageRepo messageRepo;
     EditMessageUseCase(this.messageRepo);
 
     @override 
-    Future<Either<Failure,Unit>> call(EditMessageParams params){
+    Future<Either<Failure,ActionStatus>> call(EditMessageParams params){
         return messageRepo.editMessage(params);
     }
 }
-class DeleteMessageUseCase extends UseCase<Unit,MessageIdParams>{
+class DeleteMessageUseCase extends UseCase<ActionStatus,MessageIdParams>{
     final MessageRepo messageRepo;
     DeleteMessageUseCase(this.messageRepo);
 
     @override 
-    Future<Either<Failure,Unit>> call(MessageIdParams params){
+    Future<Either<Failure,ActionStatus>> call(MessageIdParams params){
         return messageRepo.deleteMessage(params);
     }
 }
-class MarkMessageAsReadUseCase extends UseCase<Unit, MessageIdParams>{
+class MarkMessageAsReadUseCase extends UseCase<ActionStatus, MessageIdParams>{
     final MessageRepo messageRepo;
     MarkMessageAsReadUseCase(this.messageRepo);
 
     @override 
-    Future<Either<Failure,Unit>> call(MessageIdParams params){
+    Future<Either<Failure,ActionStatus>> call(MessageIdParams params){
         return messageRepo.markMessageAsRead(params);
     }
 }

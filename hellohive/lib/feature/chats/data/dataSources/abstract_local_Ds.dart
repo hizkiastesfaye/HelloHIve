@@ -8,14 +8,14 @@ abstract class ChatLocalDatasource {
     UsersChatParams params,
   );
   
-  Stream<List<ChatModel>> watchChats(String userId,);
+  Stream<List<ChatModel>> watchChats(UserIdParams params);
 
   Future<ActionStatus> cacheChat(ChatModel chat);
 
   Future<ActionStatus> cacheChats(List<ChatModel> chats);
 
   Future<ChatModel> getChat(UsersChatParams params);
-  Future<List<ChatModel>> getChats(String userId);
+  Future<List<ChatModel>> getChats(UserIdParams params);
 
   Future<ChatModel?> getChatById(String chatId);
 

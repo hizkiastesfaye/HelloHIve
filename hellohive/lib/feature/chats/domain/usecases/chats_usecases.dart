@@ -17,12 +17,12 @@ class CreateChatUseCase extends UseCase<ActionStatus, UsersChatParams>{
   }
 }
 
-class WatchChatsUseCase extends UseCaseStream<List<ChatsEntities>, ChatUserIdParams>{
+class WatchChatsUseCase extends UseCaseStream<List<ChatsEntities>, UserIdParams>{
   final ChatRepository chatRepository;
 
   WatchChatsUseCase(this.chatRepository);
   @override
-  Stream<Either<Failure, List<ChatsEntities>>> call(ChatUserIdParams params){
+  Stream<Either<Failure, List<ChatsEntities>>> call(UserIdParams params){
     return chatRepository.watchChats(params);
   }
 

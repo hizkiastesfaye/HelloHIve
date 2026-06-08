@@ -21,10 +21,10 @@ class UsersChatParams extends Equatable{
 }
 
 
-class ChatUserIdParams extends Equatable{
+class UserIdParams extends Equatable{
   final String userId;
 
-  ChatUserIdParams({
+  UserIdParams({
 
     required this.userId
   });
