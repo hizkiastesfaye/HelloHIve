@@ -6,9 +6,12 @@ import 'package:hellohive/feature/auth/presentation/pages/auth_verify_page.dart'
 import 'package:hellohive/feature/auth/presentation/pages/forgot_password_page.dart';
 import 'package:hellohive/feature/auth/presentation/pages/sign_in_page.dart';
 import 'package:hellohive/feature/auth/presentation/pages/sign_up_page.dart';
+import 'package:hellohive/feature/chats/data/models/hive_model.dart';
 import 'package:hellohive/feature/settings/presentation/pages/add_profile_pages.dart';
 import 'package:hellohive/home_page.dart';
 import 'package:hellohive/feature/settings/presentation/pages/userProfile_pages.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'feature/auth/presentation/bloc/bloc/auth_bloc.dart';
 import 'feature/friends/presentation/bloc/friends_bloc.dart';
 import 'feature/settings/presentation/bloc/user_profile_bloc_bloc.dart';
@@ -17,6 +20,12 @@ import 'injection_container.dart' as di;
 
 import 'login.dart';
 
+
+void initHive() async {
+  await Hive.initFlutter();
+  Hive.registerAdapter(ChatHiveModelAdapter());
+  // Register other adapters as needed
+}
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   try {
