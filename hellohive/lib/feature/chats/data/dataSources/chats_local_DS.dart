@@ -85,10 +85,10 @@ class ChatLocalDatasourceImpl extends ChatLocalDatasource{
   ) async {
     final chat = chatBox.values.firstWhere(
       (chat) =>
-          (chat.userAId == params.userAId &&
+          (chat.userAId == params.currentUserId &&
               chat.userBId == params.userBId) ||
           (chat.userAId == params.userBId &&
-              chat.userBId == params.userAId),
+              chat.userBId == params.currentUserId),
     );
 
     return chat.toDomain();
@@ -117,13 +117,17 @@ class ChatLocalDatasourceImpl extends ChatLocalDatasource{
   }
   @override
   Future<ActionStatus> updateChat(
-    ChatModel chat,
+    MostChatParams params,
   ) async {
-    await chatBox.put(
-      chat.id,
-      chat.toHive(),
-    );
+    final chat = chatBox.get(params.id);
+  if (chat != null) {
+    chat.unreadCount = params.unreadCount;
+    chat.mutedBy = params.mutedBy;
+    chat.deletedBy = params.deletedBy;
+    chat.updatedAt = DateTime.now();
 
+    await chatBox.put(chat.id, chat);
+  }
     return ActionStatus.success;
   }
 

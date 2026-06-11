@@ -74,6 +74,34 @@ class ChatHiveModel extends ChatModel {
           lastMessageText: lastMessageText,
           lastMessageTime: lastMessageTime,
         );
+
+  ChatHiveModel copyWith({
+  String id;
+  String userAId;
+  String userBId;
+  Map<String, int> unreadCount;
+  Map<String, bool> mutedBy;
+  Map<String, bool> deletedBy;
+  DateTime createdAt;
+  DateTime updatedAt;
+  String? lastMessageId;
+  String? lastMessageText;
+  DateTime? lastMessageTime;
+  }) {
+    return ChatHiveModel(
+      id: id,
+      userAId: userAId,
+      userBId: userBId,
+      unreadCount: unreadCount ?? this.unreadCount,
+      mutedBy: mutedBy ?? this.mutedBy,
+      deletedBy: deletedBy ?? this.deletedBy,
+      createdAt: createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      lastMessageId: lastMessageId,
+      lastMessageText: lastMessageText,
+      lastMessageTime: lastMessageTime,
+    );
+  }
 }
 
 extension ChatHiveModelMapper on ChatHiveModel {

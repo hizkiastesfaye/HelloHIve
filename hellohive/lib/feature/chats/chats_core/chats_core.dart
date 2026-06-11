@@ -68,6 +68,42 @@ class MuteChatParams extends Equatable{
   List<Object> get props => [currentUserId,chatId,isMuted];
 }
 
+class MostChatParams extends Equatable{
+  final String id;
+  final String userAId;
+  final String userBId;
+  final Map<String, int> unreadCount;
+  final Map<String, bool> mutedBy;
+  final Map<String, bool> deletedBy;
+  final String? lastMessageId;
+  final String? lastMessageText;
+  final DateTime? lastMessageTime;
+
+  MostChatParams({
+    required this.id,
+    required this.userAId,
+    required this.userBId,
+    required this.unreadCount,
+    required this.mutedBy,
+    required this.deletedBy,
+    this.lastMessageId,
+    this.lastMessageText,
+    this.lastMessageTime,
+  });
+
+  @override
+  List<Object> get props => [
+    id, 
+    userAId, 
+    userBId, 
+    unreadCount, 
+    mutedBy, 
+    deletedBy, 
+    lastMessageId ?? '', 
+    lastMessageText ?? '', 
+    lastMessageTime ?? DateTime(0)];
+}
+
 
 class SendMessageParams extends Equatable{
   final String senderId;
