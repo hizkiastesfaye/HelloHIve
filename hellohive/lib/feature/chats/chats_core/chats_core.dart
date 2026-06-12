@@ -7,6 +7,10 @@ enum ActionStatus{
   failed,
 }
 
+String generateChatId(String userAId, String userBId) {
+  final users = [userAId, userBId]..sort();
+  return '${users[0]}_${users[1]}';
+}
 
 class UsersChatParams extends Equatable{
   final String currentUserId;

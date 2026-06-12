@@ -76,30 +76,30 @@ class ChatHiveModel extends ChatModel {
         );
 
   ChatHiveModel copyWith({
-  String id;
-  String userAId;
-  String userBId;
-  Map<String, int> unreadCount;
-  Map<String, bool> mutedBy;
-  Map<String, bool> deletedBy;
-  DateTime createdAt;
-  DateTime updatedAt;
-  String? lastMessageId;
-  String? lastMessageText;
-  DateTime? lastMessageTime;
+  String? id,
+  String? userAId,
+  String? userBId,
+  Map<String, int>? unreadCount,
+  Map<String, bool>? mutedBy,
+  Map<String, bool>? deletedBy,
+  DateTime? createdAt,
+  DateTime? updatedAt,
+  String? lastMessageId,
+  String? lastMessageText,
+  DateTime? lastMessageTime,
   }) {
     return ChatHiveModel(
-      id: id,
-      userAId: userAId,
-      userBId: userBId,
+      id: id ?? this.id,
+      userAId: userAId ?? this.userAId,
+      userBId: userBId ?? this.userBId,
       unreadCount: unreadCount ?? this.unreadCount,
       mutedBy: mutedBy ?? this.mutedBy,
       deletedBy: deletedBy ?? this.deletedBy,
-      createdAt: createdAt,
+      createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
-      lastMessageId: lastMessageId,
-      lastMessageText: lastMessageText,
-      lastMessageTime: lastMessageTime,
+      lastMessageId: lastMessageId ?? this.lastMessageId,
+      lastMessageText: lastMessageText ?? this.lastMessageText,
+      lastMessageTime: lastMessageTime ?? this.lastMessageTime,
     );
   }
 }
@@ -138,4 +138,42 @@ extension ChatModelMapper on ChatModel {
       lastMessageTime: lastMessageTime,
     );
   }
+}
+
+
+
+
+
+@HiveType(typeId: 10)
+class ChatSyncOperation extends HiveObject {
+
+  @HiveField(0)
+  final String id;
+
+  @HiveField(1)
+  final SyncOperationType operation;
+
+  @HiveField(2)
+  final String chatId;
+
+  @HiveField(3)
+  final Map<String,dynamic> payload;
+
+  @HiveField(4)
+  final DateTime createdAt;
+
+  ChatSyncOperation({
+    required this.id,
+    required this.operation,
+    required this.chatId,
+    required this.payload,
+    required this.createdAt,
+  });
+}
+
+enum SyncOperationType {
+  createChat,
+  updateChat,
+  deleteChat,
+  muteChat,
 }

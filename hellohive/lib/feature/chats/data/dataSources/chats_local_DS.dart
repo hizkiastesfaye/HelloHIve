@@ -4,11 +4,13 @@ import 'package:hellohive/feature/chats/data/dataSources/abstract_local_Ds.dart'
 import 'package:hellohive/feature/chats/data/models/chats_model.dart';
 import 'package:hellohive/feature/chats/data/models/hive_model.dart';
 import 'package:hive/hive.dart';
+import 'package:uuid/uuid.dart';
 
 class ChatLocalDatasourceImpl extends ChatLocalDatasource{
   final Box<ChatHiveModel> chatBox;
+  final Box<ChatSyncOperation> operationsBox;
 
-  ChatLocalDatasourceImpl({required this.chatBox});
+  ChatLocalDatasourceImpl({required this.chatBox, required this.operationsBox});
 
   @override
   
@@ -16,8 +18,9 @@ class ChatLocalDatasourceImpl extends ChatLocalDatasource{
   Future<ActionStatus> createPendingChat(
     UsersChatParams params,
   ) async {
+    
     final chat = ChatModel(
-      id: '${params.currentUserId}_${params.userBId}', // Generate a unique ID based on user IDs
+      id: generateChatId(params.currentUserId, params.userBId),
       userAId: params.currentUserId,
       userBId: params.userBId,
       unreadCount: {},
@@ -31,6 +34,20 @@ class ChatLocalDatasourceImpl extends ChatLocalDatasource{
       chat.id,
       chat.toHive(),
     );
+    final operation = ChatSyncOperation(
+      id: const Uuid().v4(),
+      operation: SyncOperationType.createChat,
+      chatId: chat.id,
+      payload: {
+        'userAId': params.currentUserId,
+        'userBId': params.userBId,
+      },
+      createdAt: DateTime.now(),
+    );
+    await operationsBox.put(
+    operation.id,
+    operation,
+  );
 
     return ActionStatus.pending;
   }
@@ -55,6 +72,8 @@ class ChatLocalDatasourceImpl extends ChatLocalDatasource{
         );
     });
   }
+
+
   @override
   Future<ActionStatus> cacheChat(
     ChatModel chat,
@@ -66,6 +85,8 @@ class ChatLocalDatasourceImpl extends ChatLocalDatasource{
 
     return ActionStatus.success;
   }
+
+
   @override
   Future<ActionStatus> cacheChats(
     List<ChatModel> chats,
@@ -79,6 +100,8 @@ class ChatLocalDatasourceImpl extends ChatLocalDatasource{
 
     return ActionStatus.success;
   }
+
+
   @override
   Future<ChatModel> getChat(
     UsersChatParams params,
@@ -93,6 +116,8 @@ class ChatLocalDatasourceImpl extends ChatLocalDatasource{
 
     return chat.toDomain();
   }
+
+
   @override
   Future<List<ChatModel>> getChats(
     UserIdParams params,
@@ -109,25 +134,48 @@ class ChatLocalDatasourceImpl extends ChatLocalDatasource{
         (a, b) => b.updatedAt.compareTo(a.updatedAt),
       );
   }
+
+
   @override
   Future<ChatModel?> getChatById(
     String chatId,
   ) async {
     return chatBox.get(chatId)?.toDomain();
   }
+
+
   @override
   Future<ActionStatus> updateChat(
     MostChatParams params,
   ) async {
     final chat = chatBox.get(params.id);
-  if (chat != null) {
-    chat.unreadCount = params.unreadCount;
-    chat.mutedBy = params.mutedBy;
-    chat.deletedBy = params.deletedBy;
-    chat.updatedAt = DateTime.now();
+    if (chat != null) {
+      final updatedChat = chat.copyWith(
+      unreadCount: params.unreadCount,
+      mutedBy: params.mutedBy,
+      deletedBy: params.deletedBy,
+      updatedAt: DateTime.now(),
+      );
 
-    await chatBox.put(chat.id, chat);
-  }
+      await chatBox.put(chat.id, updatedChat);
+      final operation = ChatSyncOperation(
+        id: const Uuid().v4(),
+        operation: SyncOperationType.updateChat,
+        chatId: chat.id,
+        payload: {
+          'unreadCount': params.unreadCount,
+          'mutedBy': params.mutedBy,
+          'deletedBy': params.deletedBy, // Assuming the current user is userAId, adjust as needed
+        },
+        createdAt: DateTime.now(),
+      );
+      await operationsBox.put(
+        operation.id,
+        operation,
+      );
+    }
+
+      
     return ActionStatus.success;
   }
 
@@ -163,8 +211,24 @@ class ChatLocalDatasourceImpl extends ChatLocalDatasource{
       ),
     );
 
+    final operation = ChatSyncOperation(
+      id: const Uuid().v4(),
+      operation: SyncOperationType.deleteChat,
+      chatId: chat.id,
+      payload: {
+        'userId': params.userId,
+      },
+      createdAt: DateTime.now(),
+    );
+    await operationsBox.put(
+      operation.id,
+      operation,
+    );
+
     return ActionStatus.pending;
   }
+
+
   @override
   Future<ActionStatus> muteChat(
     MuteChatParams params,
@@ -178,7 +242,7 @@ class ChatLocalDatasourceImpl extends ChatLocalDatasource{
     final mutedBy =
         Map<String, bool>.from(chat.mutedBy);
 
-    mutedBy[params.userId] = params.isMuted;
+    mutedBy[params.currentUserId] = params.isMuted;
 
     await chatBox.put(
       chat.id,
@@ -195,6 +259,20 @@ class ChatLocalDatasourceImpl extends ChatLocalDatasource{
         lastMessageText: chat.lastMessageText,
         lastMessageTime: chat.lastMessageTime,
       ),
+    );
+    final operation = ChatSyncOperation(
+      id: const Uuid().v4(),
+      operation: SyncOperationType.muteChat,
+      chatId: chat.id,
+      payload: {
+        'userId': params.currentUserId,
+        'isMuted': params.isMuted,
+      },
+      createdAt: DateTime.now(),
+    );
+    await operationsBox.put(
+      operation.id,
+      operation,
     );
 
     return ActionStatus.pending;

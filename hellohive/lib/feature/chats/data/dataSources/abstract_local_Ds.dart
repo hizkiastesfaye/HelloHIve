@@ -19,7 +19,7 @@ abstract class ChatLocalDatasource {
 
   Future<ChatModel?> getChatById(String chatId);
 
-  Future<ActionStatus> updateChat(ChatModel chat);
+  Future<ActionStatus> updateChat(MostChatParams params);
 
   Future<ActionStatus> deleteChat(ChatIdUserIdParams params);
 

@@ -7,16 +7,13 @@ import '../models/message_model.dart';
 
 abstract class ChatRemoteDatasource {
 
-  Future<ActionStatus> createChat(
-    UsersChatParams params,
-  );
-
-  Stream<List<ChatModel>> watchChats(
-    String userId,
-  );
-
+  Future<ActionStatus> createChat(UsersChatParams params);
+  Stream<List<ChatModel>> watchChats(String userId);
+  Future<ChatModel> getChat(UsersChatParams params);
+  Future<List<ChatModel>> getChats(UserIdParams params);
+  Future<ChatModel?> getChatById(String chatId);
+  Future<ActionStatus> updateChat(MostChatParams params);
   Future<ActionStatus> deleteChat(ChatIdUserIdParams params);
-
   Future<ActionStatus> muteChat(MuteChatParams params);
 }
 
