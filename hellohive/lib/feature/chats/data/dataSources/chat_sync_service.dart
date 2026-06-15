@@ -1,0 +1,95 @@
+import 'package:hellohive/feature/chats/chats_core/chats_core.dart';
+import 'package:hellohive/feature/chats/data/dataSources/abstract_local_Ds.dart';
+import 'package:hellohive/feature/chats/data/dataSources/abstract_remote_DS.dart';
+import 'package:hellohive/feature/chats/data/models/hive_model.dart';
+
+
+class ChatSyncServiceFromRemoteToLocal {
+  final ChatLocalDatasource localDatasource;
+  final ChatRemoteDatasource remoteDatasource;
+  ChatSyncServiceFromRemoteToLocal({
+    required this.localDatasource,
+    required this.remoteDatasource,
+  });
+
+  void startChatSync(String userId) {
+    remoteDatasource
+        .watchChats(userId)
+        .listen((remoteChats) async {
+
+      await localDatasource.cacheChats(remoteChats);
+    });
+  }
+}
+
+
+class ChatSyncServiceFromLocalToRemote {
+  final ChatLocalDatasource localDatasource;
+  final ChatRemoteDatasource remoteDatasource;
+
+  ChatSyncServiceFromLocalToRemote({
+    required this.localDatasource,
+    required this.remoteDatasource,
+  });
+
+  Future<void> syncChats() async {
+    final operations = await localDatasource.getPendingOperations();
+
+    for (final operation in operations) {
+      try {
+        switch (operation.operation) {
+          case SyncOperationType.createChat:
+            await remoteDatasource.createChat(
+              UsersChatParams(
+                currentUserId: operation.payload['userAId'],
+                userBId: operation.payload['userBId'],
+              ),
+            );
+            break;
+
+          case SyncOperationType.updateChat:
+            await remoteDatasource.updateChat(
+              MostChatParams(
+                id: operation.chatId,
+                userAId: operation.payload['userAId'],
+                userBId: operation.payload['userBId'],
+                unreadCount: Map<String, int>.from(
+                  operation.payload['unreadCount'],
+                ),
+                mutedBy: Map<String, bool>.from(
+                  operation.payload['mutedBy'],
+                ),
+                deletedBy: Map<String, bool>.from(
+                  operation.payload['deletedBy'],
+                ),
+              ),
+            );
+            break;
+
+          case SyncOperationType.deleteChat:
+            await remoteDatasource.deleteChat(
+              ChatIdUserIdParams(
+                chatId: operation.chatId,
+                userId: operation.payload['userId'],
+              ),
+            );
+            break;
+
+          case SyncOperationType.muteChat:
+            await remoteDatasource.muteChat(
+              MuteChatParams(
+                chatId: operation.chatId,
+                currentUserId: operation.payload['currentUserId'],
+                isMuted: operation.payload['isMuted'],
+              ),
+            );
+            break;
+        }
+
+        await localDatasource.removeOperation(
+          operation.id,
+        );
+      } catch (_) {}
+    }
+  }
+}

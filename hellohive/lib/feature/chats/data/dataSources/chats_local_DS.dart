@@ -41,6 +41,11 @@ class ChatLocalDatasourceImpl extends ChatLocalDatasource{
       payload: {
         'userAId': params.currentUserId,
         'userBId': params.userBId,
+        // 'unreadCount': {},
+        // 'mutedBy': {},
+        // 'deletedBy': {},
+        // 'createdAt': DateTime.now(),
+        // 'updatedAt': DateTime.now(),
       },
       createdAt: DateTime.now(),
     );
@@ -87,17 +92,43 @@ class ChatLocalDatasourceImpl extends ChatLocalDatasource{
   }
 
 
-  @override
-  Future<ActionStatus> cacheChats(
-    List<ChatModel> chats,
+  // @override
+  // Future<ActionStatus> cacheChats(
+  //   List<ChatModel> chats,
+  // ) async {
+  //   final map = {
+  //     for (final chat in chats)
+  //       chat.id: chat.toHive(),
+  //   };
+
+  //   await chatBox.putAll(map);
+
+  //   return ActionStatus.success;
+  // }
+
+    @override
+    Future<ActionStatus> cacheChats(
+    List<ChatModel> remoteChats,
   ) async {
-    final map = {
-      for (final chat in chats)
-        chat.id: chat.toHive(),
-    };
+    final remoteIds =
+        remoteChats.map((e) => e.id).toSet();
 
-    await chatBox.putAll(map);
+    // remove chats no longer in Firestore
+    final localIds = chatBox.keys.cast<String>();
 
+    for (final id in localIds) {
+      if (!remoteIds.contains(id)) {
+        await chatBox.delete(id);
+      }
+    }
+
+    // update/add current chats
+    for (final chat in remoteChats) {
+      await chatBox.put(
+        chat.id,
+        chat.toHive(),
+      );
+    }
     return ActionStatus.success;
   }
 
@@ -163,9 +194,12 @@ class ChatLocalDatasourceImpl extends ChatLocalDatasource{
         operation: SyncOperationType.updateChat,
         chatId: chat.id,
         payload: {
+          'userAId': params.userAId,
+          'userBId': params.userBId,
           'unreadCount': params.unreadCount,
           'mutedBy': params.mutedBy,
-          'deletedBy': params.deletedBy, // Assuming the current user is userAId, adjust as needed
+          'deletedBy': params.deletedBy,
+          'updatedAt': DateTime.now(), // Assuming the current user is userAId, adjust as needed
         },
         createdAt: DateTime.now(),
       );
@@ -265,7 +299,7 @@ class ChatLocalDatasourceImpl extends ChatLocalDatasource{
       operation: SyncOperationType.muteChat,
       chatId: chat.id,
       payload: {
-        'userId': params.currentUserId,
+        'currentUserId': params.currentUserId,
         'isMuted': params.isMuted,
       },
       createdAt: DateTime.now(),
@@ -276,5 +310,21 @@ class ChatLocalDatasourceImpl extends ChatLocalDatasource{
     );
 
     return ActionStatus.pending;
+  }
+
+  @override
+  Future<List<ChatSyncOperation>> getPendingOperations() async {
+    final operations = operationsBox.values.toList();
+
+    operations.sort(
+      (a, b) => a.createdAt.compareTo(b.createdAt),
+    );
+
+    return operations;
+  }
+
+  @override
+  Future<void> removeOperation(String operationId) async {
+    await operationsBox.delete(operationId);
   }
 }

@@ -1,5 +1,6 @@
 import 'package:hellohive/feature/chats/chats_core/chats_core.dart';
 import 'package:hellohive/feature/chats/data/models/chats_model.dart';
+import 'package:hellohive/feature/chats/data/models/hive_model.dart';
 import 'package:hellohive/feature/chats/data/models/message_model.dart';
 
 abstract class ChatLocalDatasource {
@@ -24,7 +25,9 @@ abstract class ChatLocalDatasource {
   Future<ActionStatus> deleteChat(ChatIdUserIdParams params);
 
   Future<ActionStatus> muteChat(MuteChatParams params);
+  Future<List<ChatSyncOperation>> getPendingOperations();
 
+  Future<void> removeOperation(String operationId);
   // Future<ActionStatus> clearChats(
   //   String userId,
   // );
