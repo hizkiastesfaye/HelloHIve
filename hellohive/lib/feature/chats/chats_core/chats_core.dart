@@ -109,6 +109,25 @@ class MostChatParams extends Equatable{
 }
 
 
+class UpdateLastMessageParams extends Equatable{
+  final String chatId;
+  final String lastMessageId;
+  final String lastMessageText;
+  final DateTime lastMessageTime;
+
+  UpdateLastMessageParams({
+    required this.chatId,
+    required this.lastMessageId,
+    required this.lastMessageText,
+    required this.lastMessageTime,
+  });
+
+  @override
+  List<Object> get props => [chatId, lastMessageId, lastMessageText, lastMessageTime];
+}
+
+
+
 class SendMessageParams extends Equatable{
   final String senderId;
   final String receiverId;

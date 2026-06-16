@@ -44,6 +44,9 @@ abstract class MessageRemoteDatasource {
   Future<ActionStatus> markMessageAsRead({
     required String messageId,
   });
+  Future<ActionStatus> UpdateLastMessage(
+    UpdateLastMessageParams params,
+  );
 
   //   Future<List<ChatMessageModel>>
   //     getMessages({
