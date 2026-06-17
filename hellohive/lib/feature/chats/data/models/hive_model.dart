@@ -176,4 +176,5 @@ enum SyncOperationType {
   updateChat,
   deleteChat,
   muteChat,
+  updateLastMessage,
 }

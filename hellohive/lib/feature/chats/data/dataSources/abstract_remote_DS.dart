@@ -15,6 +15,7 @@ abstract class ChatRemoteDatasource {
   Future<ActionStatus> updateChat(MostChatParams params);
   Future<ActionStatus> deleteChat(ChatIdUserIdParams params);
   Future<ActionStatus> muteChat(MuteChatParams params);
+  Future<ActionStatus> updateLastMessage(UpdateLastMessageParams params,);
 }
 
 
@@ -44,9 +45,7 @@ abstract class MessageRemoteDatasource {
   Future<ActionStatus> markMessageAsRead({
     required String messageId,
   });
-  Future<ActionStatus> UpdateLastMessage(
-    UpdateLastMessageParams params,
-  );
+
 
   //   Future<List<ChatMessageModel>>
   //     getMessages({

@@ -105,7 +105,7 @@ class MostChatParams extends Equatable{
     deletedBy, 
     lastMessageId ?? '', 
     lastMessageText ?? '', 
-    lastMessageTime ?? DateTime(0)];
+    lastMessageTime ?? ''];
 }
 
 

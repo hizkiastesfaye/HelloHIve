@@ -61,6 +61,33 @@ class ChatsRepoImpl implements ChatRepository {
   }
 
   @override
+  Future<Either<Failure, ChatsEntities?>> getChatById(String chatId) async {
+    try {
+      final result = await localDatasource.getChatById(chatId);
+      return Right(result);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, ActionStatus>> updateChat(
+    MostChatParams params,
+  ) async {
+    try {
+      if (await networkInfo.isConnected) {
+        await remoteDatasource.updateChat(params);
+        return Right(ActionStatus.success);
+      } else {
+        await localDatasource.updateChat(params);
+        return Right(ActionStatus.pending);
+      }
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
   Stream<Either<Failure, List<ChatsEntities>>> watchChats(
     UserIdParams params,
   ) async* {
@@ -96,6 +123,20 @@ class ChatsRepoImpl implements ChatRepository {
         return Right(ActionStatus.success);
       } else {
         await localDatasource.muteChat(params);
+        return Right(ActionStatus.pending);
+      }
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+  @override
+  Future<Either<Failure,ActionStatus>> updateLastMessage(UpdateLastMessageParams params,) async {
+    try {
+      if (await networkInfo.isConnected) {
+        await remoteDatasource.updateLastMessage(params);
+        return Right(ActionStatus.success);
+      } else {
+        await localDatasource.updateLastMessage(params);
         return Right(ActionStatus.pending);
       }
     } catch (e) {

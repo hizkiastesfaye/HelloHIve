@@ -28,6 +28,8 @@ abstract class ChatLocalDatasource {
   Future<List<ChatSyncOperation>> getPendingOperations();
 
   Future<void> removeOperation(String operationId);
+  Future<ActionStatus> updateLastMessage(UpdateLastMessageParams params,);
+
   // Future<ActionStatus> clearChats(
   //   String userId,
   // );

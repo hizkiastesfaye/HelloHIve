@@ -28,6 +28,51 @@ class WatchChatsUseCase extends UseCaseStream<List<ChatsEntities>, UserIdParams>
 
 }
 
+class GetChatUseCase extends UseCase<ChatsEntities, UsersChatParams>{
+  final ChatRepository chatRepository;
+
+  GetChatUseCase(this.chatRepository);
+
+  @override
+  Future<Either<Failure,ChatsEntities>> call(UsersChatParams params){
+    return chatRepository.getChat(params);
+  }
+}
+
+class GetChatsUseCase extends UseCase<List<ChatsEntities>, UserIdParams>{
+  final ChatRepository chatRepository;
+
+  GetChatsUseCase(this.chatRepository);
+
+  @override
+  Future<Either<Failure,List<ChatsEntities>>> call(UserIdParams params){
+    return chatRepository.getChats(params);
+  }
+}
+
+class GetChatByIdUseCase extends UseCase<ChatsEntities?, String>{
+  final ChatRepository chatRepository;
+
+  GetChatByIdUseCase(this.chatRepository);
+
+  @override
+  Future<Either<Failure,ChatsEntities?>> call(String chatId){
+    return chatRepository.getChatById(chatId);
+  }
+}
+
+class UpdateChatUseCase extends UseCase<ActionStatus, MostChatParams>{
+  final ChatRepository chatRepository;
+
+  UpdateChatUseCase(this.chatRepository);
+
+  @override
+  Future<Either<Failure,ActionStatus>> call(MostChatParams params){
+    return chatRepository.updateChat(params);
+  }
+}
+
+
 class DeleteChatUseCase extends UseCase<ActionStatus, ChatIdUserIdParams>{
   final ChatRepository chatRepository;
 
@@ -47,5 +92,16 @@ class MuteChatUseCase extends UseCase<ActionStatus, MuteChatParams>{
   @override
   Future<Either<Failure,ActionStatus>> call(MuteChatParams params){
     return chatRepository.muteChat(params);
+  }
+}
+
+class UpdateLastMessageUseCase extends UseCase<ActionStatus, UpdateLastMessageParams>{
+  final ChatRepository chatRepository;
+
+  UpdateLastMessageUseCase(this.chatRepository);
+
+  @override
+  Future<Either<Failure,ActionStatus>> call(UpdateLastMessageParams params){
+    return chatRepository.updateLastMessage(params);
   }
 }

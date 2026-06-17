@@ -84,6 +84,17 @@ class ChatSyncServiceFromLocalToRemote {
               ),
             );
             break;
+
+          case SyncOperationType.updateLastMessage:
+            await remoteDatasource.updateLastMessage(
+              UpdateLastMessageParams(
+                chatId: operation.chatId,
+                lastMessageId: operation.payload['lastMessageId'],
+                lastMessageText: operation.payload['lastMessageText'],
+                lastMessageTime: operation.payload['lastMessageTime'],
+              ),
+            );
+            break;
         }
 
         await localDatasource.removeOperation(

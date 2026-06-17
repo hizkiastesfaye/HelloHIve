@@ -146,5 +146,15 @@ abstract class ChatRemoteDatasourceImpl implements ChatRemoteDatasource {
     return ActionStatus.success;
   }
 
-  
-}
+  @override
+  Future<ActionStatus> updateLastMessage(UpdateLastMessageParams params,) async {
+    await chats.doc(params.chatId).update({
+      'lastMessageId': params.lastMessageId,
+      'lastMessageText': params.lastMessageText,
+      'lastMessageTime': params.lastMessageTime,
+      'updatedAt': FieldValue.serverTimestamp(),
+    });
+
+    return ActionStatus.success;
+  }
+  }

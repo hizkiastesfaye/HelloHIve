@@ -313,13 +313,56 @@ class ChatLocalDatasourceImpl extends ChatLocalDatasource{
   }
 
   @override
+  Future<ActionStatus> updateLastMessage(UpdateLastMessageParams params,) async {
+    final chat = chatBox.get(params.chatId);
+
+    if (chat == null) {
+      throw Exception('Chat not found');
+    }
+
+    await chatBox.put(
+      chat.id,
+      ChatHiveModel(
+        id: chat.id,
+        userAId: chat.userAId,
+        userBId: chat.userBId,
+        unreadCount: chat.unreadCount,
+        mutedBy: chat.mutedBy,
+        deletedBy: chat.deletedBy,
+        createdAt: chat.createdAt,
+        updatedAt: DateTime.now(),
+        lastMessageId: params.lastMessageId,
+        lastMessageText: params.lastMessageText,
+        lastMessageTime: params.lastMessageTime,
+      ),
+    );
+
+    final operation = ChatSyncOperation(
+      id: const Uuid().v4(),
+      operation: SyncOperationType.updateLastMessage,
+      chatId: chat.id,
+      payload: {
+        'lastMessageId': params.lastMessageId,
+        'lastMessageText': params.lastMessageText,
+        'lastMessageTime': params.lastMessageTime,
+      },
+      createdAt: DateTime.now(),
+    );
+    await operationsBox.put(
+      operation.id,
+      operation,
+    );
+
+    return ActionStatus.pending;
+  }
+
+
+  @override
   Future<List<ChatSyncOperation>> getPendingOperations() async {
     final operations = operationsBox.values.toList();
-
     operations.sort(
       (a, b) => a.createdAt.compareTo(b.createdAt),
     );
-
     return operations;
   }
 
