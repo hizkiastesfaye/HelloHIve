@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:hellohive/core/errors/failure.dart';
 import 'package:hellohive/feature/chats/chats_core/chats_core.dart';
+import 'package:hellohive/feature/chats/chats_core/conversion.dart';
 import 'package:hellohive/feature/chats/domain/entities/chats_entities.dart';
 import 'package:hellohive/feature/chats/domain/usecases/chats_usecases.dart';
 import 'package:meta/meta.dart';
@@ -39,23 +40,138 @@ class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
     required this.muteChatUseCase,
     required this.updateLastMessageUseCase,
   }) : super(ChatsInitial()) {
-    on<CreateChatEvent>((event, emit) {
+    on<CreateChatEvent>((event, emit) async {
       emit(ChatsLoading());
       final params = UsersChatParams(
         currentUserId: event.currentUserId,
         userBId: event.userBId,
       );
-      final result = createChatUseCase(params);
+      final result = await createChatUseCase(params);
+      result.fold(
+          (failure) => emit(ChatsError(_mapFailureToMessage(failure))),
+          (actionStatus) => emit(ChatCreated('${actionStatus.name}')),
+        
+      );
+    });
+
+    on<GetChatEvent>((event, emit) async{
+      emit(ChatsLoading());
+      final params = UsersChatParams(
+        currentUserId: event.currentUserId,
+        userBId: event.userBId,
+      );
+      final result = await getChatUseCase(params);
+      result.fold(
+          (failure) => emit(ChatsError(_mapFailureToMessage(failure))),
+          (chat) => emit(ChatLoaded(chat)),
+       );
+    });
+
+    on<GetChatsEvent>((event, emit) async {
+      emit(ChatsLoading());
+      final params = UserIdParams(userId: event.userId);
+      final result = await getChatsUseCase(params);
+      result.fold(
+          (failure) => emit(ChatsError(_mapFailureToMessage(failure))),
+          (chats) => emit(ChatsLoaded(chats)),
+        );
+    });
+
+    on<GetChatByIdEvent>((event, emit) async {
+      emit(ChatsLoading());
+      final result = await getChatByIdUseCase(event.chatId);
+      result.fold(
+          (failure) => emit(ChatsError(_mapFailureToMessage(failure))),
+          (chat) {
+            if (chat != null) {
+              emit(ChatLoadedById(chat));
+            } else {
+              emit(ChatsError('Chat not found'));
+            }
+          },
+        );
+    });
+
+    on<WatchChatsEvent>((event, emit) async{
+      emit(ChatsLoading());
+      final params = UserIdParams(userId: event.userId);
+      final result = await watchChatsUseCase(params);
+      await emit.forEach(
+          result,
+          onData: (statusResult)=> statusResult.fold(
+            (failure) => ChatsError(_mapFailureToMessage(failure)),
+            (status) => WatchChats(status)
+          )
+        );
+    });
+
+    on<UpdateChatEvent>((event, emit) {
+      emit(ChatsLoading());
+      final params = MostChatParams(
+        id: event.id,
+        userAId: event.userAId,
+        userBId: event.userBId,
+        mutedBy: event.mutedBy,
+        deletedBy: event.deletedBy,
+        lastMessageId: event.lastMessageId,
+        lastMessageText: event.lastMessageText,
+        lastMessageTime: event.lastMessageTime,
+      );
+      final result = updateChatUseCase(params);
       result.then((either) {
         either.fold(
           (failure) => emit(ChatsError(_mapFailureToMessage(failure))),
-          (actionStatus) => emit(ChatCreated('${actionStatus.name}')),
+          (actionStatus) => emit(ChatUpdated('${actionStatus.name}')),
         );
       });
     });
 
-    
-    
+    on<DeleteChatEvent>((event, emit) {
+      emit(ChatsLoading());
+      final params = ChatIdUserIdParams(
+        chatId: event.chatId,
+        userId: event.userId,
+      );
+      final result = deleteChatUseCase(params);
+      result.then((either) {
+        either.fold(
+          (failure) => emit(ChatsError(_mapFailureToMessage(failure))),
+          (actionStatus) => emit(ChatDeleted('${actionStatus.name}')),
+        );
+      });
+    });
+
+    on<MuteChatEvent>((event, emit) {
+      emit(ChatsLoading());
+      final params = MuteChatParams(
+        currentUserId: event.currentUserId,
+        chatId: event.chatId,
+        isMuted: event.isMuted,
+      );
+      final result = muteChatUseCase(params);
+      result.then((either) {
+        either.fold(
+          (failure) => emit(ChatsError(_mapFailureToMessage(failure))),
+          (actionStatus) => emit(ChatMuted('${actionStatus.name}')),
+        );
+      });
+    });
+
+    on<UpdateLastMessageEvent>((event, emit) async{
+      emit(ChatsLoading());
+      final lastMessageTime = DateTimeConverter.stringToDateTime(event.lastMessageTime);
+      final params = UpdateLastMessageParams(
+        chatId: event.chatId,
+        lastMessageId: event.lastMessageId,
+        lastMessageText: event.lastMessageText,
+        lastMessageTime: lastMessageTime,
+      );
+      final result = await updateLastMessageUseCase(params);
+      result.fold(
+          (failure) => emit(ChatsError(_mapFailureToMessage(failure))),
+          (actionStatus) => emit(ChatLastMessageUpdated('${actionStatus.name}')),
+        );
+    });
   }
 
   String _mapFailureToMessage(Failure failure) {

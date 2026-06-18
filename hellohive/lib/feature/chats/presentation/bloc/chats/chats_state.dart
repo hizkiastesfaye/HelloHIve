@@ -65,9 +65,9 @@ final class ChatMuted extends ChatsState{
   List<Object> get props => [message];
 }
 
-final class LastMessageUpdated extends ChatsState{
+final class ChatLastMessageUpdated extends ChatsState{
   final String message;
-  LastMessageUpdated(this.message);
+  ChatLastMessageUpdated(this.message);
   @override
   List<Object> get props => [message];
 }

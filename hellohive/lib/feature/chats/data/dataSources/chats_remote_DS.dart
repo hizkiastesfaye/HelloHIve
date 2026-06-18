@@ -115,7 +115,6 @@ abstract class ChatRemoteDatasourceImpl implements ChatRemoteDatasource {
     MostChatParams params,
   ) async {
     await chats.doc(params.id).update({
-      'unreadCount': params.unreadCount,
       'mutedBy': params.mutedBy,
       'deletedBy': params.deletedBy,
       'updatedAt': FieldValue.serverTimestamp(),

@@ -76,7 +76,6 @@ class MostChatParams extends Equatable{
   final String id;
   final String userAId;
   final String userBId;
-  final Map<String, int> unreadCount;
   final Map<String, bool> mutedBy;
   final Map<String, bool> deletedBy;
   final String? lastMessageId;
@@ -87,7 +86,6 @@ class MostChatParams extends Equatable{
     required this.id,
     required this.userAId,
     required this.userBId,
-    required this.unreadCount,
     required this.mutedBy,
     required this.deletedBy,
     this.lastMessageId,
@@ -100,7 +98,6 @@ class MostChatParams extends Equatable{
     id, 
     userAId, 
     userBId, 
-    unreadCount, 
     mutedBy, 
     deletedBy, 
     lastMessageId ?? '', 

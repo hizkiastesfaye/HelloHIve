@@ -53,9 +53,6 @@ class ChatSyncServiceFromLocalToRemote {
                 id: operation.chatId,
                 userAId: operation.payload['userAId'],
                 userBId: operation.payload['userBId'],
-                unreadCount: Map<String, int>.from(
-                  operation.payload['unreadCount'],
-                ),
                 mutedBy: Map<String, bool>.from(
                   operation.payload['mutedBy'],
                 ),

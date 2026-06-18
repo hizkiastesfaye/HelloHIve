@@ -182,7 +182,6 @@ class ChatLocalDatasourceImpl extends ChatLocalDatasource{
     final chat = chatBox.get(params.id);
     if (chat != null) {
       final updatedChat = chat.copyWith(
-      unreadCount: params.unreadCount,
       mutedBy: params.mutedBy,
       deletedBy: params.deletedBy,
       updatedAt: DateTime.now(),
@@ -196,7 +195,6 @@ class ChatLocalDatasourceImpl extends ChatLocalDatasource{
         payload: {
           'userAId': params.userAId,
           'userBId': params.userBId,
-          'unreadCount': params.unreadCount,
           'mutedBy': params.mutedBy,
           'deletedBy': params.deletedBy,
           'updatedAt': DateTime.now(), // Assuming the current user is userAId, adjust as needed
