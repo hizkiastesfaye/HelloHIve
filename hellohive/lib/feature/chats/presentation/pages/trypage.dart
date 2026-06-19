@@ -1,0 +1,221 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hellohive/feature/chats/presentation/bloc/chats/chats_bloc.dart';
+
+class TryChatPage extends StatefulWidget {
+  const TryChatPage({super.key});
+
+  @override
+  State<TryChatPage> createState() => _TryChatPageState();
+}
+
+class _TryChatPageState extends State<TryChatPage> {
+  final currentUserController = TextEditingController();
+  final userBController = TextEditingController();
+
+  @override
+  void dispose() {
+    currentUserController.dispose();
+    userBController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Try Chat'),
+      ),
+      body: BlocConsumer<ChatsBloc, ChatsState>(
+        listener: (context, state) {
+          if (state is ChatCreated) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.message)),
+            );
+          }
+
+          if (state is ChatDeleted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.message)),
+            );
+          }
+
+          if (state is ChatMuted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.message)),
+            );
+          }
+
+          if (state is ChatsError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.message)),
+            );
+          }
+        },
+        builder: (context, state) {
+          return Column(
+            children: [
+              const SizedBox(height: 16),
+
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: TextField(
+                  controller: currentUserController,
+                  decoration: const InputDecoration(
+                    labelText: 'Current User Id',
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 12),
+
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: TextField(
+                  controller: userBController,
+                  decoration: const InputDecoration(
+                    labelText: 'Other User Id',
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 16),
+
+              Wrap(
+                spacing: 10,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      context.read<ChatsBloc>().add(
+                            CreateChatEvent(
+                              currentUserId:
+                                  currentUserController.text,
+                              userBId: userBController.text,
+                            ),
+                          );
+                    },
+                    child: const Text('Create Chat'),
+                  ),
+
+                  ElevatedButton(
+                    onPressed: () {
+                      context.read<ChatsBloc>().add(
+                            WatchChatsEvent(
+                              userId:
+                                  currentUserController.text,
+                            ),
+                          );
+                    },
+                    child: const Text('Watch Chats'),
+                  ),
+
+                  ElevatedButton(
+                    onPressed: () {
+                      context.read<ChatsBloc>().add(
+                            GetChatsEvent(
+                              userId:
+                                  currentUserController.text,
+                            ),
+                          );
+                    },
+                    child: const Text('Get Chats'),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 20),
+
+              if (state is ChatsLoading)
+                const Expanded(
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
+
+              if (state is WatchChats)
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: state.chats.length,
+                    itemBuilder: (context, index) {
+                      final chat = state.chats[index];
+
+                      return Card(
+                        child: ListTile(
+                          title: Text(
+                            '${chat.userAId} ↔ ${chat.userBId}',
+                          ),
+                          subtitle: Text(
+                            chat.lastMessageText ?? 'No messages',
+                          ),
+                          trailing: PopupMenuButton(
+                            itemBuilder: (_) => [
+                              const PopupMenuItem(
+                                value: 'mute',
+                                child: Text('Mute'),
+                              ),
+                              const PopupMenuItem(
+                                value: 'delete',
+                                child: Text('Delete'),
+                              ),
+                            ],
+                            onSelected: (value) {
+                              if (value == 'mute') {
+                                context.read<ChatsBloc>().add(
+                                      MuteChatEvent(
+                                        currentUserId:
+                                            currentUserController.text,
+                                        chatId: chat.id,
+                                        isMuted: true,
+                                      ),
+                                    );
+                              }
+
+                              if (value == 'delete') {
+                                context.read<ChatsBloc>().add(
+                                      DeleteChatEvent(
+                                        chatId: chat.id,
+                                        userId:
+                                            currentUserController.text,
+                                      ),
+                                    );
+                              }
+                            },
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+
+              if (state is ChatsLoaded)
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: state.chats.length,
+                    itemBuilder: (context, index) {
+                      final chat = state.chats[index];
+
+                      return ListTile(
+                        title: Text(chat.id),
+                        subtitle: Text(
+                          chat.lastMessageText ?? 'No messages',
+                        ),
+                      );
+                    },
+                  ),
+                ),
+
+              if (state is ChatLoaded)
+                Expanded(
+                  child: Center(
+                    child: Text(
+                      'Chat: ${state.chat.id}',
+                    ),
+                  ),
+                ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+}

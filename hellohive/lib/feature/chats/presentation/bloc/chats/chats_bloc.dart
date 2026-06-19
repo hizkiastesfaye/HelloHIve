@@ -93,7 +93,6 @@ class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
     });
 
     on<WatchChatsEvent>((event, emit) async{
-      emit(ChatsLoading());
       final params = UserIdParams(userId: event.userId);
       final result = await watchChatsUseCase(params);
       await emit.forEach(
