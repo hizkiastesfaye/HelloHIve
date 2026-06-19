@@ -89,7 +89,7 @@ class _TryChatPageState extends State<TryChatPage> {
                       context.read<ChatsBloc>().add(
                             CreateChatEvent(
                               currentUserId:
-                                  currentUserController.text,
+                              currentUserController.text,
                               userBId: userBController.text,
                             ),
                           );
@@ -97,17 +97,17 @@ class _TryChatPageState extends State<TryChatPage> {
                     child: const Text('Create Chat'),
                   ),
 
-                  ElevatedButton(
-                    onPressed: () {
-                      context.read<ChatsBloc>().add(
-                            WatchChatsEvent(
-                              userId:
-                                  currentUserController.text,
-                            ),
-                          );
-                    },
-                    child: const Text('Watch Chats'),
-                  ),
+                  // ElevatedButton(
+                  //   onPressed: () {
+                  //     context.read<ChatsBloc>().add(
+                  //           WatchChatsEvent(
+                  //             userId:
+                  //                 currentUserController.text,
+                  //           ),
+                  //         );
+                  //   },
+                  //   child: const Text('Watch Chats'),
+                  // ),
 
                   ElevatedButton(
                     onPressed: () {

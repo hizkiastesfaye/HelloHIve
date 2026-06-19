@@ -3,7 +3,7 @@ import 'package:hellohive/feature/chats/chats_core/chats_core.dart';
 import 'package:hellohive/feature/chats/data/dataSources/abstract_remote_DS.dart';
 import 'package:hellohive/feature/chats/data/models/chats_model.dart';
 
-abstract class ChatRemoteDatasourceImpl implements ChatRemoteDatasource {
+class ChatRemoteDatasourceImpl implements ChatRemoteDatasource {
   final FirebaseFirestore firestore;
 
   ChatRemoteDatasourceImpl({required this.firestore});
@@ -11,25 +11,36 @@ abstract class ChatRemoteDatasourceImpl implements ChatRemoteDatasource {
   @override
   Future<ActionStatus> createChat(UsersChatParams params)async {
     try {
+      print('-----------------Chat created in remote datasource------------------');
+
       final chatId = generateChatId(params.currentUserId, params.userBId);
       final chatDoc = chats.doc(chatId);
-      final existDoc = await chatDoc.get();
+      // final existDoc = await chatDoc.get();
+      final Map<String,bool> stat = {params.currentUserId:false,params.userBId:false};
       final chatData = {
         'id':chatId,
         'userAId': params.currentUserId,
         'userBId': params.userBId,
         'unreadCount': {},
-        'mutedBy': {},
-        'deletedBy': {},
+        'mutedBy': stat,
+        'deletedBy': stat,
         'createdAt': DateTime.now(),
         'updatedAt': DateTime.now(),
-        'lastMessageId': null,
-        'lastMessageText': null,
-        'lastMessageTime': null,
+        'lastMessageId': '',
+        'lastMessageText': '',
+        'lastMessageTime': '',
       };
-      if (!existDoc.exists){
-        await chatDoc.set(chatData);
-      }
+      await chatDoc.set(chatData, SetOptions(merge: true));
+      // if (!existDoc.exists){
+      //   await chatDoc.set(chatData);
+      // }
+
+      print('-----------------Chat created in remote datasource------------------');
+      print('-----------------Chat created in remote datasource------------------');
+      print('-----------------Chat created in remote datasource------------------');
+      print('${params.currentUserId} and ${params.userBId} ');
+      print('-----------------Chat created in remote datasource------------------');
+      print('-----------------Chat created in remote datasource------------------');
 
       return ActionStatus.success;
     } catch (e) {

@@ -7,6 +7,8 @@ import 'package:hellohive/feature/auth/presentation/pages/forgot_password_page.d
 import 'package:hellohive/feature/auth/presentation/pages/sign_in_page.dart';
 import 'package:hellohive/feature/auth/presentation/pages/sign_up_page.dart';
 import 'package:hellohive/feature/chats/data/models/hive_model.dart';
+import 'package:hellohive/feature/chats/presentation/bloc/chats/chats_bloc.dart';
+import 'package:hellohive/feature/chats/presentation/pages/trypage.dart';
 import 'package:hellohive/feature/settings/presentation/pages/add_profile_pages.dart';
 import 'package:hellohive/home_page.dart';
 import 'package:hellohive/feature/settings/presentation/pages/userProfile_pages.dart';
@@ -21,13 +23,26 @@ import 'injection_container.dart' as di;
 import 'login.dart';
 
 
-void initHive() async {
-  await Hive.initFlutter();
-  Hive.registerAdapter(ChatHiveModelAdapter());
-  // Register other adapters as needed
-}
+// void initHive() async {
+//   await Hive.initFlutter();
+//   Hive.registerAdapter(ChatHiveModelAdapter());
+
+//   Hive.registerAdapter(ChatSyncOperationAdapter());
+
+//   await Hive.openBox<ChatHiveModel>('chatBox');
+//   await Hive.openBox<ChatSyncOperation>('operationsBox');
+//   // Register other adapters as needed
+// }
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+  Hive.registerAdapter(ChatHiveModelAdapter());
+
+  Hive.registerAdapter(ChatSyncOperationAdapter());
+
+  await Hive.openBox<ChatHiveModel>('chatBox');
+  await Hive.openBox<ChatSyncOperation>('operationsBox');
+
   try {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
@@ -49,7 +64,8 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (context) => di.sl<AuthBloc>()),
         BlocProvider(create:(context) => di.sl<UserProfileBlocBloc>()),
-        BlocProvider(create: (context) => di.sl<FriendsBloc>())
+        BlocProvider(create: (context) => di.sl<FriendsBloc>()),
+        BlocProvider(create: (context) => di.sl<ChatsBloc>()),
       ],
       child: MaterialApp(
         // title: 'Hello Hive',
@@ -98,6 +114,7 @@ class MyApp extends StatelessWidget {
           '/resetPassword' :(context)=> const ForgotPasswordPage(),
           '/userProfile':(context) => UserProfilePage(),
           '/addUserProfile':(context)=> AddProfilePages(),
+          // '/tryChat':(context) => TryChatPage(),
         },
       ),
     );

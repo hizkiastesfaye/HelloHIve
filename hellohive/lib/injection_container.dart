@@ -8,6 +8,15 @@ import 'package:hellohive/feature/auth/data/repositories/auth_repositories_impl.
 import 'package:hellohive/feature/auth/domain/repositories/auth_repositories.dart';
 import 'package:hellohive/feature/auth/domain/usecases/auth_usecases.dart';
 import 'package:hellohive/feature/auth/presentation/bloc/bloc/auth_bloc.dart';
+import 'package:hellohive/feature/chats/data/dataSources/abstract_local_Ds.dart';
+import 'package:hellohive/feature/chats/data/dataSources/abstract_remote_DS.dart';
+import 'package:hellohive/feature/chats/data/dataSources/chats_local_DS.dart';
+import 'package:hellohive/feature/chats/data/dataSources/chats_remote_DS.dart';
+import 'package:hellohive/feature/chats/data/models/hive_model.dart';
+import 'package:hellohive/feature/chats/data/repositories/chats_repo_impl.dart';
+import 'package:hellohive/feature/chats/domain/repositories/chats_repositories.dart';
+import 'package:hellohive/feature/chats/domain/usecases/chats_usecases.dart';
+import 'package:hellohive/feature/chats/presentation/bloc/chats/chats_bloc.dart';
 import 'package:hellohive/feature/friends/data/datasources/friends_local_DS.dart';
 import 'package:hellohive/feature/friends/data/datasources/friends_remote_DS.dart';
 import 'package:hellohive/feature/friends/data/repositories/friends_repo_impl.dart';
@@ -20,6 +29,7 @@ import 'package:hellohive/feature/settings/data/repositories/user_profile_repo_i
 import 'package:hellohive/feature/settings/domain/repositories/user_profile_repo.dart';
 import 'package:hellohive/feature/settings/domain/usecases/user_profile_useCase.dart';
 import 'package:hellohive/feature/settings/presentation/bloc/user_profile_bloc_bloc.dart';
+import 'package:hive/hive.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -37,6 +47,13 @@ Future<void> init() async{
   sl.registerLazySingleton(()=>FirebaseDatabase.instance);
   final sharedInstance = await SharedPreferences.getInstance();
   sl.registerLazySingleton<SharedPreferences>(()=>sharedInstance);
+  sl.registerLazySingleton<Box<ChatHiveModel>>(
+    () => Hive.box<ChatHiveModel>('chatBox'),
+  );
+
+  sl.registerLazySingleton<Box<ChatSyncOperation>>(
+    () => Hive.box<ChatSyncOperation>('operationsBox'),
+  );
 
   //! Features - Auth
   //? Auth Bloc
@@ -138,4 +155,52 @@ Future<void> init() async{
   //? Friends Data Sources
   sl.registerLazySingleton<FriendsLocalDS>(()=>FriendsLocalDsImpl(sharedPreferences: sl()));
   sl.registerLazySingleton<FriendsRemoteDS>(()=>FriendsRemoteDsImpl(sl()));
+
+
+  //! Features - Chats
+  //? Chats Bloc
+  sl.registerFactory(()=>ChatsBloc(
+    createChatUseCase: sl(),
+    getChatUseCase: sl(),
+    getChatsUseCase: sl(),
+    getChatByIdUseCase: sl(),
+    watchChatsUseCase: sl(),
+    updateChatUseCase: sl(),
+    deleteChatUseCase: sl(),
+    muteChatUseCase: sl(),
+    updateLastMessageUseCase: sl(),
+  ));
+
+  //? Chats Usecases
+  sl.registerLazySingleton(()=>CreateChatUseCase(sl())); 
+  sl.registerLazySingleton(()=>GetChatUseCase(sl()));
+  sl.registerLazySingleton(()=>GetChatsUseCase(sl()));
+  sl.registerLazySingleton(()=>GetChatByIdUseCase(sl()));
+  sl.registerLazySingleton(()=>WatchChatsUseCase(sl()));
+  sl.registerLazySingleton(()=>UpdateChatUseCase(sl()));
+  sl.registerLazySingleton(()=>DeleteChatUseCase(sl()));
+  sl.registerLazySingleton(()=>MuteChatUseCase(sl()));
+  sl.registerLazySingleton(()=>UpdateLastMessageUseCase(sl()));
+
+  //? Chats Repositories
+  sl.registerLazySingleton<ChatRepository>(()=>ChatsRepoImpl(
+    localDatasource: sl(),
+    remoteDatasource: sl(),
+    networkInfo: sl()
+  ));
+
+  //? Chats Data Sources
+  sl.registerLazySingleton<ChatLocalDatasource>(
+    () => ChatLocalDatasourceImpl(
+      chatBox: sl(),
+      operationsBox: sl(),
+    ),
+  );
+
+  sl.registerLazySingleton<ChatRemoteDatasource>(
+    ()=>ChatRemoteDatasourceImpl(
+      firestore: sl(),
+    )
+  );
+
 }

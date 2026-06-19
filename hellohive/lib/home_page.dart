@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hellohive/feature/chats/presentation/pages/trypage.dart';
 import 'package:hellohive/feature/friends/presentation/pages/friendsPage.dart';
 import 'package:hellohive/feature/settings/presentation/bloc/user_profile_bloc_bloc.dart';
 import 'package:hellohive/feature/settings/presentation/pages/settingsPage.dart';
@@ -30,6 +31,15 @@ class _HomePageState extends State<HomePage> {
               Navigator.pushNamed(context, '/oldLogin');
             },
             child: Text('Go to Login'),
+          ),
+
+          Text('Try Chats Page'),
+          ElevatedButton(
+            onPressed: () {
+              // Navigator.pushNamed(context, '/tryChat');
+              Navigator.push(context, MaterialPageRoute(builder: (context) => TryChatPage()));
+            },
+            child: Text('Go to Try Chat'),
           ),
         ],
       );
@@ -66,6 +76,7 @@ class _HomePageState extends State<HomePage> {
           print('-----------------user profile loaded in home page------------------');
           print('-----------------user profile loaded in home page------------------');
           print('User Profile: ${state.userProfiles.firstName} ${state.userProfiles.lastName}');
+          print('User Profile: ${state.userProfiles.uId}');
           print('-----------------user profile loaded in home page------------------');
           print('-----------------user profile loaded in home page------------------');
 
