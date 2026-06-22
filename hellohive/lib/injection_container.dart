@@ -10,6 +10,7 @@ import 'package:hellohive/feature/auth/domain/usecases/auth_usecases.dart';
 import 'package:hellohive/feature/auth/presentation/bloc/bloc/auth_bloc.dart';
 import 'package:hellohive/feature/chats/data/dataSources/abstract_local_Ds.dart';
 import 'package:hellohive/feature/chats/data/dataSources/abstract_remote_DS.dart';
+import 'package:hellohive/feature/chats/data/dataSources/chat_sync_service.dart';
 import 'package:hellohive/feature/chats/data/dataSources/chats_local_DS.dart';
 import 'package:hellohive/feature/chats/data/dataSources/chats_remote_DS.dart';
 import 'package:hellohive/feature/chats/data/models/hive_model.dart';
@@ -181,12 +182,15 @@ Future<void> init() async{
   sl.registerLazySingleton(()=>DeleteChatUseCase(sl()));
   sl.registerLazySingleton(()=>MuteChatUseCase(sl()));
   sl.registerLazySingleton(()=>UpdateLastMessageUseCase(sl()));
+  sl.registerLazySingleton(()=>ChatSync(sl()));
 
   //? Chats Repositories
   sl.registerLazySingleton<ChatRepository>(()=>ChatsRepoImpl(
     localDatasource: sl(),
     remoteDatasource: sl(),
-    networkInfo: sl()
+    networkInfo: sl(),
+    syncFromLToR: sl(),
+    syncFromRtoL: sl()
   ));
 
   //? Chats Data Sources
@@ -202,5 +206,16 @@ Future<void> init() async{
       firestore: sl(),
     )
   );
+
+  //?ChatSyncService
+  sl.registerLazySingleton(()=>ChatSyncServiceFromLocalToRemote(
+    localDatasource: sl(),
+    remoteDatasource: sl(),
+  ));
+
+  sl.registerLazySingleton(()=>ChatSyncServiceFromRemoteToLocal(
+    localDatasource: sl(),
+    remoteDatasource: sl(),
+  ));
 
 }

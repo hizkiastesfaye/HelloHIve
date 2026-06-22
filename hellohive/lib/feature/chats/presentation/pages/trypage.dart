@@ -114,7 +114,8 @@ class _TryChatPageState extends State<TryChatPage> {
                       context.read<ChatsBloc>().add(
                             GetChatsEvent(
                               userId:
-                                  currentUserController.text,
+                                  // currentUserController.text,
+                                  'kFe0FXpgqsZDWLM6g45nCzm1Wnl1'
                             ),
                           );
                     },

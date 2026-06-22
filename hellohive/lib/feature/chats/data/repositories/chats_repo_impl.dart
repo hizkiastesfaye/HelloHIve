@@ -5,6 +5,7 @@ import 'package:hellohive/core/network/netowork_info.dart';
 import 'package:hellohive/feature/chats/chats_core/chats_core.dart';
 import 'package:hellohive/feature/chats/data/dataSources/abstract_local_Ds.dart';
 import 'package:hellohive/feature/chats/data/dataSources/abstract_remote_DS.dart';
+import 'package:hellohive/feature/chats/data/dataSources/chat_sync_service.dart';
 import 'package:hellohive/feature/chats/domain/entities/chats_entities.dart';
 import 'package:hellohive/feature/chats/domain/repositories/chats_repositories.dart';
 
@@ -13,10 +14,15 @@ class ChatsRepoImpl implements ChatRepository {
   final ChatRemoteDatasource remoteDatasource;
   final NetworkInfo networkInfo;
 
+  final ChatSyncServiceFromLocalToRemote syncFromLToR;
+  final ChatSyncServiceFromRemoteToLocal syncFromRtoL;
+
   ChatsRepoImpl({
     required this.localDatasource,
     required this.remoteDatasource,
     required this.networkInfo,
+    required this.syncFromLToR,
+    required this.syncFromRtoL
   });
 
   @override
@@ -54,6 +60,16 @@ class ChatsRepoImpl implements ChatRepository {
   ) async {
     try {
         final result = await localDatasource.getChats(params);
+        if(result.isEmpty || result == null){
+          print('nuuuuuuuuuuuuuuuuuuuuuuuuuuuuul');
+        }
+        print(')))))))))))))))))))))');
+        print(')))))))))))))))))))))');
+        for(final i in result){
+          print(i.id);
+        }
+        print(')))))))))))))))))))))');
+        print(')))))))))))))))))))))');
         return Right(result);
     } catch (e) {
       return Left(ServerFailure(e.toString()));
@@ -139,6 +155,24 @@ class ChatsRepoImpl implements ChatRepository {
         await localDatasource.updateLastMessage(params);
         return Right(ActionStatus.pending);
       }
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> chatSync(
+    UserIdParams params,
+  ) async {
+    try {
+      if (await networkInfo.isConnected) {
+        await syncFromRtoL.getChatsFromRemote(params);
+        await syncFromLToR.syncChats();
+
+        return const Right(null);
+      }
+
+      return Left(NetworkFailure());
     } catch (e) {
       return Left(ServerFailure(e.toString()));
     }

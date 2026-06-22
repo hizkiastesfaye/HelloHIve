@@ -73,7 +73,16 @@ class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
       final result = await getChatsUseCase(params);
       result.fold(
           (failure) => emit(ChatsError(_mapFailureToMessage(failure))),
-          (chats) => emit(ChatsLoaded(chats)),
+          (chats){ 
+            print('++++++++++++++++++++++++++++++++++');
+            print('++++++++++++++++++++++++++++++++++');
+            for (final ch in chats){
+              print(ch);
+            }
+            print('++++++++++++++++++++++++++++++++++');
+            print('++++++++++++++++++++++++++++++++++');
+
+            emit(ChatsLoaded(chats));}
         );
     });
 

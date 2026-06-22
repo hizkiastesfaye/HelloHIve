@@ -12,13 +12,23 @@ class ChatSyncServiceFromRemoteToLocal {
     required this.remoteDatasource,
   });
 
-  void startChatSync(String userId) {
+  void startChatSync(UserIdParams params) {
     remoteDatasource
-        .watchChats(userId)
+        .watchChats(params.userId)
         .listen((remoteChats) async {
 
       await localDatasource.cacheChats(remoteChats);
     });
+  }
+
+  Future<void> getChatsFromRemote(UserIdParams params) async{
+    final chats = await remoteDatasource.getChats(params);
+    localDatasource.cacheChats(chats);
+  }
+
+  Future<void> getChatFromRemote(UsersChatParams params) async{
+    final chat = await remoteDatasource.getChat(params);
+    localDatasource.cacheChat(chat);
   }
 }
 

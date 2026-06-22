@@ -1,5 +1,6 @@
 
 import 'package:dartz/dartz.dart';
+import 'package:dartz/dartz_unsafe.dart';
 import 'package:hellohive/core/errors/failure.dart';
 import 'package:hellohive/core/usecases/usecase.dart';
 import 'package:hellohive/feature/chats/chats_core/chats_core.dart';
@@ -103,5 +104,15 @@ class UpdateLastMessageUseCase extends UseCase<ActionStatus, UpdateLastMessagePa
   @override
   Future<Either<Failure,ActionStatus>> call(UpdateLastMessageParams params){
     return chatRepository.updateLastMessage(params);
+  }
+}
+
+class ChatSync extends UseCase<void, UserIdParams>{
+  final ChatRepository chatRepository;
+  ChatSync(this.chatRepository);
+
+  @override
+  Future<Either<Failure,void>> call(UserIdParams params){
+    return chatRepository.chatSync(params);
   }
 }
