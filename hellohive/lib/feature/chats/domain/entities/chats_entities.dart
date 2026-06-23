@@ -2,8 +2,7 @@ import 'package:equatable/equatable.dart';
 
 class ChatsEntities extends Equatable{
   final String id;
-  final String userAId;
-  final String userBId;
+  final List<String> participants;
   final Map<String, int> unreadCount;
   final Map<String, bool> mutedBy;
   final Map<String, bool> deletedBy;
@@ -15,8 +14,7 @@ class ChatsEntities extends Equatable{
 
   ChatsEntities({
     required this.id,
-    required this.userAId,
-    required this.userBId,
+    required this.participants,
     required this.unreadCount,
     required this.mutedBy,
     required this.deletedBy,
@@ -29,8 +27,7 @@ class ChatsEntities extends Equatable{
   @override
   List<Object?> get props => [
     id,
-    userAId,
-    userBId,
+    participants,
     unreadCount,
     mutedBy,
     deletedBy,

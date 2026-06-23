@@ -143,7 +143,7 @@ class _TryChatPageState extends State<TryChatPage> {
                       return Card(
                         child: ListTile(
                           title: Text(
-                            '${chat.userAId} ↔ ${chat.userBId}',
+                            '${chat.participants[0]} ↔ ${chat.participants[1]}',
                           ),
                           subtitle: Text(
                             chat.lastMessageText ?? 'No messages',
@@ -152,7 +152,7 @@ class _TryChatPageState extends State<TryChatPage> {
                             itemBuilder: (_) => [
                               const PopupMenuItem(
                                 value: 'mute',
-                                child: Text('Mute'),
+                                child: Text('Mute')
                               ),
                               const PopupMenuItem(
                                 value: 'delete',

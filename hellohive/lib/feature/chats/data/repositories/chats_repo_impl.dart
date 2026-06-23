@@ -161,7 +161,7 @@ class ChatsRepoImpl implements ChatRepository {
   }
 
   @override
-  Future<Either<Failure, void>> chatSync(
+  Future<Either<Failure, Unit>> chatSync(
     UserIdParams params,
   ) async {
     try {
@@ -169,7 +169,7 @@ class ChatsRepoImpl implements ChatRepository {
         await syncFromRtoL.getChatsFromRemote(params);
         await syncFromLToR.syncChats();
 
-        return const Right(null);
+        return const Right(unit);
       }
 
       return Left(NetworkFailure());

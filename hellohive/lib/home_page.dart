@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hellohive/feature/chats/presentation/bloc/chats/chats_bloc.dart';
 import 'package:hellohive/feature/chats/presentation/pages/trypage.dart';
 import 'package:hellohive/feature/friends/presentation/pages/friendsPage.dart';
 import 'package:hellohive/feature/settings/presentation/bloc/user_profile_bloc_bloc.dart';
@@ -37,7 +38,11 @@ class _HomePageState extends State<HomePage> {
           ElevatedButton(
             onPressed: () {
               // Navigator.pushNamed(context, '/tryChat');
+              context.read<ChatsBloc>().add(
+                ChatSyncEvent('kFe0FXpgqsZDWLM6g45nCzm1Wnl1')
+              );
               Navigator.push(context, MaterialPageRoute(builder: (context) => TryChatPage()));
+              
             },
             child: Text('Go to Try Chat'),
           ),

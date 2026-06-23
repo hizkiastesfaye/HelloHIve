@@ -4,8 +4,7 @@ import 'package:hellohive/feature/chats/domain/entities/chats_entities.dart';
 class ChatModel extends ChatsEntities {
   ChatModel({
     required String id,
-    required String userAId,
-    required String userBId,
+    required List<String> participants,
     required Map<String, int> unreadCount,
     required Map<String, bool> mutedBy,
     required Map<String, bool> deletedBy,
@@ -16,8 +15,7 @@ class ChatModel extends ChatsEntities {
     DateTime? lastMessageTime,
   }) : super(
     id: id,
-    userAId: userAId,
-    userBId: userBId,
+    participants:participants,
     unreadCount: unreadCount,
     mutedBy: mutedBy,
     deletedBy: deletedBy,
@@ -31,8 +29,7 @@ class ChatModel extends ChatsEntities {
   factory ChatModel.fromJson(Map<String, dynamic> json) {
     return ChatModel(
       id: json['id'],
-      userAId: json['userAId'],
-      userBId: json['userBId'],
+      participants: List<String>.from(json['participants']),
       unreadCount: Map<String, int>.from(json['unreadCount']),
       mutedBy: Map<String, bool>.from(json['mutedBy']),
       deletedBy: Map<String, bool>.from(json['deletedBy']),
@@ -47,8 +44,7 @@ class ChatModel extends ChatsEntities {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'userAId': userAId,
-      'userBId': userBId,
+      'participants':participants,
       'unreadCount': unreadCount,
       'mutedBy': mutedBy,
       'deletedBy': deletedBy,

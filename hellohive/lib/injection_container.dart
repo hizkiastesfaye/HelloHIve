@@ -170,6 +170,7 @@ Future<void> init() async{
     deleteChatUseCase: sl(),
     muteChatUseCase: sl(),
     updateLastMessageUseCase: sl(),
+    chatSyncUsecase: sl()
   ));
 
   //? Chats Usecases
@@ -182,7 +183,7 @@ Future<void> init() async{
   sl.registerLazySingleton(()=>DeleteChatUseCase(sl()));
   sl.registerLazySingleton(()=>MuteChatUseCase(sl()));
   sl.registerLazySingleton(()=>UpdateLastMessageUseCase(sl()));
-  sl.registerLazySingleton(()=>ChatSync(sl()));
+  sl.registerLazySingleton(()=>ChatSyncUsecase(sl()));
 
   //? Chats Repositories
   sl.registerLazySingleton<ChatRepository>(()=>ChatsRepoImpl(

@@ -107,12 +107,12 @@ class UpdateLastMessageUseCase extends UseCase<ActionStatus, UpdateLastMessagePa
   }
 }
 
-class ChatSync extends UseCase<void, UserIdParams>{
+class ChatSyncUsecase extends UseCase<Unit, UserIdParams>{
   final ChatRepository chatRepository;
-  ChatSync(this.chatRepository);
+  ChatSyncUsecase(this.chatRepository);
 
   @override
-  Future<Either<Failure,void>> call(UserIdParams params){
+  Future<Either<Failure,Unit>> call(UserIdParams params){
     return chatRepository.chatSync(params);
   }
 }

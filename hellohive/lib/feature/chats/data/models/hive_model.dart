@@ -11,48 +11,43 @@ class ChatHiveModel extends ChatModel {
 
   @HiveField(1)
   @override
-  final String userAId;
+  final List<String> participants;
 
   @HiveField(2)
   @override
-  final String userBId;
+  final Map<String, int> unreadCount;
 
   @HiveField(3)
   @override
-  final Map<String, int> unreadCount;
+  final Map<String, bool> mutedBy;
 
   @HiveField(4)
   @override
-  final Map<String, bool> mutedBy;
+  final Map<String, bool> deletedBy;
 
   @HiveField(5)
   @override
-  final Map<String, bool> deletedBy;
+  final DateTime createdAt;
 
   @HiveField(6)
   @override
-  final DateTime createdAt;
+  final DateTime updatedAt;
 
   @HiveField(7)
   @override
-  final DateTime updatedAt;
+  final String? lastMessageId;
 
   @HiveField(8)
   @override
-  final String? lastMessageId;
-
-  @HiveField(9)
-  @override
   final String? lastMessageText;
 
-  @HiveField(10)
+  @HiveField(9)
   @override
   final DateTime? lastMessageTime;
 
   ChatHiveModel({
     required this.id,
-    required this.userAId,
-    required this.userBId,
+    required this.participants,
     required this.unreadCount,
     required this.mutedBy,
     required this.deletedBy,
@@ -63,8 +58,7 @@ class ChatHiveModel extends ChatModel {
     this.lastMessageTime,
   }) : super(
           id: id,
-          userAId: userAId,
-          userBId: userBId,
+          participants: participants,
           unreadCount: unreadCount,
           mutedBy: mutedBy,
           deletedBy: deletedBy,
@@ -77,8 +71,7 @@ class ChatHiveModel extends ChatModel {
 
   ChatHiveModel copyWith({
   String? id,
-  String? userAId,
-  String? userBId,
+  List<String>? participants,
   Map<String, int>? unreadCount,
   Map<String, bool>? mutedBy,
   Map<String, bool>? deletedBy,
@@ -90,8 +83,7 @@ class ChatHiveModel extends ChatModel {
   }) {
     return ChatHiveModel(
       id: id ?? this.id,
-      userAId: userAId ?? this.userAId,
-      userBId: userBId ?? this.userBId,
+      participants: participants ?? this.participants,
       unreadCount: unreadCount ?? this.unreadCount,
       mutedBy: mutedBy ?? this.mutedBy,
       deletedBy: deletedBy ?? this.deletedBy,
@@ -108,8 +100,7 @@ extension ChatHiveModelMapper on ChatHiveModel {
   ChatModel toDomain() {
     return ChatModel(
       id: id,
-      userAId: userAId,
-      userBId: userBId,
+      participants:participants,
       unreadCount: unreadCount,
       mutedBy: mutedBy,
       deletedBy: deletedBy,
@@ -126,8 +117,7 @@ extension ChatModelMapper on ChatModel {
   ChatHiveModel toHive({String? hiveId, bool isPendingSync = false}) {
     return ChatHiveModel( // Use domain ID as Hive ID if not provided
       id: id,
-      userAId: userAId,
-      userBId: userBId,
+      participants:participants,
       unreadCount: unreadCount,
       mutedBy: mutedBy,
       deletedBy: deletedBy,

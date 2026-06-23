@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hellohive/feature/chats/chats_core/chats_core.dart';
 import 'package:hellohive/feature/chats/data/dataSources/abstract_remote_DS.dart';
 import 'package:hellohive/feature/chats/data/models/chats_model.dart';
@@ -8,6 +9,7 @@ class ChatRemoteDatasourceImpl implements ChatRemoteDatasource {
 
   ChatRemoteDatasourceImpl({required this.firestore});
   CollectionReference get chats => firestore.collection('chats');
+  final currentUser = FirebaseAuth.instance.currentUser;
   @override
   Future<ActionStatus> createChat(UsersChatParams params)async {
     try {
@@ -48,35 +50,35 @@ class ChatRemoteDatasourceImpl implements ChatRemoteDatasource {
     }
 
   }
-  @override
-  Stream<List<ChatModel>> watchChats(
-    String userId,
+@override
+Stream<List<ChatModel>> watchChats(
+  String userId,
   ) {
-    return chats.snapshots().map((snapshot) {
-      return snapshot.docs
-          .map(
-            (doc) => ChatModel.fromJson(
-              doc.data() as Map<String, dynamic>,
-            ),
-          )
-          .where(
-            (chat) =>
-                chat.userAId == userId ||
-                chat.userBId == userId,
-          )
-          .toList();
-    });
+    return chats
+        .where(
+          'participants',
+          arrayContains: userId,
+        )
+        .snapshots()
+        .map(
+          (snapshot) => snapshot.docs
+              .map(
+                (doc) => ChatModel.fromJson(
+                  doc.data() as Map<String, dynamic>,
+                ),
+              )
+              .toList(),
+        );
   }
   @override
   Future<ChatModel> getChat(
     UsersChatParams params,
   ) async {
-    final users = [
-      params.currentUserId,
-      params.userBId,
-    ]..sort();
 
-    final chatId = generateChatId(users[0], users[1]);
+    final chatId = generateChatId(
+      params.currentUserId, 
+      params.userBId,
+      );
 
     final doc = await chats.doc(chatId).get();
 
@@ -92,18 +94,18 @@ class ChatRemoteDatasourceImpl implements ChatRemoteDatasource {
   Future<List<ChatModel>> getChats(
     UserIdParams params,
   ) async {
-    final snapshot = await chats.get();
+    final snapshot = await chats
+        .where(
+          'participants',
+          arrayContains: params.userId,
+        )
+        .get();
 
     return snapshot.docs
         .map(
           (doc) => ChatModel.fromJson(
             doc.data() as Map<String, dynamic>,
           ),
-        )
-        .where(
-          (chat) =>
-              chat.userAId == params.userId ||
-              chat.userBId == params.userId,
         )
         .toList();
   }

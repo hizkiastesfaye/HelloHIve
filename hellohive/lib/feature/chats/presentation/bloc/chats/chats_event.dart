@@ -135,3 +135,11 @@ class UpdateLastMessageEvent extends ChatsEvent{
   @override
   List<Object> get props => [chatId,lastMessageId,lastMessageText,lastMessageTime];
 }
+
+class ChatSyncEvent extends ChatsEvent{
+  final String userId;
+  ChatSyncEvent(this.userId);
+
+  @override
+  List<Object> get props => [userId];
+}

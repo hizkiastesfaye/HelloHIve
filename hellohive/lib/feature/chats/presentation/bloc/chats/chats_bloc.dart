@@ -29,6 +29,7 @@ class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
   final DeleteChatUseCase deleteChatUseCase;
   final MuteChatUseCase muteChatUseCase;
   final UpdateLastMessageUseCase updateLastMessageUseCase;
+  final ChatSyncUsecase chatSyncUsecase;
   ChatsBloc({
     required this.createChatUseCase,
     required this.getChatUseCase,
@@ -39,6 +40,7 @@ class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
     required this.deleteChatUseCase,
     required this.muteChatUseCase,
     required this.updateLastMessageUseCase,
+    required this.chatSyncUsecase
   }) : super(ChatsInitial()) {
     on<CreateChatEvent>((event, emit) async {
       emit(ChatsLoading());
@@ -179,6 +181,16 @@ class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
           (failure) => emit(ChatsError(_mapFailureToMessage(failure))),
           (actionStatus) => emit(ChatLastMessageUpdated('${actionStatus.name}')),
         );
+    });
+
+    on<ChatSyncEvent>((event,emit) async{
+      emit(ChatsLoading());
+      final params = UserIdParams(userId: event.userId);
+      final result = await chatSyncUsecase(params);
+      result.fold(
+        (failure)=> emit(ChatsError(_mapFailureToMessage(failure))),
+        (unit)=>emit(ChatSynced('success'))
+      );
     });
   }
 

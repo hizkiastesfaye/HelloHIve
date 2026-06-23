@@ -18,5 +18,5 @@ abstract class ChatRepository {
 
   Future<Either<Failure,ActionStatus>> muteChat(MuteChatParams params);
   Future<Either<Failure,ActionStatus>> updateLastMessage(UpdateLastMessageParams params,);
-  Future<Either<Failure,void>> chatSync(UserIdParams params);
+  Future<Either<Failure,Unit>> chatSync(UserIdParams params);
 }

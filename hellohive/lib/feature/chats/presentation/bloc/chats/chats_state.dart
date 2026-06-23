@@ -72,6 +72,14 @@ final class ChatLastMessageUpdated extends ChatsState{
   List<Object> get props => [message];
 }
 
+final class ChatSynced extends ChatsState{
+  final String message;
+  ChatSynced(this.message);
+
+  @override
+  List<Object> get props => [message];
+}
+
 final class ChatsError extends ChatsState{
   final String message;
   ChatsError(this.message);

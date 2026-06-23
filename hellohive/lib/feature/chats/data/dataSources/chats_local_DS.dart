@@ -18,11 +18,10 @@ class ChatLocalDatasourceImpl extends ChatLocalDatasource{
   Future<ActionStatus> createPendingChat(
     UsersChatParams params,
   ) async {
-    
+    List<String> participants = [params.currentUserId,params.userBId];
     final chat = ChatModel(
       id: generateChatId(params.currentUserId, params.userBId),
-      userAId: params.currentUserId,
-      userBId: params.userBId,
+      participants: participants,
       unreadCount: {},
       mutedBy: {},
       deletedBy: {},
@@ -57,26 +56,29 @@ class ChatLocalDatasourceImpl extends ChatLocalDatasource{
     return ActionStatus.pending;
   }
     
-  @override
-  Stream<List<ChatModel>> watchChats(
-    UserIdParams params,
-  ) async* {
-    yield await getChats(params);
+@override
+Stream<List<ChatModel>> watchChats(
+  UserIdParams params,
+) async* {
+  yield await getChats(params);
 
-    yield* chatBox.watch().map((_) {
-      return chatBox.values
-          .where(
-            (chat) =>
-                chat.userAId == params.userId ||
-                chat.userBId == params.userId,
-          )
-          .map((e) => e.toDomain())
-          .toList()
-        ..sort(
-          (a, b) => b.updatedAt.compareTo(a.updatedAt),
-        );
-    });
-  }
+  yield* chatBox.watch().map((_) {
+    return chatBox.values
+        .where(
+          (chat) => chat.participants.contains(
+            params.userId,
+          ),
+        )
+        .map((e) => e.toDomain())
+        .toList()
+      ..sort(
+        (a, b) => (b.lastMessageTime ?? b.updatedAt)
+            .compareTo(
+              a.lastMessageTime ?? a.updatedAt,
+            ),
+      );
+  });
+}
 
 
   @override
@@ -133,20 +135,22 @@ class ChatLocalDatasourceImpl extends ChatLocalDatasource{
   }
 
 
-  @override
-  Future<ChatModel> getChat(
-    UsersChatParams params,
-  ) async {
-    final chat = chatBox.values.firstWhere(
-      (chat) =>
-          (chat.userAId == params.currentUserId &&
-              chat.userBId == params.userBId) ||
-          (chat.userAId == params.userBId &&
-              chat.userBId == params.currentUserId),
-    );
+@override
+Future<ChatModel> getChat(
+  UsersChatParams params,
+) async {
+  final chat = chatBox.values.firstWhere(
+    (chat) =>
+        chat.participants.contains(
+          params.currentUserId,
+        ) &&
+        chat.participants.contains(
+          params.userBId,
+        ),
+  );
 
-    return chat.toDomain();
-  }
+  return chat.toDomain();
+}
 
 
   @override
@@ -155,14 +159,17 @@ class ChatLocalDatasourceImpl extends ChatLocalDatasource{
   ) async {
     return chatBox.values
         .where(
-          (chat) =>
-              chat.userAId == params.userId ||
-              chat.userBId == params.userId,
+          (chat) => chat.participants.contains(
+            params.userId,
+          ),
         )
         .map((e) => e.toDomain())
         .toList()
       ..sort(
-        (a, b) => b.updatedAt.compareTo(a.updatedAt),
+        (a, b) => (b.lastMessageTime ?? b.updatedAt)
+            .compareTo(
+              a.lastMessageTime ?? a.updatedAt,
+            ),
       );
   }
 
@@ -230,8 +237,7 @@ class ChatLocalDatasourceImpl extends ChatLocalDatasource{
       chat.id,
       ChatHiveModel(
         id: chat.id,
-        userAId: chat.userAId,
-        userBId: chat.userBId,
+        participants: chat.participants,
         unreadCount: chat.unreadCount,
         mutedBy: chat.mutedBy,
         deletedBy: deletedBy,
@@ -280,8 +286,7 @@ class ChatLocalDatasourceImpl extends ChatLocalDatasource{
       chat.id,
       ChatHiveModel(
         id: chat.id,
-        userAId: chat.userAId,
-        userBId: chat.userBId,
+        participants: chat.participants,
         unreadCount: chat.unreadCount,
         mutedBy: mutedBy,
         deletedBy: chat.deletedBy,
@@ -322,8 +327,7 @@ class ChatLocalDatasourceImpl extends ChatLocalDatasource{
       chat.id,
       ChatHiveModel(
         id: chat.id,
-        userAId: chat.userAId,
-        userBId: chat.userBId,
+        participants: chat.participants,
         unreadCount: chat.unreadCount,
         mutedBy: chat.mutedBy,
         deletedBy: chat.deletedBy,
