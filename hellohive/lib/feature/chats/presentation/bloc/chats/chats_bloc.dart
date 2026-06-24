@@ -185,6 +185,11 @@ class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
 
     on<ChatSyncEvent>((event,emit) async{
       emit(ChatsLoading());
+      print('\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\');
+      print('\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\');
+      print('\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\');
+      print('\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\');
+      print('\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\');
       final params = UserIdParams(userId: event.userId);
       final result = await chatSyncUsecase(params);
       result.fold(

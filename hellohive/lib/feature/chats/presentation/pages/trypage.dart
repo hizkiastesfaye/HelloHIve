@@ -88,9 +88,11 @@ class _TryChatPageState extends State<TryChatPage> {
                     onPressed: () {
                       context.read<ChatsBloc>().add(
                             CreateChatEvent(
-                              currentUserId:
-                              currentUserController.text,
-                              userBId: userBController.text,
+                              // currentUserId:
+                              // currentUserController.text,
+                              // userBId: userBController.text,
+                              currentUserId: 'kFe0FXpgqsZDWLM6g45nCzm1Wnl1',
+                              userBId: 'PO7JWLCipETDQTCCsJM5KdgVZv83'
                             ),
                           );
                     },

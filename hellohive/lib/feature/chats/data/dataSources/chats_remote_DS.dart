@@ -21,8 +21,7 @@ class ChatRemoteDatasourceImpl implements ChatRemoteDatasource {
       final Map<String,bool> stat = {params.currentUserId:false,params.userBId:false};
       final chatData = {
         'id':chatId,
-        'userAId': params.currentUserId,
-        'userBId': params.userBId,
+        'participants':[params.currentUserId, params.userBId],
         'unreadCount': {},
         'mutedBy': stat,
         'deletedBy': stat,
@@ -74,7 +73,6 @@ Stream<List<ChatModel>> watchChats(
   Future<ChatModel> getChat(
     UsersChatParams params,
   ) async {
-
     final chatId = generateChatId(
       params.currentUserId, 
       params.userBId,
@@ -94,20 +92,46 @@ Stream<List<ChatModel>> watchChats(
   Future<List<ChatModel>> getChats(
     UserIdParams params,
   ) async {
-    final snapshot = await chats
-        .where(
-          'participants',
-          arrayContains: params.userId,
-        )
-        .get();
+    try{
+      print('------------------------------------------');
+      print('------------------------------------------');
+      print('------------------------------------------');
+      print('------------------------------------------');
+      print('remote ds');
+      print('------------------------------------------');
+      print('------------------------------------------');
+      print('------------------------------------------');
+      print('------------------------------------------');
+      final snapshot = await chats
+          .where(
+            'participants',
+            arrayContains: params.userId,
+          )
+          .get();
 
-    return snapshot.docs
-        .map(
-          (doc) => ChatModel.fromJson(
-            doc.data() as Map<String, dynamic>,
-          ),
-        )
-        .toList();
+      final result = snapshot.docs
+          .map(
+            (doc) => ChatModel.fromJson(
+              doc.data() as Map<String, dynamic>,
+            ),
+          )
+          .toList();
+      print('------------------------------------------');
+      print('------------------remote ds 2------------------------');
+      print('------------------------------------------');
+      print('DOC COUNT: ${snapshot.docs.length}');
+      for(final i in result){
+        print(i);
+      }
+      return result;
+    } catch (e){
+      print('cccccccccccccaaaaaaaaattttttttcccccchhhhh');
+      print('cccccccccccccaaaaaaaaattttttttcccccchhhhh');
+      print(e);
+      print('cccccccccccccaaaaaaaaattttttttcccccchhhhh');
+      
+      throw e.toString();
+    }
   }
   @override
   Future<ChatModel?> getChatById(

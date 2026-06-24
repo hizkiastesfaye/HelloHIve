@@ -166,9 +166,18 @@ class ChatsRepoImpl implements ChatRepository {
   ) async {
     try {
       if (await networkInfo.isConnected) {
+        print('------------------------------------------');
+        print('------------------------------------------');
+        print('------------------------------------------');
+        print('-----------sync repo------------');
+        print('------------------------------------------');
+        print('------------------------------------------');
+        print('------------------------------------------');
+        print('------------------------------------------');
+        print('------------------------------------------');
         await syncFromRtoL.getChatsFromRemote(params);
         await syncFromLToR.syncChats();
-
+        
         return const Right(unit);
       }
 

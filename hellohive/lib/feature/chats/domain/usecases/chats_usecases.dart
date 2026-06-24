@@ -113,6 +113,7 @@ class ChatSyncUsecase extends UseCase<Unit, UserIdParams>{
 
   @override
   Future<Either<Failure,Unit>> call(UserIdParams params){
+    
     return chatRepository.chatSync(params);
   }
 }

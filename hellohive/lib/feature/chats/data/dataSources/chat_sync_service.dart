@@ -22,7 +22,14 @@ class ChatSyncServiceFromRemoteToLocal {
   }
 
   Future<void> getChatsFromRemote(UserIdParams params) async{
+    print('+++++++++++++++++++++++++++++++++++++++++++++++++++');
+    print('+++++++++++++++++++++++++++++++++++++++++++++++++++');
+    print('get chats sync');
+    print('+++++++++++++++++++++++++++++++++++++++++++++++++++');
+    print('+++++++++++++++++++++++++++++++++++++++++++++++++++');
+    print('+++++++++++++++++++++++++++++++++++++++++++++++++++');
     final chats = await remoteDatasource.getChats(params);
+    
     localDatasource.cacheChats(chats);
   }
 
