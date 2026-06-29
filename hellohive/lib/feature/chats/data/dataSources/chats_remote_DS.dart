@@ -29,7 +29,7 @@ class ChatRemoteDatasourceImpl implements ChatRemoteDatasource {
         'updatedAt': DateTime.now(),
         'lastMessageId': '',
         'lastMessageText': '',
-        'lastMessageTime': '',
+        'lastMessageTime': null,
       };
       await chatDoc.set(chatData, SetOptions(merge: true));
       // if (!existDoc.exists){
@@ -108,6 +108,12 @@ Stream<List<ChatModel>> watchChats(
             arrayContains: params.userId,
           )
           .get();
+
+
+      for (final doc in snapshot.docs) {
+        print('Document ID: ${doc.id}');
+        print(doc.data());
+      }
 
       final result = snapshot.docs
           .map(
