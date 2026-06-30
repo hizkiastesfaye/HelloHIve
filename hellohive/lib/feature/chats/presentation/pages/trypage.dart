@@ -92,24 +92,26 @@ class _TryChatPageState extends State<TryChatPage> {
                               // currentUserController.text,
                               // userBId: userBController.text,
                               currentUserId: 'kFe0FXpgqsZDWLM6g45nCzm1Wnl1',
-                              userBId: 'PO7JWLCipETDQTCCsJM5KdgVZv83'
+                              // userBId: 'PO7JWLCipETDQTCCsJM5KdgVZv83'
+                              userBId: 'ZxHLcmKdfoh499xFizuQp73Rfon2'
                             ),
                           );
                     },
                     child: const Text('Create Chat'),
                   ),
 
-                  // ElevatedButton(
-                  //   onPressed: () {
-                  //     context.read<ChatsBloc>().add(
-                  //           WatchChatsEvent(
-                  //             userId:
-                  //                 currentUserController.text,
-                  //           ),
-                  //         );
-                  //   },
-                  //   child: const Text('Watch Chats'),
-                  // ),
+                  ElevatedButton(
+                    onPressed: () {
+                      context.read<ChatsBloc>().add(
+                            WatchChatsEvent(
+                              userId:
+                                  // currentUserController.text,
+                                  'kFe0FXpgqsZDWLM6g45nCzm1Wnl1'
+                            ),
+                          );
+                    },
+                    child: const Text('Watch Chats'),
+                  ),
 
                   ElevatedButton(
                     onPressed: () {
@@ -123,8 +125,93 @@ class _TryChatPageState extends State<TryChatPage> {
                     },
                     child: const Text('Get Chats'),
                   ),
+                  ElevatedButton(
+                    onPressed: () {
+                      context.read<ChatsBloc>().add(
+                            GetChatEvent(
+                              currentUserId:
+                                  // currentUserController.text,
+                                  'kFe0FXpgqsZDWLM6g45nCzm1Wnl1',
+                              userBId: 'PO7JWLCipETDQTCCsJM5KdgVZv83'
+                            ),
+                          );
+                    },
+                    child: const Text('Get a Chat'),
+                  ),
+
+                  ElevatedButton(
+                    onPressed: () {
+                      context.read<ChatsBloc>().add(
+                            GetChatByIdEvent(
+                              chatId:  'PO7JWLCipETDQTCCsJM5KdgVZv83_kFe0FXpgqsZDWLM6g45nCzm1Wnl1',
+                            ),
+                          );
+                    },
+                    child: const Text('Get Chat by Id'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      context.read<ChatsBloc>().add(
+                            UpdateChatEvent(
+                              // id:  'PO7JWLCipETDQTCCsJM5KdgVZv83_kFe0FXpgqsZDWLM6g45nCzm1Wnl1',
+                              id: 'ZxHLcmKdfoh499xFizuQp73Rfon2_kFe0FXpgqsZDWLM6g45nCzm1Wnl1',
+                              userAId:
+                                  // currentUserController.text,
+                                  'kFe0FXpgqsZDWLM6g45nCzm1Wnl1',
+                              // userBId: 'PO7JWLCipETDQTCCsJM5KdgVZv83',
+                              userBId: 'ZxHLcmKdfoh499xFizuQp73Rfon2',
+                              unreadCount: {
+                                'kFe0FXpgqsZDWLM6g45nCzm1Wnl1': 1,
+                                // 'PO7JWLCipETDQTCCsJM5KdgVZv83':1
+                                'ZxHLcmKdfoh499xFizuQp73Rfon2':0,
+                              },
+                              mutedBy:{
+                                'kFe0FXpgqsZDWLM6g45nCzm1Wnl1': false,
+                                // 'PO7JWLCipETDQTCCsJM5KdgVZv83':true
+                                'ZxHLcmKdfoh499xFizuQp73Rfon2':false
+                              },
+                              deletedBy: {
+                                'kFe0FXpgqsZDWLM6g45nCzm1Wnl1': false,
+                                // 'PO7JWLCipETDQTCCsJM5KdgVZv83':false,
+                                'ZxHLcmKdfoh499xFizuQp73Rfon2':false
+                              }
+                            ),
+                          );
+                    },
+                    child: const Text('Update chats'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      context.read<ChatsBloc>().add(
+                            DeleteChatEvent(
+                              userId:
+                                  // currentUserController.text,
+                                  'kFe0FXpgqsZDWLM6g45nCzm1Wnl1',
+                              // chatId: 'PO7JWLCipETDQTCCsJM5KdgVZv83_kFe0FXpgqsZDWLM6g45nCzm1Wnl1',
+                              chatId:'ZxHLcmKdfoh499xFizuQp73Rfon2_kFe0FXpgqsZDWLM6g45nCzm1Wnl1'
+
+                            ),
+                          );
+                    },
+                    child: const Text('Delete Chat'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      context.read<ChatsBloc>().add(
+                            MuteChatEvent(
+                              currentUserId:
+                                  // currentUserController.text,
+                                  'kFe0FXpgqsZDWLM6g45nCzm1Wnl1',
+                              chatId: 'PO7JWLCipETDQTCCsJM5KdgVZv83_kFe0FXpgqsZDWLM6g45nCzm1Wnl1',
+                              isMuted: true,
+                            ),
+                          );
+                    },
+                    child: const Text('Mute Chat'),
+                  ),
                 ],
               ),
+
 
               const SizedBox(height: 20),
 
@@ -200,6 +287,7 @@ class _TryChatPageState extends State<TryChatPage> {
                       return ListTile(
                         title: Text(chat.id),
                         subtitle: Text(
+                          
                           chat.lastMessageText ?? 'No messages',
                         ),
                       );
@@ -208,6 +296,14 @@ class _TryChatPageState extends State<TryChatPage> {
                 ),
 
               if (state is ChatLoaded)
+                Expanded(
+                  child: Center(
+                    child: Text(
+                      'Chat: ${state.chat.id}',
+                    ),
+                  ),
+                ),
+              if (state is ChatLoadedById)
                 Expanded(
                   child: Center(
                     child: Text(

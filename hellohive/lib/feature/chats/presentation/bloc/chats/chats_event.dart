@@ -81,9 +81,9 @@ class UpdateChatEvent extends ChatsEvent{
     required this.unreadCount,
     required this.mutedBy,
     required this.deletedBy,
-    required this.lastMessageId,
-    required this.lastMessageText,
-    required this.lastMessageTime,
+    this.lastMessageId,
+    this.lastMessageText,
+    this.lastMessageTime,
 
   });
 

@@ -22,7 +22,10 @@ class ChatRemoteDatasourceImpl implements ChatRemoteDatasource {
       final chatData = {
         'id':chatId,
         'participants':[params.currentUserId, params.userBId],
-        'unreadCount': {},
+        'unreadCount': {
+          params.currentUserId: 0,
+          params.userBId: 0
+        },
         'mutedBy': stat,
         'deletedBy': stat,
         'createdAt': DateTime.now(),
@@ -169,11 +172,29 @@ Stream<List<ChatModel>> watchChats(
   Future<ActionStatus> deleteChat(
     ChatIdUserIdParams params,
   ) async {
-    await chats.doc(params.chatId).update({
+    final docRef = chats.doc(params.chatId);
+    final doc = await docRef.get();
+    if (!doc.exists) {
+      return ActionStatus.failed;
+    }
+  
+    final chat = ChatModel.fromJson(
+      doc.data() as Map<String, dynamic>,
+    );
+
+    chat.deletedBy[params.userId] = true;
+
+    final allDeleted = chat.deletedBy.values.every((value) => value);
+
+    if (allDeleted) {
+      await docRef.delete();
+    }
+    else{
+      await docRef.update({
       'deletedBy.${params.userId}': true,
       'updatedAt': FieldValue.serverTimestamp(),
-    });
-
+      });
+    }
     return ActionStatus.success;
   }
   @override

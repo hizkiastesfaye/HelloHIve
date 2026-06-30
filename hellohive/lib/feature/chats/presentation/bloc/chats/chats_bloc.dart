@@ -115,7 +115,7 @@ class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
         );
     });
 
-    on<UpdateChatEvent>((event, emit) {
+    on<UpdateChatEvent>((event, emit) async{
       emit(ChatsLoading());
       final params = MostChatParams(
         id: event.id,
@@ -127,44 +127,48 @@ class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
         lastMessageText: event.lastMessageText,
         lastMessageTime: event.lastMessageTime,
       );
-      final result = updateChatUseCase(params);
-      result.then((either) {
-        either.fold(
+      final result = await updateChatUseCase(params);
+      result.fold(
           (failure) => emit(ChatsError(_mapFailureToMessage(failure))),
-          (actionStatus) => emit(ChatUpdated('${actionStatus.name}')),
-        );
-      });
+          (actionStatus) {
+            print('===================================');
+            print('===================================');
+            print('===================================');
+            print(actionStatus.name);
+            print('===================================');
+            print('===================================');
+            print('===================================');
+            print('===================================');
+            print('===================================');
+            emit(ChatUpdated('${actionStatus.name}'));},
+      );
     });
 
-    on<DeleteChatEvent>((event, emit) {
+    on<DeleteChatEvent>((event, emit) async{
       emit(ChatsLoading());
       final params = ChatIdUserIdParams(
         chatId: event.chatId,
         userId: event.userId,
       );
-      final result = deleteChatUseCase(params);
-      result.then((either) {
-        either.fold(
+      final result = await deleteChatUseCase(params);
+      result.fold(
           (failure) => emit(ChatsError(_mapFailureToMessage(failure))),
           (actionStatus) => emit(ChatDeleted('${actionStatus.name}')),
         );
-      });
     });
 
-    on<MuteChatEvent>((event, emit) {
+    on<MuteChatEvent>((event, emit) async{
       emit(ChatsLoading());
       final params = MuteChatParams(
         currentUserId: event.currentUserId,
         chatId: event.chatId,
         isMuted: event.isMuted,
       );
-      final result = muteChatUseCase(params);
-      result.then((either) {
-        either.fold(
+      final result = await muteChatUseCase(params);
+      result.fold(
           (failure) => emit(ChatsError(_mapFailureToMessage(failure))),
           (actionStatus) => emit(ChatMuted('${actionStatus.name}')),
         );
-      });
     });
 
     on<UpdateLastMessageEvent>((event, emit) async{
