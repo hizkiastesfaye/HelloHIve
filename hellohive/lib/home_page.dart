@@ -3,7 +3,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hellohive/feature/chats/presentation/bloc/chats/chats_bloc.dart';
-import 'package:hellohive/feature/chats/presentation/pages/trypage.dart';
 import 'package:hellohive/feature/friends/presentation/pages/friendsPage.dart';
 import 'package:hellohive/feature/settings/presentation/bloc/user_profile_bloc_bloc.dart';
 import 'package:hellohive/feature/settings/presentation/pages/settingsPage.dart';
@@ -23,31 +22,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _builder() {
     if (_isChatSelected) {
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text('Chat Home Page'),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pushNamed(context, '/oldLogin');
-            },
-            child: Text('Go to Login'),
-          ),
-
-          Text('Try Chats Page'),
-          ElevatedButton(
-            onPressed: () {
-              // Navigator.pushNamed(context, '/tryChat');
-              context.read<ChatsBloc>().add(
-                ChatSyncEvent('kFe0FXpgqsZDWLM6g45nCzm1Wnl1')
-              );
-              Navigator.push(context, MaterialPageRoute(builder: (context) => TryChatPage()));
-              
-            },
-            child: Text('Go to Try Chat'),
-          ),
-        ],
-      );
+      return ChatsPage();
     } else if (_isSettingsSelected) {
       // return Text('Settings Page');
       return SettingsPage();

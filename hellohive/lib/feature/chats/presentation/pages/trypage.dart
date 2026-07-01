@@ -253,7 +253,8 @@ class _TryChatPageState extends State<TryChatPage> {
                                 context.read<ChatsBloc>().add(
                                       MuteChatEvent(
                                         currentUserId:
-                                            currentUserController.text,
+                                            // currentUserController.text,
+                                            'kFe0FXpgqsZDWLM6g45nCzm1Wnl1',
                                         chatId: chat.id,
                                         isMuted: true,
                                       ),
