@@ -8,6 +8,7 @@ import '../../friends_core/friends_usecases_core.dart';
 abstract class FriendsRemoteDS {
   Future<List<FriendsModel>> getFriendsRemote(FriendsParams params);
   Future<List<FriendsModel>> getRandomFriendsRemote();
+  Future<FriendsModel> getFriendRemote(FriendParams params);
 }
 
 class FriendsRemoteDsImpl implements FriendsRemoteDS {
@@ -104,5 +105,19 @@ class FriendsRemoteDsImpl implements FriendsRemoteDS {
       print(e.toString());
       throw UnknownException();
     }
+  }
+
+  @override
+  Future<FriendsModel> getFriendRemote(FriendParams params)async{
+    final doc = await firebaseFirestore.collection('users').doc(params.friendId).get();
+
+    if (!doc.exists) {
+      throw ServerException();
+    }
+
+    return FriendsModel.fromJson({
+      ...doc.data() as Map<String, dynamic>,
+      'uId':doc.id,
+    });
   }
 }

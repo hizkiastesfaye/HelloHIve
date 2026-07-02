@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hellohive/feature/chats/presentation/pages/trypage.dart';
+import 'package:hellohive/feature/friends/presentation/bloc/friends_bloc.dart';
 import 'package:http/http.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/chats/chats_bloc.dart';
@@ -32,6 +33,7 @@ class __ChatsPageStateState extends State<ChatsPage>{
                 context.read<ChatsBloc>().add(
                   ChatSyncEvent('kFe0FXpgqsZDWLM6g45nCzm1Wnl1')
                 );
+
                 Navigator.push(context, MaterialPageRoute(builder: (context) => TryChatPage()));
                 
               },

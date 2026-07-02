@@ -13,3 +13,14 @@ class FriendsParams extends Equatable{
   @override
   List<Object?> get props=>[value, fieldName];
 }
+
+class FriendParams extends Equatable{
+  final String friendId;
+
+  FriendParams({
+    required this.friendId
+  });
+
+  @override 
+  List<Object> get props=>[friendId];
+}
