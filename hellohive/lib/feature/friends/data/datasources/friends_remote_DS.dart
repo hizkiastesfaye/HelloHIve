@@ -9,6 +9,8 @@ abstract class FriendsRemoteDS {
   Future<List<FriendsModel>> getFriendsRemote(FriendsParams params);
   Future<List<FriendsModel>> getRandomFriendsRemote();
   Future<FriendsModel> getFriendRemote(FriendParams params);
+  Future<List<FriendsModel>> getFriendsByListIdRemote(FriendsIdsParams params);
+
 }
 
 class FriendsRemoteDsImpl implements FriendsRemoteDS {
@@ -119,5 +121,40 @@ class FriendsRemoteDsImpl implements FriendsRemoteDS {
       ...doc.data() as Map<String, dynamic>,
       'uId':doc.id,
     });
+  }
+
+  @override
+  Future<List<FriendsModel>> getFriendsByListIdRemote(
+    FriendsIdsParams params,
+    ) async {
+      if (params.friendsIds.isEmpty) return [];
+
+      const chunkSize = 20;
+      final List<FriendsModel> friends = [];
+
+      for (int i = 0; i < params.friendsIds.length; i += chunkSize) {
+        final chunk = params.friendsIds.sublist(
+          i,
+          (i + chunkSize > params.friendsIds.length)
+              ? params.friendsIds.length
+              : i + chunkSize,
+        );
+
+        final snapshot = await firebaseFirestore
+            .collection('users')
+            .where(FieldPath.documentId, whereIn: chunk)
+            .get();
+
+        friends.addAll(
+          snapshot.docs.map(
+            (doc) => FriendsModel.fromJson({
+              ...doc.data(),
+              'uId': doc.id,
+            }),
+          ),
+        );
+      }
+
+    return friends;
   }
 }

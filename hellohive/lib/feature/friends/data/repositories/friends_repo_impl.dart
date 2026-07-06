@@ -85,4 +85,25 @@ class FriendsRepoImpl implements FriendsRepo {
       return Left(NetworkFailure());
     }
   }
+
+  @override
+  Future<Either<Failure,List<FriendsEntities>>> getFriendsByListId(FriendsIdsParams params) async{
+    if(await networkInfo.isConnected){
+      try{
+        final getFriendResult = await friendsRemote.getFriendsByListIdRemote(params);
+        // friendsLocal.cacheFriend(getFriendsResult);
+        return Right(getFriendResult);
+      } on ServerException catch(e){
+        return Left(ServerFailure(e.message));
+      }  on UnknownException catch(e){
+        return Left(UnknownFailure(e.message));
+      } catch(_){
+        return Left(UnknownFailure());
+      }
+    }
+    else{
+      return Left(NetworkFailure());
+    }
+  }
+
 }

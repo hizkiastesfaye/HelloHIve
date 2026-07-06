@@ -9,4 +9,5 @@ abstract class FriendsRepo {
   Future<Either<Failure, List<FriendsEntities>>> getFriends(FriendsParams params);
   Future<Either<Failure, List<FriendsEntities>>> getRandomFriends();
   Future<Either<Failure, FriendsEntities>> getFriend(FriendParams params);
+  Future<Either<Failure,List<FriendsEntities>>> getFriendsByListId(FriendsIdsParams params);
 }

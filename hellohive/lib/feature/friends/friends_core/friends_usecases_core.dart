@@ -24,3 +24,13 @@ class FriendParams extends Equatable{
   @override 
   List<Object> get props=>[friendId];
 }
+
+class FriendsIdsParams extends Equatable{
+  final List<String> friendsIds;
+
+  FriendsIdsParams({
+    required this.friendsIds
+  });
+  @override 
+  List<Object> get props=>[friendsIds];
+}

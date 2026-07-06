@@ -34,3 +34,12 @@ class GetRandomFriendsUseCases extends UseCase<List<FriendsEntities>,NoParams>{
     return friendsRepo.getRandomFriends();
   }
 }
+
+class GetFriendsByListIdUsecases extends UseCase<List<FriendsEntities>,FriendsIdsParams>{
+  final FriendsRepo friendsRepo;
+  GetFriendsByListIdUsecases(this.friendsRepo);
+    @override
+  Future<Either<Failure, List<FriendsEntities>>> call(FriendsIdsParams params) {
+    return friendsRepo.getRandomFriends();
+  }
+}
