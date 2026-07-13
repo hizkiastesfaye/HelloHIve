@@ -4,11 +4,14 @@ import 'dart:convert';
 import 'package:dartz/dartz.dart';
 import 'package:hellohive/core/errors/exception.dart';
 import 'package:hellohive/feature/friends/data/models/friends_model.dart';
+import 'package:hellohive/feature/friends/friends_core/friends_usecases_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class FriendsLocalDS {
   Future<Unit> cacheRandomFriends(List<FriendsModel> friendsToCache);
   Future<List<FriendsModel>> getCachedRandomFriends();
+  Future<List<FriendsModel>> getFriendsByListIdLocal(FriendsIdsParams params);
+
 }
 
 class FriendsLocalDsImpl implements FriendsLocalDS {
@@ -45,5 +48,20 @@ class FriendsLocalDsImpl implements FriendsLocalDS {
       throw CacheException();
     }
   }
+
+  // @override
+  // Future<List<FriendsModel>> getFriendsByListIdLocal(FriendsIdsParams params) async{
+  //   try{
+  //     final jsonString = await sharedPreferences.getString('friendsByListId_${params.ids.join(',')}');
+  //     if(jsonString == null || jsonString.isEmpty){
+  //       throw CacheException('No data in catch');
+  //     }
+  //     final decodeJson = jsonDecode(jsonString) as List;
+  //     return decodeJson.map((friend)=> FriendsModel.fromJson(friend)).toList();
+  //   }
+  //   catch(_){
+  //     throw CacheException();
+  //   }
+  // }
   
 }
