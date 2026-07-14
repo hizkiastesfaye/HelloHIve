@@ -9,6 +9,7 @@ import 'package:hellohive/feature/auth/presentation/pages/sign_up_page.dart';
 import 'package:hellohive/feature/chats/data/models/hive_model.dart';
 import 'package:hellohive/feature/chats/presentation/bloc/chats/chats_bloc.dart';
 import 'package:hellohive/feature/chats/presentation/pages/trypage.dart';
+import 'package:hellohive/feature/friends/data/models/friends_hive_model.dart';
 import 'package:hellohive/feature/settings/presentation/pages/add_profile_pages.dart';
 import 'package:hellohive/home_page.dart';
 import 'package:hellohive/feature/settings/presentation/pages/userProfile_pages.dart';
@@ -42,6 +43,10 @@ void main() async {
 
   await Hive.openBox<ChatHiveModel>('chatBox');
   await Hive.openBox<ChatSyncOperation>('operationsBox');
+
+
+  Hive.registerAdapter(FriendsHiveModelAdapter());
+  await Hive.openBox<FriendsHiveModel>('friendsBox');
 
   try {
     await Firebase.initializeApp(

@@ -40,7 +40,7 @@ class FriendsHiveModel extends FriendsModel {
         );
 }
 
-extension FriendsHiveModelMapper on FriendsModel {
+extension FriendsModelMapper on FriendsModel {
   FriendsHiveModel toHiveModel({String? hiveId, bool isPendingSync = false}) {
     return FriendsHiveModel(
       uId: uId,
@@ -52,7 +52,7 @@ extension FriendsHiveModelMapper on FriendsModel {
   }
 }
 
-extension FriendsModelMapper on FriendsHiveModel {
+extension FriendsHiveModelMapper on FriendsHiveModel {
   FriendsModel toModel() {
     return FriendsModel(
       uId: uId,

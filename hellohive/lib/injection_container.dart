@@ -20,6 +20,7 @@ import 'package:hellohive/feature/chats/domain/usecases/chats_usecases.dart';
 import 'package:hellohive/feature/chats/presentation/bloc/chats/chats_bloc.dart';
 import 'package:hellohive/feature/friends/data/datasources/friends_local_DS.dart';
 import 'package:hellohive/feature/friends/data/datasources/friends_remote_DS.dart';
+import 'package:hellohive/feature/friends/data/models/friends_hive_model.dart';
 import 'package:hellohive/feature/friends/data/repositories/friends_repo_impl.dart';
 import 'package:hellohive/feature/friends/domain/repositories/friends_repo.dart';
 import 'package:hellohive/feature/friends/domain/usecases/friends_usecases.dart';
@@ -54,6 +55,10 @@ Future<void> init() async{
 
   sl.registerLazySingleton<Box<ChatSyncOperation>>(
     () => Hive.box<ChatSyncOperation>('operationsBox'),
+  );
+
+  sl.registerLazySingleton<Box<FriendsHiveModel>>(
+    () => Hive.box<FriendsHiveModel>('friendsBox'),
   );
 
   //! Features - Auth
@@ -154,7 +159,12 @@ Future<void> init() async{
     friendsRemote: sl()));
 
   //? Friends Data Sources
-  sl.registerLazySingleton<FriendsLocalDS>(()=>FriendsLocalDsImpl(sharedPreferences: sl()));
+  sl.registerLazySingleton<FriendsLocalDS>(
+    ()=>FriendsLocalDsImpl(
+      friendsBox: sl(),
+      sharedPreferences: sl()
+      )
+    );
   sl.registerLazySingleton<FriendsRemoteDS>(()=>FriendsRemoteDsImpl(sl()));
 
 
