@@ -26,6 +26,7 @@ class FriendsRepoImpl implements FriendsRepo {
     if(await networkInfo.isConnected){
       try{
         final getFriendsResult = await friendsRemote.getFriendsRemote(params);
+        friendsLocal.cacheFriendsLocal(getFriendsResult);
         return Right(getFriendsResult);
       } on ServerException catch(e){
         return Left(ServerFailure(e.message));
@@ -87,22 +88,37 @@ class FriendsRepoImpl implements FriendsRepo {
   }
 
   @override
-  Future<Either<Failure,List<FriendsEntities>>> getFriendsByListId(FriendsIdsParams params) async{
-    if(await networkInfo.isConnected){
-      try{
-        final getFriendResult = await friendsRemote.getFriendsByListIdRemote(params);
-        // friendsLocal.cacheFriend(getFriendsResult);
-        return Right(getFriendResult);
-      } on ServerException catch(e){
-        return Left(ServerFailure(e.message));
-      }  on UnknownException catch(e){
-        return Left(UnknownFailure(e.message));
-      } catch(_){
-        return Left(UnknownFailure());
+  Future<Either<Failure, List<FriendsEntities>>> getFriendsByListId(
+    FriendsIdsParams params,
+  ) async {
+    try {
+      // Try local cache first
+      final localFriends =
+          await friendsLocal.getFriendsByListIdLocal(params);
+
+      if (localFriends.isNotEmpty) {
+        return Right(localFriends);
       }
-    }
-    else{
+
+      // Cache is empty, check internet
+      if (await networkInfo.isConnected) {
+        final remoteFriends =
+            await friendsRemote.getFriendsByListIdRemote(params);
+
+        await friendsLocal.cacheFriendsByListIdLocal(remoteFriends);
+
+        return Right(remoteFriends);
+      }
+
       return Left(NetworkFailure());
+    } on CacheException catch (e) {
+      return Left(CacheFailure(e.message));
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.message));
+    } on UnknownException catch (e) {
+      return Left(UnknownFailure(e.message));
+    } catch (_) {
+      return Left(UnknownFailure());
     }
   }
 
