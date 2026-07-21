@@ -14,10 +14,9 @@ abstract class FriendsLocalDS {
   Future<Unit> cacheRandomFriends(List<FriendsModel> friendsToCache);
   Future<List<FriendsModel>> getCachedRandomFriends();
   Future<List<FriendsModel>> getFriendsByListIdLocal(FriendsIdsParams params);
-  Future<Unit> cacheFriendsByListIdLocal(List<FriendsModel> friends);
 
   Future<FriendsModel> getFriendLocal(String friendId);
-  Future<List<FriendsModel>> getFriendsLocal();
+  Future<List<FriendsModel>> getFriendsLocal({int limit = 20, int offset = 0});
 
   Future<Unit> cacheFriendLocal(FriendsModel friend);
   Future<Unit> cacheFriendsLocal(List<FriendsModel> friends);
@@ -83,25 +82,7 @@ class FriendsLocalDsImpl implements FriendsLocalDS {
     }
   }
 
-  @override
-  Future<Unit> cacheFriendsByListIdLocal(
-    List<FriendsModel> friends,
-  ) async {
-    try {
-      if (friends.isEmpty) {
-        return unit;
-      }
 
-      await friendsBox.putAll({
-        for (final friend in friends)
-          friend.uId: friend.toHiveModel(),
-      });
-
-      return unit;
-    } catch (_) {
-      throw CacheException();
-    }
-  }
 
 
   @override
@@ -109,6 +90,10 @@ class FriendsLocalDsImpl implements FriendsLocalDS {
     FriendsModel friend,
   ) async {
     try {
+      if (friendsBox.containsKey(friend.uId)) {
+        // Friend already exists
+        return unit;
+      }
       await friendsBox.put(
         friend.uId,
         friend.toHiveModel(),
@@ -129,10 +114,15 @@ class FriendsLocalDsImpl implements FriendsLocalDS {
         return unit;
       }
 
-      await friendsBox.putAll({
+      final newFriends = {
         for (final friend in friends)
-          friend.uId: friend.toHiveModel(),
-      });
+          if (!friendsBox.containsKey(friend.uId))
+            friend.uId: friend.toHiveModel(),
+      };
+
+      if (newFriends.isNotEmpty) {
+        await friendsBox.putAll(newFriends);
+      }
 
       return unit;
     } catch (_) {
@@ -158,9 +148,14 @@ class FriendsLocalDsImpl implements FriendsLocalDS {
   }
 
   @override
-  Future<List<FriendsModel>> getFriendsLocal() async {
+  Future<List<FriendsModel>> getFriendsLocal({
+    int limit = 20,
+    int offset = 0,
+  }) async {
     try {
       return friendsBox.values
+          .skip(offset)
+          .take(limit)
           .map((friend) => friend.toModel())
           .toList();
     } catch (_) {

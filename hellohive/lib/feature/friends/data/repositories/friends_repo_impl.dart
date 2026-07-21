@@ -72,7 +72,7 @@ class FriendsRepoImpl implements FriendsRepo {
     if(await networkInfo.isConnected){
       try{
         final getFriendResult = await friendsRemote.getFriendRemote(params);
-        // friendsLocal.cacheFriend(getFriendsResult);
+        friendsLocal.cacheFriendLocal(getFriendResult);
         return Right(getFriendResult);
       } on ServerException catch(e){
         return Left(ServerFailure(e.message));
@@ -96,21 +96,30 @@ class FriendsRepoImpl implements FriendsRepo {
       final localFriends =
           await friendsLocal.getFriendsByListIdLocal(params);
 
-      if (localFriends.isNotEmpty) {
+      final localIds = localFriends.map((e) => e.uId).toSet();
+
+      final missingIds = params.friendsIds
+          .where((id) => !localIds.contains(id))
+          .toList();
+
+      if (missingIds.isEmpty) {
         return Right(localFriends);
       }
 
-      // Cache is empty, check internet
-      if (await networkInfo.isConnected) {
-        final remoteFriends =
-            await friendsRemote.getFriendsByListIdRemote(params);
-
-        await friendsLocal.cacheFriendsByListIdLocal(remoteFriends);
-
-        return Right(remoteFriends);
+      if (!await networkInfo.isConnected) {
+        return Left(NetworkFailure());
       }
 
-      return Left(NetworkFailure());
+      final remoteFriends = await friendsRemote.getFriendsByListIdRemote(
+        FriendsIdsParams(friendsIds: missingIds),
+      );
+
+      await friendsLocal.cacheFriendsLocal(remoteFriends);
+
+      return Right([
+        ...localFriends,
+        ...remoteFriends,
+      ]);
     } on CacheException catch (e) {
       return Left(CacheFailure(e.message));
     } on ServerException catch (e) {
