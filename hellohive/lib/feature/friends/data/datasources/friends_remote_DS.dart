@@ -10,7 +10,7 @@ abstract class FriendsRemoteDS {
   Future<List<FriendsModel>> getRandomFriendsRemote();
   Future<FriendsModel> getFriendRemote(FriendParams params);
   Future<List<FriendsModel>> getFriendsByListIdRemote(FriendsIdsParams params);
-
+  Stream<FriendsModel> watchFriend(String friendId);
 }
 
 class FriendsRemoteDsImpl implements FriendsRemoteDS {
@@ -18,6 +18,8 @@ class FriendsRemoteDsImpl implements FriendsRemoteDS {
   final FirebaseFirestore firebaseFirestore;
 
   FriendsRemoteDsImpl(this.firebaseFirestore);
+  CollectionReference<Map<String, dynamic>> get users =>
+      firebaseFirestore.collection('users');
   @override
   Future<List<FriendsModel>> getFriendsRemote(FriendsParams params) async{
     
@@ -156,5 +158,20 @@ class FriendsRemoteDsImpl implements FriendsRemoteDS {
       }
 
     return friends;
+  }
+
+  @override
+  Stream<FriendsModel> watchFriend(String friendId) {
+    
+    return users.doc(friendId).snapshots().map((snapshot) {
+      if (!snapshot.exists || snapshot.data() == null) {
+        throw Exception('Friend not found');
+      }
+
+      return FriendsModel.fromJson({
+        ...snapshot.data()!,
+        'uId': snapshot.id,
+      });
+    });
   }
 }

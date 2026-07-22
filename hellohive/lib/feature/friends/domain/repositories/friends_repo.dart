@@ -1,5 +1,3 @@
-
-
 import 'package:dartz/dartz.dart';
 import 'package:hellohive/core/errors/failure.dart';
 import 'package:hellohive/feature/friends/domain/entities/friends_entities.dart';

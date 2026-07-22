@@ -1,11 +1,11 @@
+import 'package:dartz/dartz.dart';
+import 'package:hellohive/core/errors/failure.dart';
+import 'package:hellohive/feature/friends/friends_core/friends_usecases_core.dart';
+
 abstract class FriendSyncRepository {
-  Future<void> initialize();
+  Future<Either<Failure, Unit>> syncFriends(
+    FriendsIdsParams params,
+  );
 
-  Future<void> syncFriends(List<String> friendIds);
-
-  Future<void> addFriend(String friendId);
-
-  Future<void> removeFriend(String friendId);
-
-  Future<void> dispose();
+  Future<Either<Failure, Unit>> dispose();
 }

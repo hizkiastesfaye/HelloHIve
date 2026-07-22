@@ -1,82 +1,69 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:hellohive/feature/friends/data/models/friends_hive_model.dart';
 import 'package:hellohive/feature/friends/data/models/friends_model.dart';
-import 'package:hive/hive.dart';
+
+import '../datasources/friends_local_ds.dart';
+import '../datasources/friends_remote_ds.dart';
 
 abstract class FriendSyncService {
-  Future<void> initialize();
+  Future<void> initialize(List<String> friendIds);
   Future<void> syncFriends(List<String> friendIds);
-  Future<void> addFriend(String friendId);
-  Future<void> removeFriend(String friendId);
+  Future<void> startListeningToFriend(String friendId);
+  Future<void> stopListeningToFriend(String friendId,);
   Future<void> dispose();
 }
 
 class FriendSyncServiceImpl implements FriendSyncService {
+  final FriendsRemoteDS remoteDatasource;
+  final FriendsLocalDS localDatasource;
+
   FriendSyncServiceImpl({
-    required FirebaseFirestore firestore,
-    required Box<FriendsHiveModel> friendsBox,
-  })  : _firestore = firestore,
-        _friendsBox = friendsBox;
+    required this.remoteDatasource,
+    required this.localDatasource,
+  });
 
-  final FirebaseFirestore _firestore;
-  final Box<FriendsHiveModel> _friendsBox;
-
-  final Map<String, StreamSubscription<DocumentSnapshot>>
+  final Map<String, StreamSubscription<FriendsModel>>
       _subscriptions = {};
 
   @override
-  Future<void> initialize() async {
-    final ids = _friendsBox.keys.cast<String>().toList();
-
-    await syncFriends(ids);
+  Future<void> initialize(List<String> friendIds) async {
+    await syncFriends(friendIds);
   }
 
   @override
   Future<void> syncFriends(List<String> friendIds) async {
-    for (final id in friendIds) {
-      await addFriend(id);
+    final currentIds = _subscriptions.keys.toSet();
+    final newIds = friendIds.toSet();
+
+    // Stop listeners for removed friends
+    for (final id in currentIds.difference(newIds)) {
+      await stopListeningToFriend(id);
+    }
+
+    // Start listeners for newly added friends
+    for (final id in newIds.difference(currentIds)) {
+      await startListeningToFriend(id);
     }
   }
 
   @override
-  Future<void> addFriend(String friendId) async {
+  Future<void> startListeningToFriend(
+    String friendId,
+  ) async {
     if (_subscriptions.containsKey(friendId)) {
       return;
     }
 
-    final subscription = _firestore
-        .collection('users') // <-- Change if needed
-        .doc(friendId)
-        .snapshots()
+    final subscription = remoteDatasource
+        .watchFriend(friendId)
         .listen(
-      (snapshot) async {
-        try {
-          if (!snapshot.exists) {
-            await _friendsBox.delete(friendId);
-            await removeFriend(friendId);
-            return;
-          }
-          final data = snapshot.data();
-
-          if (data == null) return;
-
-          final friend = FriendsModel.fromJson({
-            ...data,
-            'uId': snapshot.id,
-          });
-
-          await _friendsBox.put(
-            friendId,
-            friend.toHiveModel(),
-          );
-        } catch (_) {
-          // Optionally log the error.
-        }
+      (friend) async {
+        await localDatasource.cacheFriendLocal(friend);
       },
-      onError: (_) {
-        // Optionally log Firestore listener errors.
+      onError: (_) async {
+        // Friend deleted or unavailable.
+        // Stop listening.
+        await stopListeningToFriend(friendId);
       },
     );
 
@@ -84,7 +71,9 @@ class FriendSyncServiceImpl implements FriendSyncService {
   }
 
   @override
-  Future<void> removeFriend(String friendId) async {
+  Future<void> stopListeningToFriend(
+    String friendId,
+  ) async {
     final subscription = _subscriptions.remove(friendId);
 
     await subscription?.cancel();
