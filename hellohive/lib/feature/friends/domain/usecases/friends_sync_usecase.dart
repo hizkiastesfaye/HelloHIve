@@ -1,32 +1,25 @@
-
-
 import 'package:dartz/dartz.dart';
+import 'package:hellohive/core/errors/failure.dart';
+import 'package:hellohive/core/usecases/usecase.dart';
 import 'package:hellohive/feature/friends/domain/repositories/friend_sync_repo.dart';
-import 'package:hellohive/feature/friends/friends_core/friends_usecases_core.dart';
 
-import '../../../../core/errors/failure.dart';
-import '../../../../core/usecases/usecase.dart';
+class SyncFriendsUseCase extends UseCase<Unit, NoParams> {
 
-
-class SyncFriendsUseCase
-    extends UseCase<Unit, FriendsIdsParams> {
-
-  final FriendSyncRepository repository;
+  final FriendsSyncRepository repository;
 
   SyncFriendsUseCase(this.repository);
 
   @override
   Future<Either<Failure, Unit>> call(
-    FriendsIdsParams params,
+    NoParams params,
   ) {
-    return repository.syncFriends(params);
+    return repository.syncFriends();
   }
 }
 
-class DisposeFriendSyncUseCase
-    extends UseCase<Unit, NoParams> {
+class DisposeFriendSyncUseCase extends UseCase<Unit, NoParams> {
 
-  final FriendSyncRepository repository;
+  final FriendsSyncRepository repository;
 
   DisposeFriendSyncUseCase(this.repository);
 

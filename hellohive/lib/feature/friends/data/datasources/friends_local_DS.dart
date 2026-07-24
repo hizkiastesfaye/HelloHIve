@@ -17,7 +17,7 @@ abstract class FriendsLocalDS {
 
   Future<FriendsModel> getFriendLocal(String friendId);
   Future<List<FriendsModel>> getFriendsLocal({int limit = 20, int offset = 0});
-
+  Future<List<String>> getFriendsIdsLocal();
   Future<Unit> cacheFriendLocal(FriendsModel friend);
   Future<Unit> cacheFriendsLocal(List<FriendsModel> friends);
 }
@@ -148,6 +148,15 @@ class FriendsLocalDsImpl implements FriendsLocalDS {
   }
 
   @override
+  Future<List<String>> getFriendsIdsLocal() async {
+    try {
+      return friendsBox.keys.cast<String>().toList();
+    } catch (_) {
+      throw CacheException();
+    }
+  }
+
+  @override
   Future<List<FriendsModel>> getFriendsLocal({
     int limit = 20,
     int offset = 0,
@@ -162,7 +171,10 @@ class FriendsLocalDsImpl implements FriendsLocalDS {
       throw CacheException();
     }
   }
+
+
 }
+
 
 
 // class FriendsLocalDsImpl implements FriendsLocalDS {

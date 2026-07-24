@@ -1,6 +1,5 @@
 import 'package:hellohive/core/usecases/usecase.dart';
 import 'package:hellohive/feature/friends/domain/usecases/friends_sync_usecase.dart';
-import 'package:hellohive/feature/friends/friends_core/friends_usecases_core.dart';
 
 class AppInitializer {
   final SyncFriendsUseCase syncFriendsUseCase;
@@ -11,14 +10,8 @@ class AppInitializer {
     required this.disposeFriendSyncUseCase,
   });
 
-  Future<void> start({
-    required List<String> friendIds,
-  }) async {
-    await syncFriendsUseCase(
-      FriendsIdsParams(
-        friendsIds: friendIds,
-      ),
-    );
+  Future<void> start() async {
+    await syncFriendsUseCase(NoParams());
   }
 
   Future<void> stop() async {
