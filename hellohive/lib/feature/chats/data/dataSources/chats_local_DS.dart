@@ -131,6 +131,12 @@ Stream<List<ChatModel>> watchChats(
         chat.toHive(),
       );
     }
+        print('+++++++++++++++++++++++++++++++++++++++++++++++++++');
+    print('+++++++++++++++++++++++++++++++++++++++++++++++++++');
+    print('get chats sync locccalll');
+    print('+++++++++++++++++++++++++++++++++++++++++++++++++++');
+    print('+++++++++++++++++++++++++++++++++++++++++++++++++++');
+    print('+++++++++++++++++++++++++++++++++++++++++++++++++++');
     return ActionStatus.success;
   }
 
@@ -139,6 +145,8 @@ Stream<List<ChatModel>> watchChats(
 Future<ChatModel> getChat(
   UsersChatParams params,
 ) async {
+  print('++++++++++++++++++++++getchat+++++++++++++++++++++++++++++');
+
   final chat = chatBox.values.firstWhere(
     (chat) =>
         chat.participants.contains(
@@ -148,6 +156,9 @@ Future<ChatModel> getChat(
           params.userBId,
         ),
   );
+  print('+++++++++++++++++++++++++++++++++++++++++++++++++++');
+  print(chat.toDomain().toString());
+  print('+++++++++++++++++++++++++++++++++++++++++++++++++++');
 
   return chat.toDomain();
 }

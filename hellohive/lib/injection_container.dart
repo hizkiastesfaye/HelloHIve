@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:get_it/get_it.dart';
+import 'package:hellohive/core/app_initialize.dart';
 import 'package:hellohive/core/network/netowork_info.dart';
 import 'package:hellohive/feature/auth/data/dataSources/auth_remote_data_source.dart';
 import 'package:hellohive/feature/auth/data/repositories/auth_repositories_impl.dart';
@@ -38,6 +39,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 final sl = GetIt.I;
 
 Future<void> init() async{
+
+  //!App Initializer
+  sl.registerLazySingleton(()=>AppInitializer(
+    chatSyncUsecase: sl(),
+  ));
 
   //!core
   sl.registerLazySingleton<NetworkInfo>(()=>NetworkInfoImpl(sl()));

@@ -105,6 +105,13 @@ Stream<List<ChatModel>> watchChats(
       print('------------------------------------------');
       print('------------------------------------------');
       print('------------------------------------------');
+      final firebaseUser = FirebaseAuth.instance.currentUser;
+
+      print('====================================');
+      print('Firebase authenticated UID: ${firebaseUser?.uid}');
+      print('Params userId: ${params.userId}');
+      print('Email: ${firebaseUser?.email}');
+      print('====================================');
       final snapshot = await chats
           .where(
             'participants',

@@ -2,11 +2,15 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hellohive/core/app_initialize.dart';
+import 'package:hellohive/feature/chats/domain/usecases/chats_usecases.dart';
 import 'package:hellohive/feature/chats/presentation/bloc/chats/chats_bloc.dart';
 import 'package:hellohive/feature/friends/presentation/pages/friendsPage.dart';
 import 'package:hellohive/feature/settings/presentation/bloc/user_profile_bloc_bloc.dart';
 import 'package:hellohive/feature/settings/presentation/pages/settingsPage.dart';
 import 'package:hellohive/feature/chats/presentation/pages/chatsPage.dart';
+import 'injection_container.dart' as di;
+
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -16,9 +20,20 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final AppInitializer appInitializer = di.sl<AppInitializer>();
   bool _isChatSelected = true;
   bool _isSettingsSelected = false;
   bool _isfriendsSelected = false;
+  
+@override
+void initState() {
+  super.initState();
+  _initializeApp();
+}
+
+Future<void> _initializeApp() async {
+  await appInitializer.start();
+}
 
   Widget _builder() {
     if (_isChatSelected) {
@@ -131,6 +146,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       onPressed: () {
+
                         setState(() {
                           _isChatSelected = true;
                           _isSettingsSelected = false;
@@ -164,6 +180,8 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       onPressed: () {
+                        appInitializer.start();
+
                         setState(() {
                           _isChatSelected = false;
                           _isSettingsSelected = true;

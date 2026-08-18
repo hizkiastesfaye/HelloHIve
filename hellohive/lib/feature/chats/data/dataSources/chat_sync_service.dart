@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hellohive/feature/chats/chats_core/chats_core.dart';
 import 'package:hellohive/feature/chats/data/dataSources/abstract_local_Ds.dart';
 import 'package:hellohive/feature/chats/data/dataSources/abstract_remote_DS.dart';
@@ -11,6 +12,8 @@ class ChatSyncServiceFromRemoteToLocal {
     required this.localDatasource,
     required this.remoteDatasource,
   });
+  final currentUser = FirebaseAuth.instance.currentUser;
+
 
   void startChatSync(UserIdParams params) {
     remoteDatasource
@@ -22,15 +25,20 @@ class ChatSyncServiceFromRemoteToLocal {
   }
 
   Future<void> getChatsFromRemote(UserIdParams params) async{
-    print('+++++++++++++++++++++++++++++++++++++++++++++++++++');
-    print('+++++++++++++++++++++++++++++++++++++++++++++++++++');
-    print('get chats sync');
-    print('+++++++++++++++++++++++++++++++++++++++++++++++++++');
-    print('+++++++++++++++++++++++++++++++++++++++++++++++++++');
-    print('+++++++++++++++++++++++++++++++++++++++++++++++++++');
+
     final chats = await remoteDatasource.getChats(params);
     
     localDatasource.cacheChats(chats);
+      print('+++++++++++++++++++++++++++++++++++++++++++++++++++');
+    print('+++++++++++++++++++++++++++++++++++++++++++++++++++');
+    print('get chats sync');
+    print(chats.isEmpty);
+    // for(final i in chats){
+    //       print(i.id);
+    //     }
+    print('+++++++++++++++++++++++++++++++++++++++++++++++++++');
+    print('+++++++++++++++++++++++++++++++++++++++++++++++++++');
+    print('+++++++++++++++++++++++++++++++++++++++++++++++++++');
   }
 
   Future<void> getChatFromRemote(UsersChatParams params) async{
