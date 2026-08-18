@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hellohive/feature/chats/chats_core/chats_core.dart';
 import 'package:hellohive/feature/chats/data/dataSources/abstract_local_Ds.dart';
 import 'package:hellohive/feature/chats/data/dataSources/abstract_remote_DS.dart';
 import 'package:hellohive/feature/chats/data/models/hive_model.dart';
+import 'package:hellohive/feature/chats/data/models/chats_model.dart';
 
 
 class ChatSyncServiceFromRemoteToLocal {
@@ -126,3 +129,79 @@ class ChatSyncServiceFromLocalToRemote {
     }
   }
 }
+
+
+
+
+
+// abstract class ChatSyncService {
+//   /// Starts syncing all chats currently stored locally.
+//   Future<void> syncChats();
+
+//   /// Stops all active chat listeners.
+//   Future<void> dispose();
+// }
+
+// class ChatSyncServiceImpl implements ChatSyncService {
+//   final ChatRemoteDatasource remoteDatasource;
+//   final ChatLocalDatasource localDatasource;
+
+//   ChatSyncServiceImpl({
+//     required this.remoteDatasource,
+//     required this.localDatasource,
+//   });
+
+//   final Map<String, StreamSubscription<ChatModel>> _subscriptions = {};
+
+//   @override
+//   Future<void> syncChats() async {
+//     final localChatIds =
+//         (await localDatasource.getChatIdsLocal()).toSet();
+
+//     final listeningIds = _subscriptions.keys.toSet();
+
+//     // Stop listening to chats that no longer exist locally.
+//     for (final chatId in listeningIds.difference(localChatIds)) {
+//       await _stopListening(chatId);
+//     }
+
+//     // Start listening to newly added chats.
+//     for (final chatId in localChatIds.difference(listeningIds)) {
+//       await _startListening(chatId);
+//     }
+//   }
+
+//   Future<void> _startListening(String chatId) async {
+//     if (_subscriptions.containsKey(chatId)) {
+//       return;
+//     }
+
+//     final subscription = remoteDatasource
+//         .watchChat(chatId)
+//         .listen(
+//       (chat) async {
+//         await localDatasource.cacheChat(chat);
+//       },
+//       onError: (_) async {
+//         await _stopListening(chatId);
+//       },
+//     );
+
+//     _subscriptions[chatId] = subscription;
+//   }
+
+//   Future<void> _stopListening(String chatId) async {
+//     final subscription = _subscriptions.remove(chatId);
+
+//     await subscription?.cancel();
+//   }
+
+//   @override
+//   Future<void> dispose() async {
+//     for (final subscription in _subscriptions.values) {
+//       await subscription.cancel();
+//     }
+
+//     _subscriptions.clear();
+//   }
+// }
