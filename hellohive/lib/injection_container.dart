@@ -156,6 +156,8 @@ Future<void> init() async{
 
   //? Friends Usecases
   sl.registerLazySingleton(()=>GetFriendsUseCases(sl()));
+  sl.registerLazySingleton(()=>GetFriendUseCases(sl()));
+  sl.registerLazySingleton(()=>GetFriendsByListIdUsecases(sl()));
   sl.registerLazySingleton(()=>GetRandomFriendsUseCases(sl()));
 
   //? Friends Repositories

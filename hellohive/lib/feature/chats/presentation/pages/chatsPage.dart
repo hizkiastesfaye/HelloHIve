@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hellohive/feature/chats/presentation/pages/chats_friends.dart';
 import 'package:hellohive/feature/chats/presentation/pages/trypage.dart';
 import 'package:hellohive/feature/friends/presentation/bloc/friends_bloc.dart';
 import 'package:http/http.dart';
@@ -39,6 +40,17 @@ class __ChatsPageStateState extends State<ChatsPage>{
               },
               child: Text('Go to Try Chat'),
             ),
+            ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const FriendsListByIdPage(),
+                ),
+              );
+            },
+            child: const Text('Go to chat_friends'),
+          )
           ],
         )
       ),

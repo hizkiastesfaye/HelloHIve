@@ -40,6 +40,6 @@ class GetFriendsByListIdUsecases extends UseCase<List<FriendsEntities>,FriendsId
   GetFriendsByListIdUsecases(this.friendsRepo);
     @override
   Future<Either<Failure, List<FriendsEntities>>> call(FriendsIdsParams params) {
-    return friendsRepo.getRandomFriends();
+    return friendsRepo.getFriendsByListId(params);
   }
 }
