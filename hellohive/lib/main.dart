@@ -48,14 +48,16 @@ void main() async {
   Hive.registerAdapter(FriendsHiveModelAdapter());
   await Hive.openBox<FriendsHiveModel>('friendsBox');
 
-  try {
+  // try {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
     await di.init();
-  } catch (e) {
-    print('Firebase initialization error: $e');
-  }
+    
+  // } catch (e) {
+  //   print('Firebase initialization error: $e');
+
+  // }
   runApp(const MyApp());
 }
 

@@ -3,7 +3,7 @@ import '../../domain/entities/friends_entities.dart';
 
 class FriendsModel extends FriendsEntities {
   FriendsModel({
-    required uId,
+    required String uId,
     required String firstName,
     required String lastName,
     required String username,

@@ -21,9 +21,13 @@ import 'package:hellohive/feature/chats/domain/usecases/chats_usecases.dart';
 import 'package:hellohive/feature/chats/presentation/bloc/chats/chats_bloc.dart';
 import 'package:hellohive/feature/friends/data/datasources/friends_local_DS.dart';
 import 'package:hellohive/feature/friends/data/datasources/friends_remote_DS.dart';
+import 'package:hellohive/feature/friends/data/datasources/friends_sync_service.dart';
 import 'package:hellohive/feature/friends/data/models/friends_hive_model.dart';
+import 'package:hellohive/feature/friends/data/repositories/friend_sync_repo_impl.dart';
 import 'package:hellohive/feature/friends/data/repositories/friends_repo_impl.dart';
+import 'package:hellohive/feature/friends/domain/repositories/friend_sync_repo.dart';
 import 'package:hellohive/feature/friends/domain/repositories/friends_repo.dart';
+import 'package:hellohive/feature/friends/domain/usecases/friends_sync_usecase.dart';
 import 'package:hellohive/feature/friends/domain/usecases/friends_usecases.dart';
 import 'package:hellohive/feature/friends/presentation/bloc/friends_bloc.dart';
 import 'package:hellohive/feature/settings/data/dataSources/user_profile_local.dart';
@@ -43,6 +47,8 @@ Future<void> init() async{
   //!App Initializer
   sl.registerLazySingleton(()=>AppInitializer(
     chatSyncUsecase: sl(),
+    syncFriendsUseCase: sl(),
+    disposeFriendSyncUseCase: sl()
   ));
 
   //!core
@@ -159,12 +165,19 @@ Future<void> init() async{
   sl.registerLazySingleton(()=>GetFriendUseCases(sl()));
   sl.registerLazySingleton(()=>GetFriendsByListIdUsecases(sl()));
   sl.registerLazySingleton(()=>GetRandomFriendsUseCases(sl()));
+  sl.registerLazySingleton(()=>SyncFriendsUseCase(sl()));
+  sl.registerLazySingleton(()=>DisposeFriendSyncUseCase(sl()));
 
   //? Friends Repositories
   sl.registerLazySingleton<FriendsRepo>(()=>FriendsRepoImpl(
     networkInfo: sl(), 
     friendsLocal: sl(), 
     friendsRemote: sl()));
+  sl.registerLazySingleton<FriendsSyncRepository>(
+    () => FriendsSyncRepositoryImpl(
+      syncService: sl(),
+    ),
+  );
 
   //? Friends Data Sources
   sl.registerLazySingleton<FriendsLocalDS>(
@@ -174,7 +187,10 @@ Future<void> init() async{
       )
     );
   sl.registerLazySingleton<FriendsRemoteDS>(()=>FriendsRemoteDsImpl(sl()));
-
+  sl.registerLazySingleton<FriendSyncService>(() => FriendSyncServiceImpl(
+    localDatasource: sl(),
+    remoteDatasource: sl(),
+  ));
 
   //! Features - Chats
   //? Chats Bloc

@@ -110,6 +110,12 @@ class FriendsRepoImpl implements FriendsRepo {
         return Left(NetworkFailure());
       }
 
+    print('++++++++++++++++1by list++++++++++++++++++');
+    print('++++++++++++++++by list++++++++++++++++++');
+    print('++++++++++++++++by list++++++++++++++++++');
+    print(missingIds);
+    print('++++++++++++++++by list++++++++++++++++++');
+    print('++++++++++++++++1by list++++++++++++++++++');
       final remoteFriends = await friendsRemote.getFriendsByListIdRemote(
         FriendsIdsParams(friendsIds: missingIds),
       );
@@ -121,12 +127,17 @@ class FriendsRepoImpl implements FriendsRepo {
         ...remoteFriends,
       ]);
     } on CacheException catch (e) {
+      print('reeeee1eeeeeeuuuuunnnnnn');
+
       return Left(CacheFailure(e.message));
     } on ServerException catch (e) {
       return Left(ServerFailure(e.message));
     } on UnknownException catch (e) {
+      print('reee2eeeeeeeeuuuuunnnnnn');
+
       return Left(UnknownFailure(e.message));
     } catch (_) {
+      print('reeee3eeeeeeeuuuuunnnnnn');
       return Left(UnknownFailure());
     }
   }

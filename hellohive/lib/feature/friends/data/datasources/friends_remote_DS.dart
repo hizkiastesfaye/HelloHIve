@@ -129,6 +129,8 @@ class FriendsRemoteDsImpl implements FriendsRemoteDS {
   Future<List<FriendsModel>> getFriendsByListIdRemote(
     FriendsIdsParams params,
     ) async {
+
+      try{
       if (params.friendsIds.isEmpty) return [];
 
       const chunkSize = 20;
@@ -141,6 +143,8 @@ class FriendsRemoteDsImpl implements FriendsRemoteDS {
               ? params.friendsIds.length
               : i + chunkSize,
         );
+
+
 
         final snapshot = await firebaseFirestore
             .collection('users')
@@ -157,7 +161,22 @@ class FriendsRemoteDsImpl implements FriendsRemoteDS {
         );
       }
 
+      
+
     return friends;
+    } on ServerException catch (e){
+      print('serrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr');
+      print('serrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr');
+      print('serrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr');
+      throw ServerException(e.message);
+    } catch (e){
+      print('uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuunnnnnn');
+      print('uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuunnnnnn');
+      print(e);
+      print('uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuunnnnnn');
+      print('uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuunnnnnn');
+      throw UnknownException();
+    }
   }
 
   @override

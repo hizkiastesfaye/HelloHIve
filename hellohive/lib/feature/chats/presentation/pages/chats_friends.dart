@@ -22,9 +22,7 @@ class _FriendsListByIdPageState extends State<FriendsListByIdPage> {
   final List<String> friendsIds = [
     'ZxHLcmKdfoh499xFizuQp73Rfon2',
     'kFe0FXpgqsZDWLM6g45nCzm1Wnl1',
-    'PO7JWLCipETDQTCCsJM5KdgVZv83',
-    'qj3kn9sPCUgMboBUQRdEtZprZdp1',
-    '6FtoKtyudmQwIIYwVd6DeifRIUZ2',
+    // 'PO7JWLCipETDQTCCsJM5KdgVZv83',
   ];
 
   List<FriendsEntities> friends = [];
@@ -115,17 +113,8 @@ class _FriendsListByIdPageState extends State<FriendsListByIdPage> {
 
         return Card(
           child: ListTile(
-            leading: CircleAvatar(
-              backgroundImage: friend.photoUrl.isNotEmpty
-                  ? NetworkImage(friend.photoUrl)
-                  : null,
-              child: friend.photoUrl.isEmpty
-                  ? Text(
-                      friend.firstName.isNotEmpty
-                          ? friend.firstName[0].toUpperCase()
-                          : '?',
-                    )
-                  : null,
+            leading: Text(
+              friend.uId,
             ),
             title: Text(
               '${friend.firstName} ${friend.lastName}',
