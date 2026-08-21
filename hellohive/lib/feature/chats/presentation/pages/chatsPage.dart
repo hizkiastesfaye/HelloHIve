@@ -42,12 +42,12 @@ class __ChatsPageStateState extends State<ChatsPage>{
             ),
             ElevatedButton(
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const FriendsListByIdPage(),
-                ),
-              );
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) => const FriendsListByIdPage(),
+              //   ),
+              // );
             },
             child: const Text('Go to chat_friends'),
           )

@@ -1,7 +1,8 @@
 import 'dart:async';
 
-import 'package:hellohive/feature/friends/data/datasources/friends_local_ds.dart';
-import 'package:hellohive/feature/friends/data/datasources/friends_remote_ds.dart';
+
+import 'package:hellohive/feature/friends/data/datasources/friends_local_DS.dart';
+import 'package:hellohive/feature/friends/data/datasources/friends_remote_DS.dart';
 import 'package:hellohive/feature/friends/data/models/friends_model.dart';
 
 abstract class FriendSyncService {
@@ -50,7 +51,7 @@ class FriendSyncServiceImpl implements FriendSyncService {
         .watchFriend(friendId)
         .listen(
       (friend) async {
-        await localDatasource.cacheFriendLocal(friend);
+        // await localDatasource.cacheFriendLocal(friend);
       },
       onError: (_) async {
         await _stopListening(friendId);

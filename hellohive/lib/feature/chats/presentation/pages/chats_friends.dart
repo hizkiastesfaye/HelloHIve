@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
+import 'package:hellohive/injection_container.dart' as ic;
 import 'package:hellohive/feature/friends/domain/entities/friends_entities.dart';
 import 'package:hellohive/feature/friends/domain/usecases/friends_usecases.dart';
 import 'package:hellohive/feature/friends/friends_core/friends_usecases_core.dart';
@@ -17,7 +17,7 @@ class FriendsListByIdPage extends StatefulWidget {
 
 class _FriendsListByIdPageState extends State<FriendsListByIdPage> {
   final GetFriendsByListIdUsecases getFriendsByListIdUsecases =
-      GetIt.instance<GetFriendsByListIdUsecases>();
+  ic.sl<GetFriendsByListIdUsecases>();
 
   final List<String> friendsIds = [
     'ZxHLcmKdfoh499xFizuQp73Rfon2',

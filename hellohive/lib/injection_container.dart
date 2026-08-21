@@ -180,6 +180,10 @@ Future<void> init() async{
   );
 
   //? Friends Data Sources
+    sl.registerLazySingleton<FriendSyncService>(() => FriendSyncServiceImpl(
+    localDatasource: sl(),
+    remoteDatasource: sl(),
+  ));
   sl.registerLazySingleton<FriendsLocalDS>(
     ()=>FriendsLocalDsImpl(
       friendsBox: sl(),
@@ -187,10 +191,7 @@ Future<void> init() async{
       )
     );
   sl.registerLazySingleton<FriendsRemoteDS>(()=>FriendsRemoteDsImpl(sl()));
-  sl.registerLazySingleton<FriendSyncService>(() => FriendSyncServiceImpl(
-    localDatasource: sl(),
-    remoteDatasource: sl(),
-  ));
+
 
   //! Features - Chats
   //? Chats Bloc

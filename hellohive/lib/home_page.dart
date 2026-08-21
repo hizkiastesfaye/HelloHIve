@@ -9,7 +9,7 @@ import 'package:hellohive/feature/friends/presentation/pages/friendsPage.dart';
 import 'package:hellohive/feature/settings/presentation/bloc/user_profile_bloc_bloc.dart';
 import 'package:hellohive/feature/settings/presentation/pages/settingsPage.dart';
 import 'package:hellohive/feature/chats/presentation/pages/chatsPage.dart';
-import 'injection_container.dart' as di;
+import 'injection_container.dart' as ic;
 
 
 class HomePage extends StatefulWidget {
@@ -20,7 +20,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final AppInitializer appInitializer = di.sl<AppInitializer>();
+  final AppInitializer appInitializer = ic.sl<AppInitializer>();
   bool _isChatSelected = true;
   bool _isSettingsSelected = false;
   bool _isfriendsSelected = false;
