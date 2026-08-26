@@ -150,7 +150,7 @@ class FriendsRemoteDsImpl implements FriendsRemoteDS {
             .collection('users')
             .where(FieldPath.documentId, whereIn: chunk)
             .get();
-
+        
         friends.addAll(
           snapshot.docs.map(
             (doc) => FriendsModel.fromJson({

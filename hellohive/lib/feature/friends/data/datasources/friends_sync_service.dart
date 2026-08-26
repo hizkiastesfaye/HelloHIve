@@ -28,7 +28,13 @@ class FriendSyncServiceImpl implements FriendSyncService {
   Future<void> syncFriends() async {
     final localFriendIds =
         (await localDatasource.getFriendsIdsLocal()).toSet();
-
+    print('sssyyyyyyyysssssssssssysfysysys');
+    print('sssyyyyyyyysssssssssssysfysysys');
+    print('sssyyyyyyyysssssssssssysfysysys');
+    print(localFriendIds);
+    print('sssyyyyyyyysssssssssssysfysysys');
+    print('sssyyyyyyyysssssssssssysfysysys');
+    print('sssyyyyyyyysssssssssssysfysysys');
     final listeningIds = _subscriptions.keys.toSet();
 
     // Stop listening to friends that no longer exist locally.

@@ -205,7 +205,9 @@ Future<void> init() async{
     deleteChatUseCase: sl(),
     muteChatUseCase: sl(),
     updateLastMessageUseCase: sl(),
-    chatSyncUsecase: sl()
+    chatSyncUsecase: sl(),
+
+    getFriendsByListIdUsecases: sl(),
   ));
 
   //? Chats Usecases

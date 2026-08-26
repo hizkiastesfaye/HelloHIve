@@ -31,7 +31,7 @@ final class ChatLoadedById extends ChatsState{
 }
 
 final class ChatsLoaded extends ChatsState{
-  final List<ChatsEntities> chats;
+  final List<ALLChatsFriendsParams> chats;
   ChatsLoaded(this.chats);
   @override
   List<Object> get props => [chats];

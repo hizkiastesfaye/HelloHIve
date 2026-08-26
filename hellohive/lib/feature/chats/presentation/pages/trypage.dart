@@ -286,7 +286,12 @@ class _TryChatPageState extends State<TryChatPage> {
                       final chat = state.chats[index];
 
                       return ListTile(
-                        title: Text(chat.id),
+                        title: Column(
+                          children: [
+                            Text(chat.chatId),
+                            Text(chat.firstName),
+                          ],
+                        ),
                         subtitle: Text(
                           
                           chat.lastMessageText ?? 'No messages',

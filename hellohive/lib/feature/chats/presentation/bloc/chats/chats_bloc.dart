@@ -1,10 +1,14 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:hellohive/core/core_params.dart';
 import 'package:hellohive/core/errors/failure.dart';
+import 'package:hellohive/core/relate_features/chats_friends.dart';
 import 'package:hellohive/feature/chats/chats_core/chats_core.dart';
 import 'package:hellohive/feature/chats/chats_core/conversion.dart';
 import 'package:hellohive/feature/chats/domain/entities/chats_entities.dart';
 import 'package:hellohive/feature/chats/domain/usecases/chats_usecases.dart';
+import 'package:hellohive/feature/friends/domain/usecases/friends_usecases.dart';
+import 'package:hellohive/feature/friends/friends_core/friends_usecases_core.dart';
 import 'package:meta/meta.dart';
 
 part 'chats_event.dart';
@@ -30,6 +34,8 @@ class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
   final MuteChatUseCase muteChatUseCase;
   final UpdateLastMessageUseCase updateLastMessageUseCase;
   final ChatSyncUsecase chatSyncUsecase;
+
+  final GetFriendsByListIdUsecases getFriendsByListIdUsecases;
   ChatsBloc({
     required this.createChatUseCase,
     required this.getChatUseCase,
@@ -40,7 +46,9 @@ class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
     required this.deleteChatUseCase,
     required this.muteChatUseCase,
     required this.updateLastMessageUseCase,
-    required this.chatSyncUsecase
+    required this.chatSyncUsecase,
+
+    required this.getFriendsByListIdUsecases,
   }) : super(ChatsInitial()) {
     on<CreateChatEvent>((event, emit) async {
       emit(ChatsLoading());
@@ -69,15 +77,105 @@ class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
        );
     });
 
+
     on<GetChatsEvent>((event, emit) async {
       emit(ChatsLoading());
-      final params = UserIdParams(userId: event.userId);
+
+      final params = UserIdParams(
+        userId: event.userId,
+      );
+
       final result = await getChatsUseCase(params);
-      result.fold(
-          (failure) => emit(ChatsError(_mapFailureToMessage(failure))),
-          (chats)=>emit(ChatsLoaded(chats))
+
+      if (result.isLeft()) {
+        final failure = result.fold(
+          (failure) => failure,
+          (_) => null,
         );
+
+        emit(
+          ChatsError(_mapFailureToMessage(failure!)),
+        );
+
+        return;
+      }
+
+      final chats = result.fold(
+        (_) => <ChatsEntities>[],
+        (chats) => chats,
+      );
+
+      if (chats.isEmpty) {
+        emit(ChatsLoaded([]));
+        return;
+      }
+
+      final friendsIds = getOtherUserIds(chats);
+      print('friendsId');
+      print('friendsId');
+      print('friendsId');
+      print(friendsIds);
+      print('friendsId');
+      print('friendsId');
+      print('friendsId');
+
+      final friendsResult = await getFriendsByListIdUsecases(
+        FriendsIdsParams(
+          friendsIds: friendsIds,
+        ),
+      );
+
+      friendsResult.fold(
+        (failure) {
+          emit(
+            ChatsError(_mapFailureToMessage(failure)),
+          );
+        },
+        (friends) {
+          print('freinds');
+          print('freinds');
+          print('freinds');
+          print('freinds');
+          print(friends.length);
+          print('freinds');
+          print('freinds');
+          print('freinds');
+          final finalResult = getChatsWithFriends(
+            chats,
+            friends,
+          );
+
+          emit(
+            ChatsLoaded(finalResult),
+          );
+        },
+      );
     });
+
+    // on<GetChatsEvent>((event, emit) async {
+    //   emit(ChatsLoading());
+    //   final params = UserIdParams(userId: event.userId);
+    //   final result = await getChatsUseCase(params);
+    //   result.fold(
+    //       (failure) => emit(ChatsError(_mapFailureToMessage(failure))),
+    //       (chats) {
+    //         if (chats.isEmpty){
+    //           return;
+    //         }
+    //         final friendsIds = getOtherUserIds(chats);
+    //         final friends = await getFriendsByListIdUsecases(
+    //           FriendsIdsParams(friendsIds: friendsIds)
+    //         );
+    //         friends.fold(
+    //           (failure)=> emit(ChatsError(_mapFailureToMessage(failure))),
+    //           (friends){
+    //             final finalResult=getChatsWithFriends(chats,friends);
+    //             emit(ChatsLoaded(finalResult));
+    //           }
+    //         );
+    //         }
+    //     );
+    // });
 
     on<GetChatByIdEvent>((event, emit) async {
       emit(ChatsLoading());
