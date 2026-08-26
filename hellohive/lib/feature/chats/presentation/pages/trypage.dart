@@ -92,8 +92,8 @@ class _TryChatPageState extends State<TryChatPage> {
                               // currentUserController.text,
                               // userBId: userBController.text,
                               currentUserId: 'kFe0FXpgqsZDWLM6g45nCzm1Wnl1',
-                              // userBId: 'PO7JWLCipETDQTCCsJM5KdgVZv83'
-                              userBId: 'ZxHLcmKdfoh499xFizuQp73Rfon2'
+                              userBId: 'ZGm1JO2tA1NWkNpN1Ma5U8q2qhx1'
+                              // userBId: 'ZxHLcmKdfoh499xFizuQp73Rfon2'
                             ),
                           );
                     },

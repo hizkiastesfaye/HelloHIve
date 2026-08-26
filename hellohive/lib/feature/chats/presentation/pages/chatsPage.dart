@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hellohive/feature/chats/presentation/pages/chatpage.dart';
 import 'package:hellohive/feature/chats/presentation/pages/chats_friends.dart';
 import 'package:hellohive/feature/chats/presentation/pages/trypage.dart';
 import 'package:hellohive/feature/friends/presentation/bloc/friends_bloc.dart';
@@ -15,6 +16,9 @@ class __ChatsPageStateState extends State<ChatsPage>{
   @override
   Widget build(BuildContext context){
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Chats Home Page'),
+      ),
       body: Center( child:
         Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -50,6 +54,20 @@ class __ChatsPageStateState extends State<ChatsPage>{
               );
             },
             child: const Text('Go to chat_friends'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              // context.read<ChatsBloc>().add(
+              //   GetChatsEvent(userId: 'kFe0FXpgqsZDWLM6g45nCzm1Wnl1')
+              // );
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ChatPage(),
+                ),
+              );
+            },
+            child: const Text('Go to chat chats'),
           )
           ],
         )

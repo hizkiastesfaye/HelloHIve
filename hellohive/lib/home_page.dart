@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hellohive/core/app_initialize.dart';
 import 'package:hellohive/feature/chats/domain/usecases/chats_usecases.dart';
 import 'package:hellohive/feature/chats/presentation/bloc/chats/chats_bloc.dart';
+import 'package:hellohive/feature/chats/presentation/pages/chatpage.dart';
 import 'package:hellohive/feature/friends/presentation/pages/friendsPage.dart';
 import 'package:hellohive/feature/settings/presentation/bloc/user_profile_bloc_bloc.dart';
 import 'package:hellohive/feature/settings/presentation/pages/settingsPage.dart';
@@ -37,7 +38,7 @@ Future<void> _initializeApp() async {
 
   Widget _builder() {
     if (_isChatSelected) {
-      return ChatsPage();
+      return ChatPage();
     } else if (_isSettingsSelected) {
       // return Text('Settings Page');
       return SettingsPage();

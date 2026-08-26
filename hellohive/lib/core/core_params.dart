@@ -3,8 +3,8 @@ import 'package:equatable/equatable.dart';
 
 class ALLChatsFriendsParams extends Equatable{
   final String chatId;
-  final Map<String, int> unreadCount;
-  final Map<String, bool> mutedBy;
+  final int unreadCount;
+  final bool mutedBy;
   final Map<String, bool> deletedBy;
   final DateTime createdAt;
   final DateTime updatedAt;
