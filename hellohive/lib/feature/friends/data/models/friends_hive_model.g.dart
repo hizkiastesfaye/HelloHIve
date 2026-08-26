@@ -22,13 +22,14 @@ class FriendsHiveModelAdapter extends TypeAdapter<FriendsHiveModel> {
       lastName: fields[2] as String,
       username: fields[3] as String,
       photoUrl: fields[4] as String,
+      description: fields[5] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, FriendsHiveModel obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.uId)
       ..writeByte(1)
@@ -38,7 +39,9 @@ class FriendsHiveModelAdapter extends TypeAdapter<FriendsHiveModel> {
       ..writeByte(3)
       ..write(obj.username)
       ..writeByte(4)
-      ..write(obj.photoUrl);
+      ..write(obj.photoUrl)
+      ..writeByte(5)
+      ..write(obj.description);
   }
 
   @override

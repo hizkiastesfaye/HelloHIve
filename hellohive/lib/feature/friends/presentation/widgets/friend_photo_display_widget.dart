@@ -3,7 +3,8 @@ import 'package:hellohive/feature/settings/domain/entities/user_profile_entities
 
 class FriendPhotoDisplayWidget extends StatelessWidget {
   final String photoUrl;
-  const FriendPhotoDisplayWidget({super.key, required this.photoUrl});
+  final double? size;
+  const FriendPhotoDisplayWidget({super.key, required this.photoUrl, this.size });
 
   @override
   Widget build(BuildContext context) {
@@ -37,8 +38,8 @@ class FriendPhotoDisplayWidget extends StatelessWidget {
         child: Image.asset(
           // 'assets/images/allstar.jpg',
           photoUrl,
-          height: 40,
-          width: 40,
+          height: size ?? 50,
+          width: size ?? 50,
           fit: BoxFit.cover,
         ),
       ),

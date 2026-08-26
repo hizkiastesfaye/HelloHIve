@@ -25,81 +25,76 @@ class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          
-          BlocBuilder<ChatsBloc, ChatsState>(
-            builder: (context, state) {
-              if (state is ChatsLoading) {
-                return Center(child: CircularProgressIndicator());
-              } else if (state is ChatsError) {
-                return Center(child: Text(state.message));
-              } else if (state is ChatsLoaded) {
-                final chats = state.chats;
-                return ListView.builder(
-                  itemCount: chats.length,
-                  itemBuilder: (context, index) {
-                    final chat = chats[index];
-                    return Card(
-                      elevation: 2,
-                      margin: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                      shadowColor: Colors.black.withOpacity(0.1),
-                      color: Colors.white,
-                      child: ListTile(
-                        leading:FriendPhotoDisplayWidget(photoUrl: chat.photoUrl),
-                        title: Text(
-                          '${chat.firstName} ${chat.lastName}',
-                          style: TextTheme.of(context).titleLarge,
-                          ),
-                        subtitle: Text(
-                          chat.lastMessageText?.isNotEmpty == true
-                            ? chat.lastMessageText!
-                            : 'say hi to your friend.',
-                          style: TextTheme.of(context).bodySmall,
-                          ),
-                          trailing: Column(children: [
-                            Text(
-                              chat.lastMessageTime != null
-                                  ? '${chat.lastMessageTime!.hour}:${chat.lastMessageTime!.minute}'
-                                  : '${DateTime.now().hour}:${DateTime.now().minute}',
-                              style: TextTheme.of(context).bodySmall,
-                            ),
-                            if (chat.unreadCount > 0)
-                              Container(
-                                padding: EdgeInsets.all(6),
-                                decoration: BoxDecoration(
-                                  color: Colors.blue,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Text(
-                                  '${chat.unreadCount}',
-                                  style: TextTheme.of(context).bodySmall?.copyWith(color: Colors.white),
-                                ),
-                              ),
-                          ],),
-                        onTap: () {
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //     builder: (context) => ChatDetailsPage(chatId: chat.id),
-                          //   ),
-                          // );
-                          Navigator.push(
-                            context, 
-                            MaterialPageRoute(
-                              builder: (context) => ChatsPage()));
-                          // Navigate to chat details page
-                        },
+      body: BlocBuilder<ChatsBloc, ChatsState>(
+        builder: (context, state) {
+          if (state is ChatsLoading) {
+            return Center(child: CircularProgressIndicator());
+          } else if (state is ChatsError) {
+            return Center(child: Text(state.message));
+          } else if (state is ChatsLoaded) {
+            final chats = state.chats;
+            return ListView.builder(
+              itemCount: chats.length,
+              itemBuilder: (context, index) {
+                final chat = chats[index];
+                return Card(
+                  elevation: 2,
+                  margin: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  shadowColor: Colors.black.withOpacity(0.1),
+                  color: Colors.white,
+                  child: ListTile(
+                    leading:FriendPhotoDisplayWidget(photoUrl: chat.photoUrl),
+                    title: Text(
+                      '${chat.firstName} ${chat.lastName}',
+                      style: TextTheme.of(context).titleLarge,
                       ),
-                    );
-                  },
+                    subtitle: Text(
+                      chat.lastMessageText?.isNotEmpty == true
+                        ? chat.lastMessageText!
+                        : 'say hi to your friend.',
+                      style: TextTheme.of(context).bodySmall,
+                      ),
+                      trailing: Column(children: [
+                        Text(
+                          chat.lastMessageTime != null
+                              ? '${chat.lastMessageTime!.hour}:${chat.lastMessageTime!.minute}'
+                              : '${DateTime.now().hour}:${DateTime.now().minute}',
+                          style: TextTheme.of(context).bodySmall,
+                        ),
+                        if (chat.unreadCount > 0)
+                          Container(
+                            padding: EdgeInsets.all(6),
+                            decoration: BoxDecoration(
+                              color: Colors.blue,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Text(
+                              '${chat.unreadCount}',
+                              style: TextTheme.of(context).bodySmall?.copyWith(color: Colors.white),
+                            ),
+                          ),
+                      ],),
+                    onTap: () {
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (context) => ChatDetailsPage(chatId: chat.id),
+                      //   ),
+                      // );
+                      Navigator.push(
+                        context, 
+                        MaterialPageRoute(
+                          builder: (context) => ChatsPage()));
+                      // Navigate to chat details page
+                    },
+                  ),
                 );
-              } else {
-                return Center(child: Text('No chats available'));
-              }
-            },
-          ),
-        ],
+              },
+            );
+          } else {
+            return Center(child: Text('No chats available'));
+          }
+        },
       )
      
     );

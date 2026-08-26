@@ -25,18 +25,24 @@ class FriendsHiveModel extends FriendsModel {
   @override
   final String photoUrl;
 
+  @HiveField(5)
+  @override
+  final String description;
+
   FriendsHiveModel({
     required this.uId,
     required this.firstName,
     required this.lastName,
     required this.username,
     required this.photoUrl,
+    required this.description,
   }) : super(
           uId: uId,
           firstName: firstName,
           lastName: lastName,
           username: username,
           photoUrl: photoUrl,
+          description: description,
         );
 }
 
@@ -48,6 +54,7 @@ extension FriendsModelMapper on FriendsModel {
       lastName: lastName,
       username: username,
       photoUrl: photoUrl,
+      description: description,
     );
   }
 }
@@ -60,6 +67,7 @@ extension FriendsHiveModelMapper on FriendsHiveModel {
       lastName: lastName,
       username: username,
       photoUrl: photoUrl,
+      description: description,
     );
   }
 }

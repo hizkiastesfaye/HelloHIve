@@ -64,7 +64,9 @@ class FriendsRemoteDsImpl implements FriendsRemoteDS {
               data['firstName'] != null &&
               data['firstName'].toString().trim().isNotEmpty &&
               data['lastName'] != null &&
-              data['lastName'].toString().trim().isNotEmpty;
+              data['lastName'].toString().trim().isNotEmpty &&
+              data['description'] != null &&
+              data['description'].toString().trim().isNotEmpty;
         })
         .map((friend) => FriendsModel.fromJson({
           ...friend.data(),
@@ -94,7 +96,9 @@ class FriendsRemoteDsImpl implements FriendsRemoteDS {
               data['firstName'] != null &&
               data['firstName'].toString().trim().isNotEmpty &&
               data['lastName'] != null &&
-              data['lastName'].toString().trim().isNotEmpty;
+              data['lastName'].toString().trim().isNotEmpty &&
+              data['description'] != null &&
+              data['description'].toString().trim().isNotEmpty;
         })
         .map((friend) => FriendsModel.fromJson({
           ...friend.data(),

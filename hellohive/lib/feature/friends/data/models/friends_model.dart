@@ -8,12 +8,14 @@ class FriendsModel extends FriendsEntities {
     required String lastName,
     required String username,
     required String photoUrl,
+    required String description,
   }) : super(
           uId: uId,
           firstName:firstName,
           lastName: lastName,
           username: username,
           photoUrl: photoUrl,
+          description: description,
         );
 
   factory FriendsModel.fromJson(Map<String, dynamic> json) {
@@ -23,6 +25,7 @@ class FriendsModel extends FriendsEntities {
       lastName: json['lastName'],
       username: json['username'],
       photoUrl: json['photoUrl'],
+      description: json['description'],
     );
   }
 
@@ -33,6 +36,7 @@ class FriendsModel extends FriendsEntities {
       'lastName': lastName,
       'username': username,
       'photoUrl': photoUrl,
+      'description': description,
     };
   } 
 }

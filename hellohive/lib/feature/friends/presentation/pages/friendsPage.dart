@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hellohive/feature/friends/presentation/bloc/friends_bloc.dart';
+import 'package:hellohive/feature/friends/presentation/pages/Friend_detail.dart';
 import '../widgets/widgets.dart';
 class FriendsPage extends StatefulWidget {
   const FriendsPage({super.key});
@@ -247,11 +248,14 @@ class _FriendsPageState extends State<FriendsPage> {
                     return Column(
                       children: state.friends.map((friend){
                         return ListTile(
-                          leading: FriendPhotoDisplayWidget(photoUrl:friend.photoUrl),
+                          leading: FriendPhotoDisplayWidget(photoUrl:friend.photoUrl,),
                           title: Text('${friend.firstName} ${friend.lastName}'),
                           subtitle: Text('@${friend.username}'),
                           onTap: (){
-                            Navigator.pushNamed(context, '/addUserProfile');
+                            // Navigator.pushNamed(context, '/addUserProfile');
+                            Navigator.push(
+                              context, 
+                              MaterialPageRoute(builder: (context) => FriendDetailsPage(friend: friend)));
                           },
                         );
                       }).toList(),
