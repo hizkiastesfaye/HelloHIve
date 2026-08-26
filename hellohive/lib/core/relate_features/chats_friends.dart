@@ -17,10 +17,12 @@ List<String> getOtherUserIds(
         throw 'user error';
     }
     final currentUserId = user.uid;
-    final participants = chats
+    final chatss = chats.where((chat) => chat.deletedBy[currentUserId] != true);
+    final participants = chatss
         .map((chat) => chat.participants)
         .toList();
     return participants
+    
       .expand((chat) => chat)
       .where((id) => id != currentUserId)
       .toList();
@@ -64,6 +66,7 @@ List<ALLChatsFriendsParams> getChatsWithFriends(
         lastName: friend.lastName,
         username: friend.username,
         photoUrl: friend.photoUrl,
+        description: friend.description,
       ),
     );
   }

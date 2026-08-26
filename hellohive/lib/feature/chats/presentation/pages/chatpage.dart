@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hellohive/feature/chats/presentation/bloc/chats/chats_bloc.dart';
+import 'package:hellohive/feature/chats/presentation/pages/chat_friend_detail.dart';
 import 'package:hellohive/feature/chats/presentation/pages/chatsPage.dart';
 import 'package:hellohive/feature/friends/presentation/widgets/friend_photo_display_widget.dart';
 
 class ChatPage extends StatefulWidget {
-  const ChatPage({super.key});
+  final String uId;
+  const ChatPage({super.key, required this.uId});
 
   @override
   State<ChatPage> createState() => _ChatPageState();
@@ -18,7 +20,8 @@ class _ChatPageState extends State<ChatPage> {
 
     context.read<ChatsBloc>().add(
       GetChatsEvent(
-        userId: 'kFe0FXpgqsZDWLM6g45nCzm1Wnl1',
+        // userId: 'kFe0FXpgqsZDWLM6g45nCzm1Wnl1',
+        userId: widget.uId
       ),
     );
   }
@@ -75,16 +78,16 @@ class _ChatPageState extends State<ChatPage> {
                           ),
                       ],),
                     onTap: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder: (context) => ChatDetailsPage(chatId: chat.id),
-                      //   ),
-                      // );
                       Navigator.push(
-                        context, 
+                        context,
                         MaterialPageRoute(
-                          builder: (context) => ChatsPage()));
+                          builder: (context) => ChatFriendDetail(friend: chat),
+                        ),
+                      );
+                      // Navigator.push(
+                      //   context, 
+                      //   MaterialPageRoute(
+                      //     builder: (context) => ChatsPage()));
                       // Navigate to chat details page
                     },
                   ),

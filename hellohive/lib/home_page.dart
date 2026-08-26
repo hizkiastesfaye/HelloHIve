@@ -25,6 +25,7 @@ class _HomePageState extends State<HomePage> {
   bool _isChatSelected = true;
   bool _isSettingsSelected = false;
   bool _isfriendsSelected = false;
+  String uId = '';
   
 @override
 void initState() {
@@ -38,7 +39,7 @@ Future<void> _initializeApp() async {
 
   Widget _builder() {
     if (_isChatSelected) {
-      return ChatPage();
+      return ChatPage(uId:uId);
     } else if (_isSettingsSelected) {
       // return Text('Settings Page');
       return SettingsPage();
@@ -68,6 +69,7 @@ Future<void> _initializeApp() async {
         //   );
         // }
         if(state is UserProfileLoaded){
+          uId = state.userProfiles.id;
           print('-----------------user profile loaded in home page------------------');
           print('-----------------user profile loaded in home page------------------');
           print('-----------------user profile loaded in home page------------------');

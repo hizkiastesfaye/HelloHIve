@@ -16,6 +16,7 @@ class ALLChatsFriendsParams extends Equatable{
   final String lastName;
   final String username;
   final String photoUrl;
+  final String description;
 
   ALLChatsFriendsParams({
     required this.chatId,
@@ -32,13 +33,14 @@ class ALLChatsFriendsParams extends Equatable{
     required this.lastName,
     required this.username,
     required this.photoUrl,
+    required this.description,
   });
 
     @override
   List<Object?> get props => [
     chatId,unreadCount,mutedBy,deletedBy,
     createdAt,updatedAt,friendId, firstName,
-    lastName, username, photoUrl,
+    lastName, username, photoUrl, description,
     lastMessageId,lastMessageText,lastMessageTime,
     
   ];

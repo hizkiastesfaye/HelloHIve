@@ -96,22 +96,8 @@ Stream<List<ChatModel>> watchChats(
     UserIdParams params,
   ) async {
     try{
-      print('------------------------------------------');
-      print('------------------------------------------');
-      print('------------------------------------------');
-      print('------------------------------------------');
-      print('remote ds');
-      print('------------------------------------------');
-      print('------------------------------------------');
-      print('------------------------------------------');
-      print('------------------------------------------');
       final firebaseUser = FirebaseAuth.instance.currentUser;
 
-      print('====================================');
-      print('Firebase authenticated UID: ${firebaseUser?.uid}');
-      print('Params userId: ${params.userId}');
-      print('Email: ${firebaseUser?.email}');
-      print('====================================');
       final snapshot = await chats
           .where(
             'participants',
@@ -132,20 +118,11 @@ Stream<List<ChatModel>> watchChats(
             ),
           )
           .toList();
-      print('------------------------------------------');
-      print('------------------remote ds 2------------------------');
-      print('------------------------------------------');
-      print('DOC COUNT: ${snapshot.docs.length}');
       for(final i in result){
         print(i);
       }
       return result;
     } catch (e){
-      print('cccccccccccccaaaaaaaaattttttttcccccchhhhh');
-      print('cccccccccccccaaaaaaaaattttttttcccccchhhhh');
-      print(e);
-      print('cccccccccccccaaaaaaaaattttttttcccccchhhhh');
-      
       throw e.toString();
     }
   }

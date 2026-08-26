@@ -1,25 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hellohive/core/core_params.dart';
 
 import 'package:hellohive/feature/friends/domain/entities/friends_entities.dart';
 import 'package:hellohive/feature/friends/presentation/widgets/friend_photo_display_widget.dart';
 
-class FriendDetailsPage extends StatefulWidget {
-  final FriendsEntities friend;
+class ChatFriendDetail extends StatefulWidget {
+  final ALLChatsFriendsParams friend;
 
-  const FriendDetailsPage({
+  const ChatFriendDetail({
     super.key,
     required this.friend,
   });
 
   @override
-  State<FriendDetailsPage> createState() => _FriendDetailsPageState();
+  State<ChatFriendDetail> createState() => _ChatFriendDetailsPageState();
 }
 
-class _FriendDetailsPageState extends State<FriendDetailsPage> {
+class _ChatFriendDetailsPageState extends State<ChatFriendDetail> {
   bool _isMuted = false;
 
-  FriendsEntities get friend => widget.friend;
+  ALLChatsFriendsParams get friend => widget.friend;
 
   String get fullName {
     return '${friend.firstName} ${friend.lastName}'.trim();
@@ -208,26 +209,26 @@ class _FriendDetailsPageState extends State<FriendDetailsPage> {
       padding: const EdgeInsets.symmetric(horizontal: 12),
       child: Row(
         children: [
+          // Expanded(
+          //   child: _ActionButton(
+          //     label: 'Message',
+          //     onPressed: _openChat,
+          //   ),
+          // ),
+          const SizedBox(width: 10),
           Expanded(
             child: _ActionButton(
-              label: 'Message',
-              onPressed: _openChat,
+              label: 'Delete',
+              onPressed: _showDeleteDialog,
             ),
           ),
           const SizedBox(width: 10),
-          // Expanded(
-          //   child: _ActionButton(
-          //     label: 'Delete',
-          //     onPressed: _showDeleteDialog,
-          //   ),
-          // ),
-          // const SizedBox(width: 10),
-          // Expanded(
-          //   child: _ActionButton(
-          //     label: _isMuted ? 'Unmute' : 'Mute',
-          //     onPressed: _toggleMute,
-          //   ),
-          // ),
+          Expanded(
+            child: _ActionButton(
+              label: _isMuted ? 'Unmute' : 'Mute',
+              onPressed: _toggleMute,
+            ),
+          ),
         ],
       ),
     );
@@ -244,13 +245,13 @@ class _FriendDetailsPageState extends State<FriendDetailsPage> {
             thickness: 8,
             color: Color(0xFFF2F2F2),
           ),
-          // _buildDangerActions(),
+          _buildDangerActions(),
           const Divider(
             height: 8,
             thickness: 8,
             color: Color(0xFFF2F2F2),
           ),
-          // _buildMediaSection(),
+          _buildMediaSection(),
         ],
       ),
     );

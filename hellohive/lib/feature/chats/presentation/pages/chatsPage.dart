@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/chats/chats_bloc.dart';
 
 class ChatsPage extends StatefulWidget{
+  
   const ChatsPage({super.key});
   @override
   __ChatsPageStateState createState() => __ChatsPageStateState();
@@ -36,6 +37,7 @@ class __ChatsPageStateState extends State<ChatsPage>{
               onPressed: () {
                 // Navigator.pushNamed(context, '/tryChat');
                 context.read<ChatsBloc>().add(
+                  
                   ChatSyncEvent('kFe0FXpgqsZDWLM6g45nCzm1Wnl1')
                 );
 
@@ -63,7 +65,7 @@ class __ChatsPageStateState extends State<ChatsPage>{
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const ChatPage(),
+                  builder: (context) => const ChatPage(uId:'kFe0FXpgqsZDWLM6g45nCzm1Wnl1'),
                 ),
               );
             },
