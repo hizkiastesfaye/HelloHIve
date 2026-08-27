@@ -253,6 +253,7 @@ class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
         chatId: event.chatId,
         isMuted: event.isMuted,
       );
+      
       final result = await muteChatUseCase(params);
       result.fold(
           (failure) => emit(ChatsError(_mapFailureToMessage(failure))),

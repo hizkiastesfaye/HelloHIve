@@ -15,15 +15,15 @@ class ChatRemoteDatasourceImpl implements ChatRemoteDatasource {
     try {
       print('-----------------Chat created in remote datasource------------------');
 
-      final chatId = generateChatId(params.currentUserId, params.userBId);
+      final chatId = generateChatId(currentUser!.uid, params.userBId);
       final chatDoc = chats.doc(chatId);
       // final existDoc = await chatDoc.get();
-      final Map<String,bool> stat = {params.currentUserId:false,params.userBId:false};
+      final Map<String,bool> stat = {currentUser!.uid:false,params.userBId:false};
       final chatData = {
         'id':chatId,
-        'participants':[params.currentUserId, params.userBId],
+        'participants':[currentUser!.uid, params.userBId],
         'unreadCount': {
-          params.currentUserId: 0,
+          currentUser!.uid: 0,
           params.userBId: 0
         },
         'mutedBy': stat,
@@ -42,7 +42,7 @@ class ChatRemoteDatasourceImpl implements ChatRemoteDatasource {
       print('-----------------Chat created in remote datasource------------------');
       print('-----------------Chat created in remote datasource------------------');
       print('-----------------Chat created in remote datasource------------------');
-      print('${params.currentUserId} and ${params.userBId} ');
+      print('${currentUser!.uid} and ${params.userBId} ');
       print('-----------------Chat created in remote datasource------------------');
       print('-----------------Chat created in remote datasource------------------');
 
@@ -77,7 +77,7 @@ Stream<List<ChatModel>> watchChats(
     UsersChatParams params,
   ) async {
     final chatId = generateChatId(
-      params.currentUserId, 
+      currentUser!.uid, 
       params.userBId,
       );
 
@@ -166,7 +166,7 @@ Stream<List<ChatModel>> watchChats(
       doc.data() as Map<String, dynamic>,
     );
 
-    chat.deletedBy[params.userId] = true;
+    chat.deletedBy[currentUser!.uid] = true;
 
     final allDeleted = chat.deletedBy.values.every((value) => value);
 
@@ -175,7 +175,7 @@ Stream<List<ChatModel>> watchChats(
     }
     else{
       await docRef.update({
-      'deletedBy.${params.userId}': true,
+      'deletedBy.${currentUser!.uid}': true,
       'updatedAt': FieldValue.serverTimestamp(),
       });
     }
@@ -186,7 +186,7 @@ Stream<List<ChatModel>> watchChats(
     MuteChatParams params,
   ) async {
     await chats.doc(params.chatId).update({
-      'mutedBy.${params.currentUserId}': params.isMuted,
+      'mutedBy.${currentUser!.uid}': params.isMuted,
       'updatedAt': FieldValue.serverTimestamp(),
     });
 

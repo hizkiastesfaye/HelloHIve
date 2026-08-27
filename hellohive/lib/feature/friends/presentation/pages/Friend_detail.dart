@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hellohive/feature/friends/domain/entities/friends_entities.dart';
 import 'package:hellohive/feature/friends/presentation/widgets/friend_photo_display_widget.dart';
 
+import '../../../chats/presentation/bloc/chats/chats_bloc.dart';
+
 class FriendDetailsPage extends StatefulWidget {
   final FriendsEntities friend;
 
@@ -38,17 +40,17 @@ class _FriendDetailsPageState extends State<FriendDetailsPage> {
   }
 
   void _openChat() {
+
+    context.read<ChatsBloc>().add(
+      CreateChatEvent(
+        currentUserId: '', // Replace with the actual current user ID
+        userBId: friend.uId,
+      ),
+    );
     // Replace this with your chat page/navigation.
     //
     // Example:
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: (_) => ChatPage(
-    //       friend: friend,
-    //     ),
-    //   ),
-    // );
+    Navigator.pushNamed(context, '/chatMessage');
   }
 
   void _deleteFriend() {
