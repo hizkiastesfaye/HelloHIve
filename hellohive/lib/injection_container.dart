@@ -207,6 +207,7 @@ Future<void> init() async{
     updateLastMessageUseCase: sl(),
     chatSyncUsecase: sl(),
 
+    getFriendUseCases: sl(),
     getFriendsByListIdUsecases: sl(),
   ));
 

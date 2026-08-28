@@ -9,10 +9,7 @@ import '../../../chats/presentation/bloc/chats/chats_bloc.dart';
 class FriendDetailsPage extends StatefulWidget {
   final FriendsEntities friend;
 
-  const FriendDetailsPage({
-    super.key,
-    required this.friend,
-  });
+  const FriendDetailsPage({super.key, required this.friend});
 
   @override
   State<FriendDetailsPage> createState() => _FriendDetailsPageState();
@@ -40,7 +37,6 @@ class _FriendDetailsPageState extends State<FriendDetailsPage> {
   }
 
   void _openChat() {
-
     context.read<ChatsBloc>().add(
       CreateChatEvent(
         currentUserId: '', // Replace with the actual current user ID
@@ -88,9 +84,7 @@ class _FriendDetailsPageState extends State<FriendDetailsPage> {
       builder: (context) {
         return AlertDialog(
           title: const Text('Delete friend?'),
-          content: Text(
-            'Are you sure you want to delete $fullName?',
-          ),
+          content: Text('Are you sure you want to delete $fullName?'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context, false),
@@ -117,36 +111,52 @@ class _FriendDetailsPageState extends State<FriendDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
+    return BlocListener<ChatsBloc, ChatsState>(
+      listener: (context, state) {
+        // TODO: implement listener
+        if(state is ChatCreated){
+          context.read<ChatsBloc>().add(
+            GetChatEvent(
+              currentUserId: '', // Replace with the actual current user ID
+              userBId: friend.uId, // Replace with the actual current user ID
+            ),
+          );
+          // Navigator.pushNamed(
+          //   context,
+          //   '/chatMessage',
+          //   arguments: state.chatId, // Pass the chatId as an argument
+          // );
+        }
+        if(state is ChatLoaded){
+          Navigator.pushNamed(
+            context,
+            '/chatMessage',
+            arguments: state.chat.id, // Pass the chatId as an argument
+          );
+        }
+      },
+      child: Scaffold(
         backgroundColor: Colors.white,
-        elevation: 0,
-        surfaceTintColor: Colors.transparent,
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.black,
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0,
+          surfaceTintColor: Colors.transparent,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.black),
+            onPressed: () => Navigator.pop(context),
           ),
-          onPressed: () => Navigator.pop(context),
         ),
-      ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            _buildProfileHeader(),
-            const SizedBox(height: 16),
-            _buildActionButtons(),
-            const SizedBox(height: 16),
-            const Divider(
-              height: 8,
-              thickness: 8,
-              color: Color(0xFFF2F2F2),
-            ),
-            Expanded(
-              child: _buildDetailsContent(),
-            ),
-          ],
+        body: SafeArea(
+          child: Column(
+            children: [
+              _buildProfileHeader(),
+              const SizedBox(height: 16),
+              _buildActionButtons(),
+              const SizedBox(height: 16),
+              const Divider(height: 8, thickness: 8, color: Color(0xFFF2F2F2)),
+              Expanded(child: _buildDetailsContent()),
+            ],
+          ),
         ),
       ),
     );
@@ -156,7 +166,7 @@ class _FriendDetailsPageState extends State<FriendDetailsPage> {
     return Column(
       children: [
         // _buildAvatar(),
-        FriendPhotoDisplayWidget(photoUrl: friend.photoUrl,size: 100,),
+        FriendPhotoDisplayWidget(photoUrl: friend.photoUrl, size: 100),
         const SizedBox(height: 12),
 
         Text(
@@ -172,10 +182,7 @@ class _FriendDetailsPageState extends State<FriendDetailsPage> {
 
         Text(
           '@${friend.username}',
-          style: const TextStyle(
-            fontSize: 16,
-            color: Colors.grey,
-          ),
+          style: const TextStyle(fontSize: 16, color: Colors.grey),
         ),
       ],
     );
@@ -211,10 +218,7 @@ class _FriendDetailsPageState extends State<FriendDetailsPage> {
       child: Row(
         children: [
           Expanded(
-            child: _ActionButton(
-              label: 'Message',
-              onPressed: _openChat,
-            ),
+            child: _ActionButton(label: 'Message', onPressed: _openChat),
           ),
           const SizedBox(width: 10),
           // Expanded(
@@ -241,17 +245,9 @@ class _FriendDetailsPageState extends State<FriendDetailsPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildBasicInformation(),
-          const Divider(
-            height: 8,
-            thickness: 8,
-            color: Color(0xFFF2F2F2),
-          ),
+          const Divider(height: 8, thickness: 8, color: Color(0xFFF2F2F2)),
           // _buildDangerActions(),
-          const Divider(
-            height: 8,
-            thickness: 8,
-            color: Color(0xFFF2F2F2),
-          ),
+          const Divider(height: 8, thickness: 8, color: Color(0xFFF2F2F2)),
           // _buildMediaSection(),
         ],
       ),
@@ -266,37 +262,27 @@ class _FriendDetailsPageState extends State<FriendDetailsPage> {
         children: [
           const Text(
             'username',
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey,
-            ),
+            style: TextStyle(fontSize: 14, color: Colors.grey),
           ),
           const SizedBox(height: 4),
           Text(
             friend.username,
-            style: const TextStyle(
-              fontSize: 18,
-              color: Colors.black87,
-            ),
+            style: const TextStyle(fontSize: 18, color: Colors.black87),
           ),
 
           const SizedBox(height: 20),
 
           const Text(
             'About',
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey,
-            ),
+            style: TextStyle(fontSize: 14, color: Colors.grey),
           ),
           const SizedBox(height: 4),
 
           Text(
-            friend.description .isNotEmpty ? friend.description : "It's good to have HelloHive.",
-            style: const TextStyle(
-              fontSize: 17,
-              color: Colors.grey,
-            ),
+            friend.description.isNotEmpty
+                ? friend.description
+                : "It's good to have HelloHive.",
+            style: const TextStyle(fontSize: 17, color: Colors.grey),
           ),
         ],
       ),
@@ -305,10 +291,7 @@ class _FriendDetailsPageState extends State<FriendDetailsPage> {
 
   Widget _buildDangerActions() {
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 20,
-        vertical: 14,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
       child: Row(
         children: [
           Expanded(
@@ -322,10 +305,7 @@ class _FriendDetailsPageState extends State<FriendDetailsPage> {
               ),
               child: Text(
                 'Block $fullName',
-                style: const TextStyle(
-                  fontSize: 17,
-                  color: Colors.redAccent,
-                ),
+                style: const TextStyle(fontSize: 17, color: Colors.redAccent),
               ),
             ),
           ),
@@ -340,10 +320,7 @@ class _FriendDetailsPageState extends State<FriendDetailsPage> {
               ),
               child: Text(
                 'Report $fullName',
-                style: const TextStyle(
-                  fontSize: 17,
-                  color: Colors.redAccent,
-                ),
+                style: const TextStyle(fontSize: 17, color: Colors.redAccent),
               ),
             ),
           ),
@@ -359,24 +336,9 @@ class _FriendDetailsPageState extends State<FriendDetailsPage> {
 
         const Row(
           children: [
-            Expanded(
-              child: _MediaTab(
-                label: 'Media',
-                selected: true,
-              ),
-            ),
-            Expanded(
-              child: _MediaTab(
-                label: 'Document',
-                selected: false,
-              ),
-            ),
-            Expanded(
-              child: _MediaTab(
-                label: 'Links',
-                selected: false,
-              ),
-            ),
+            Expanded(child: _MediaTab(label: 'Media', selected: true)),
+            Expanded(child: _MediaTab(label: 'Document', selected: false)),
+            Expanded(child: _MediaTab(label: 'Links', selected: false)),
           ],
         ),
 
@@ -388,10 +350,7 @@ class _FriendDetailsPageState extends State<FriendDetailsPage> {
             alignment: Alignment.centerLeft,
             child: Text(
               'No media',
-              style: TextStyle(
-                fontSize: 15,
-                color: Colors.grey,
-              ),
+              style: TextStyle(fontSize: 15, color: Colors.grey),
             ),
           ),
         ),
@@ -404,10 +363,7 @@ class _ActionButton extends StatelessWidget {
   final String label;
   final VoidCallback onPressed;
 
-  const _ActionButton({
-    required this.label,
-    required this.onPressed,
-  });
+  const _ActionButton({required this.label, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -419,19 +375,14 @@ class _ActionButton extends StatelessWidget {
           backgroundColor: const Color(0xFF2864B5),
           foregroundColor: Colors.white,
           elevation: 0,
-          padding: const EdgeInsets.symmetric(
-            horizontal: 10,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 10),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
         ),
         child: Text(
           label,
-          style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-          ),
+          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
         ),
       ),
     );
@@ -442,10 +393,7 @@ class _MediaTab extends StatelessWidget {
   final String label;
   final bool selected;
 
-  const _MediaTab({
-    required this.label,
-    required this.selected,
-  });
+  const _MediaTab({required this.label, required this.selected});
 
   @override
   Widget build(BuildContext context) {
@@ -466,11 +414,7 @@ class _MediaTab extends StatelessWidget {
           ),
         ),
         if (selected)
-          Container(
-            width: 48,
-            height: 2,
-            color: const Color(0xFF2875D0),
-          ),
+          Container(width: 48, height: 2, color: const Color(0xFF2875D0)),
       ],
     );
   }

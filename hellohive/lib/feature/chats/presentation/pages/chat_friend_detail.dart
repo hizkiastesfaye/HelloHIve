@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hellohive/core/core_params.dart';
+import 'package:hellohive/feature/chats/presentation/bloc/chats/chats_bloc.dart';
 
 import 'package:hellohive/feature/friends/domain/entities/friends_entities.dart';
 import 'package:hellohive/feature/friends/presentation/widgets/friend_photo_display_widget.dart';
 
 class ChatFriendDetail extends StatefulWidget {
-  final ALLChatsFriendsParams friend;
+  final ALLChatsFriendsParams allChatInfo;
 
   const ChatFriendDetail({
     super.key,
-    required this.friend,
+    required this.allChatInfo,
   });
 
   @override
@@ -20,11 +21,12 @@ class ChatFriendDetail extends StatefulWidget {
 class _ChatFriendDetailsPageState extends State<ChatFriendDetail> {
   bool _isMuted = false;
 
-  ALLChatsFriendsParams get friend => widget.friend;
+  ALLChatsFriendsParams get friend => widget.allChatInfo;
 
   String get fullName {
     return '${friend.firstName} ${friend.lastName}'.trim();
   }
+  int _selectedMediaTab = 0;
 
   String get initials {
     final first = friend.firstName.isNotEmpty
@@ -39,17 +41,7 @@ class _ChatFriendDetailsPageState extends State<ChatFriendDetail> {
   }
 
   void _openChat() {
-    // Replace this with your chat page/navigation.
-    //
-    // Example:
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: (_) => ChatPage(
-    //       friend: friend,
-    //     ),
-    //   ),
-    // );
+    Navigator.pushNamed(context, '/chatMessage');
   }
 
   void _deleteFriend() {
@@ -72,13 +64,13 @@ class _ChatFriendDetailsPageState extends State<ChatFriendDetail> {
 
     // When you have the chatId/currentUserId available:
     //
-    // context.read<ChatsBloc>().add(
-    //   MuteChatEvent(
-    //     currentUserId: currentUserId,
-    //     chatId: chatId,
-    //     isMuted: _isMuted,
-    //   ),
-    // );
+    context.read<ChatsBloc>().add(
+      MuteChatEvent(
+        currentUserId: friend.currentUserId,
+        chatId: friend.chatId,
+        isMuted: _isMuted,
+      ),
+    );
   }
 
   Future<void> _showDeleteDialog() async {
@@ -112,6 +104,12 @@ class _ChatFriendDetailsPageState extends State<ChatFriendDetail> {
   void _deleteFriendConfirmed() {
     // Add your DeleteChatEvent here once this page has
     // access to the corresponding chatId and currentUserId.
+    context.read<ChatsBloc>().add(
+      DeleteChatEvent(
+        chatId: friend.chatId,
+        userId: friend.currentUserId,
+      ),
+    );
   }
 
   @override
@@ -264,7 +262,7 @@ class _ChatFriendDetailsPageState extends State<ChatFriendDetail> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'username',
+            'Username',
             style: TextStyle(
               fontSize: 14,
               color: Colors.grey,
@@ -293,8 +291,8 @@ class _ChatFriendDetailsPageState extends State<ChatFriendDetail> {
           Text(
             friend.description .isNotEmpty ? friend.description : "It's good to have HelloHive.",
             style: const TextStyle(
-              fontSize: 17,
-              color: Colors.grey,
+              fontSize: 18,
+              color: Colors.black87,
             ),
           ),
         ],
@@ -320,7 +318,7 @@ class _ChatFriendDetailsPageState extends State<ChatFriendDetail> {
                 padding: EdgeInsets.zero,
               ),
               child: Text(
-                'Block $fullName',
+                'Block',
                 style: const TextStyle(
                   fontSize: 17,
                   color: Colors.redAccent,
@@ -338,7 +336,7 @@ class _ChatFriendDetailsPageState extends State<ChatFriendDetail> {
                 padding: EdgeInsets.zero,
               ),
               child: Text(
-                'Report $fullName',
+                'Report',
                 style: const TextStyle(
                   fontSize: 17,
                   color: Colors.redAccent,
@@ -356,24 +354,39 @@ class _ChatFriendDetailsPageState extends State<ChatFriendDetail> {
       children: [
         const SizedBox(height: 4),
 
-        const Row(
+        Row(
           children: [
             Expanded(
               child: _MediaTab(
                 label: 'Media',
-                selected: true,
+                selected: _selectedMediaTab == 0,
+                onTap: () {
+                  setState(() {
+                    _selectedMediaTab = 0;
+                  });
+                },
               ),
             ),
             Expanded(
               child: _MediaTab(
                 label: 'Document',
-                selected: false,
+                selected: _selectedMediaTab == 1,
+                onTap: () {
+                  setState(() {
+                    _selectedMediaTab = 1;
+                  });
+                },
               ),
             ),
             Expanded(
               child: _MediaTab(
                 label: 'Links',
-                selected: false,
+                selected: _selectedMediaTab == 2,
+                onTap: () {
+                  setState(() {
+                    _selectedMediaTab = 2;
+                  });
+                },
               ),
             ),
           ],
@@ -381,22 +394,52 @@ class _ChatFriendDetailsPageState extends State<ChatFriendDetail> {
 
         const SizedBox(height: 20),
 
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 28),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 28),
           child: Align(
             alignment: Alignment.centerLeft,
-            child: Text(
-              'No media',
-              style: TextStyle(
-                fontSize: 15,
-                color: Colors.grey,
-              ),
-            ),
+            child: _buildSelectedMediaContent(),
           ),
         ),
       ],
     );
   }
+
+  Widget _buildSelectedMediaContent() {
+    switch (_selectedMediaTab) {
+      case 0:
+        return const Text(
+          'No media',
+          style: TextStyle(
+            fontSize: 15,
+            color: Colors.grey,
+          ),
+        );
+
+      case 1:
+        return const Text(
+          'No documents',
+          style: TextStyle(
+            fontSize: 15,
+            color: Colors.grey,
+          ),
+        );
+
+      case 2:
+        return const Text(
+          'No links',
+          style: TextStyle(
+            fontSize: 15,
+            color: Colors.grey,
+          ),
+        );
+
+      default:
+        return const SizedBox();
+    }
+  }
+
+
 }
 
 class _ActionButton extends StatelessWidget {
@@ -440,37 +483,43 @@ class _ActionButton extends StatelessWidget {
 class _MediaTab extends StatelessWidget {
   final String label;
   final bool selected;
+  final VoidCallback onTap;
 
   const _MediaTab({
     required this.label,
     required this.selected,
+    required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(
-          height: 45,
-          child: Center(
-            child: Text(
-              label,
-              style: TextStyle(
-                fontSize: 17,
-                color: selected
-                    ? const Color(0xFF2875D0)
-                    : const Color(0xFF2875D0),
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: Column(
+        children: [
+          SizedBox(
+            height: 45,
+            child: Center(
+              child: Text(
+                label,
+                style: TextStyle(
+                  fontSize: 17,
+                  color: const Color(0xFF2875D0),
+                  fontWeight:
+                      selected ? FontWeight.w500 : FontWeight.normal,
+                ),
               ),
             ),
           ),
-        ),
-        if (selected)
-          Container(
-            width: 48,
-            height: 2,
-            color: const Color(0xFF2875D0),
-          ),
-      ],
+          if (selected)
+            Container(
+              width: 48,
+              height: 2,
+              color: const Color(0xFF2875D0),
+            ),
+        ],
+      ),
     );
   }
 }

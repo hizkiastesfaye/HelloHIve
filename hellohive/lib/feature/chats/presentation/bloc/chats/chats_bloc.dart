@@ -35,6 +35,7 @@ class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
   final UpdateLastMessageUseCase updateLastMessageUseCase;
   final ChatSyncUsecase chatSyncUsecase;
 
+  final GetFriendUseCases getFriendUseCases;
   final GetFriendsByListIdUsecases getFriendsByListIdUsecases;
   ChatsBloc({
     required this.createChatUseCase,
@@ -48,6 +49,7 @@ class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
     required this.updateLastMessageUseCase,
     required this.chatSyncUsecase,
 
+    required this.getFriendUseCases,
     required this.getFriendsByListIdUsecases,
   }) : super(ChatsInitial()) {
     on<CreateChatEvent>((event, emit) async {
@@ -71,10 +73,52 @@ class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
         userBId: event.userBId,
       );
       final result = await getChatUseCase(params);
-      result.fold(
-          (failure) => emit(ChatsError(_mapFailureToMessage(failure))),
-          (chat) => emit(ChatLoaded(chat)),
-       );
+      if(result.isLeft()){
+        final failure = result.fold(
+          (failure) => failure,
+          (_) => null,
+        );
+        emit(ChatsError(_mapFailureToMessage(failure!)));
+        return;
+      }
+      final chat = result.fold(
+        (_) => throw Exception('Unexpected error'),
+        (chat) => chat,
+      );
+      final friendId = chat.participants.firstWhere(
+        (id) => id != event.currentUserId,
+      );
+      final friendResult = await getFriendUseCases(
+        FriendParams( friendId: friendId),
+          
+      );
+      friendResult.fold(
+        (failure) => emit(ChatsError(_mapFailureToMessage(failure))),
+        (friend) {
+          final chatWithFriend = ALLChatsFriendsParams(
+            chatId: chat.id,
+            currentUserId: event.currentUserId,
+            unreadCount: chat.unreadCount[event.currentUserId] ?? 0,
+            mutedBy: chat.mutedBy[event.currentUserId] ?? false,
+            deletedBy: chat.deletedBy,
+            createdAt: chat.createdAt,
+            updatedAt: chat.updatedAt,
+            lastMessageId: chat.lastMessageId,
+            lastMessageText: chat.lastMessageText,
+            friendId: friend.uId,
+            firstName: friend.firstName,
+            lastName: friend.lastName,
+            username: friend.username,
+            photoUrl: friend.photoUrl,
+            description: friend.description,
+          );
+          emit(ChatLoaded(chatWithFriend));
+        },
+      );
+      // result.fold(
+      //     (failure) => emit(ChatsError(_mapFailureToMessage(failure))),
+      //     (chat) => emit(ChatLoaded(chat)),
+      //  );
     });
 
 

@@ -35,7 +35,7 @@ List<ALLChatsFriendsParams> getChatsWithFriends(
     for (final friend in friends)
       friend.uId: friend,
   };
-  final currentUserId = FirebaseAuth.instance.currentUser?.uid;
+  final currentUserId = FirebaseAuth.instance.currentUser!.uid;
   final result = <ALLChatsFriendsParams>[];
 
   for (final chat in chats) {
@@ -52,6 +52,7 @@ List<ALLChatsFriendsParams> getChatsWithFriends(
     result.add(
       ALLChatsFriendsParams(
         chatId: chat.id,
+        currentUserId: currentUserId,
         unreadCount: chat.unreadCount[currentUserId] ?? 0,
         mutedBy: chat.mutedBy[currentUserId] ?? false,
         deletedBy: chat.deletedBy,

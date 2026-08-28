@@ -81,7 +81,7 @@ class _ChatPageState extends State<ChatPage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ChatFriendDetail(friend: chat),
+                          builder: (context) => ChatFriendDetail(allChatInfo: chat),
                         ),
                       );
                       // Navigator.push(

@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 
 class ALLChatsFriendsParams extends Equatable{
   final String chatId;
+  final String currentUserId;
   final int unreadCount;
   final bool mutedBy;
   final Map<String, bool> deletedBy;
@@ -20,6 +21,7 @@ class ALLChatsFriendsParams extends Equatable{
 
   ALLChatsFriendsParams({
     required this.chatId,
+    required this.currentUserId,
     required this.unreadCount,
     required this.mutedBy,
     required this.deletedBy,
@@ -38,7 +40,7 @@ class ALLChatsFriendsParams extends Equatable{
 
     @override
   List<Object?> get props => [
-    chatId,unreadCount,mutedBy,deletedBy,
+    chatId,unreadCount,mutedBy,deletedBy,currentUserId,
     createdAt,updatedAt,friendId, firstName,
     lastName, username, photoUrl, description,
     lastMessageId,lastMessageText,lastMessageTime,
