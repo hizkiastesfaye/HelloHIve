@@ -1,4 +1,5 @@
 import 'package:hellohive/feature/chats/chats_core/chats_core.dart';
+import 'package:hellohive/feature/chats/chats_core/chats_message_core.dart';
 import 'package:hellohive/feature/chats/data/models/chats_model.dart';
 import 'package:hellohive/feature/chats/data/models/hive_model.dart';
 import 'package:hellohive/feature/chats/data/models/message_model.dart';
@@ -18,7 +19,7 @@ abstract class ChatLocalDatasource {
   Future<ChatModel> getChat(UsersChatParams params);
   Future<List<ChatModel>> getChats(UserIdParams params);
 
-  Future<ChatModel?> getChatById(String chatId);
+  Future<ChatModel> getChatById(String chatId);
 
   Future<ActionStatus> updateChat(MostChatParams params);
 
@@ -29,48 +30,11 @@ abstract class ChatLocalDatasource {
 
   Future<void> removeOperation(String operationId);
   Future<ActionStatus> updateLastMessage(UpdateLastMessageParams params,);
+  Future<List<String>> getChatIdsLocal();
+
+  // your existing methods...
 
   // Future<ActionStatus> clearChats(
   //   String userId,
   // );
-}
-
-
-
-abstract class MessageLocalDatasource {
-
-  Future<ActionStatus> sendMessage(SendMessageParams params,);
-
-  Future<ActionStatus> cacheMessage(
-    ChatMessageModel message,
-  );
-
-
-  Future<ActionStatus> cacheMessages(
-    List<ChatMessageModel> messages,
-  );
-
-  Future<List<ChatMessageModel>> getMessages(
-    String chatId,
-  );
-
-  Future<ChatMessageModel?> getLastMessage(
-    String chatId,
-  );
-
-  Future<ActionStatus> updateMessage(
-    ChatMessageModel message,
-  );
-
-  Future<ActionStatus> deleteMessage({
-    required String messageId,
-  });
-
-  Future<ActionStatus> markMessageAsRead({
-    required String messageId,
-  });
-
-  Future<ActionStatus> clearChatMessages(
-    String chatId,
-  );
 }

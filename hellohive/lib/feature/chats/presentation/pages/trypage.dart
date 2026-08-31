@@ -132,7 +132,7 @@ class _TryChatPageState extends State<TryChatPage> {
                               currentUserId:
                                   // currentUserController.text,
                                   'kFe0FXpgqsZDWLM6g45nCzm1Wnl1',
-                              userBId: 'PO7JWLCipETDQTCCsJM5KdgVZv83'
+                              userBId: 'ZxHLcmKdfoh499xFizuQp73Rfon2'
                             ),
                           );
                     },
@@ -305,7 +305,7 @@ class _TryChatPageState extends State<TryChatPage> {
                 Expanded(
                   child: Center(
                     child: Text(
-                      'Chat: ${state.chat.id}',
+                      'Chat: ${state.chat.chatId}',
                     ),
                   ),
                 ),

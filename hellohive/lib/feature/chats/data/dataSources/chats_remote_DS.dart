@@ -76,6 +76,9 @@ Stream<List<ChatModel>> watchChats(
   Future<ChatModel> getChat(
     UsersChatParams params,
   ) async {
+    print('!!!!!!!!!!!!!!!!!!!!!11');
+    print(currentUser!.uid);
+    print('!!!!!!!!!!!!!!!!!!!!!11');
     final chatId = generateChatId(
       currentUser!.uid, 
       params.userBId,

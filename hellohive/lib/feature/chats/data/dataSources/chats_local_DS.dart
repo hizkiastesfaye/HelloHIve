@@ -1,4 +1,5 @@
 
+import 'package:hellohive/core/errors/exception.dart';
 import 'package:hellohive/feature/chats/chats_core/chats_core.dart';
 import 'package:hellohive/feature/chats/data/dataSources/abstract_local_Ds.dart';
 import 'package:hellohive/feature/chats/data/models/chats_model.dart';
@@ -146,6 +147,9 @@ Future<ChatModel> getChat(
   UsersChatParams params,
 ) async {
   print('++++++++++++++++++++++getchat+++++++++++++++++++++++++++++');
+  print('++++++++++++++++++++++getchat+++++++++++++++++++++++++++++');
+  print('++++++++++++++++++++++getchat+++++++++++++++++++++++++++++');
+  print('++++++++++++++++++++++getchat+++++++++++++++++++++++++++++');
 
   final chat = chatBox.values.firstWhere(
     (chat) =>
@@ -186,10 +190,14 @@ Future<ChatModel> getChat(
 
 
   @override
-  Future<ChatModel?> getChatById(
+  Future<ChatModel> getChatById(
     String chatId,
   ) async {
-    return chatBox.get(chatId)?.toDomain();
+    final chat = chatBox.get(chatId);
+    if(chat ==null){
+      throw CacheException('chat not found');
+    }
+    return chat.toDomain();
   }
 
 
@@ -382,5 +390,16 @@ Future<ChatModel> getChat(
   @override
   Future<void> removeOperation(String operationId) async {
     await operationsBox.delete(operationId);
+  }
+
+  @override
+  Future<List<String>> getChatIdsLocal() async {
+    try {
+      return chatBox.keys
+          .map((key) => key.toString())
+          .toList();
+    } catch (_) {
+      throw CacheException('Failed to get local chat IDs');
+    }
   }
 }

@@ -1,5 +1,6 @@
 
 import 'package:hellohive/feature/chats/chats_core/chats_core.dart';
+import 'package:hellohive/feature/chats/chats_core/chats_message_core.dart';
 import 'package:hellohive/feature/chats/data/models/chats_model.dart';
 
 import '../models/message_model.dart';

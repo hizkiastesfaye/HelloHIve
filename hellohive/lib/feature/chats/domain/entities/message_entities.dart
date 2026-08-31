@@ -1,24 +1,27 @@
-
 import 'package:equatable/equatable.dart';
 
-class ChatMessageEntities extends Equatable{
+class ChatMessageEntities extends Equatable {
   final String id;
   final String chatId;
   final String senderId;
   final String receiverId;
+
   final bool isEdited;
+
   final MessageType type;
   final MessageStatus status;
+
   final Map<String, bool> deletedBy;
+
   final DateTime createdAt;
   final DateTime updatedAt;
+
   final String? text;
   final String? mediaUrl;
   final String? repliedMessageId;
   final DateTime? editedAt;
 
-  @override
-  ChatMessageEntities({
+  const ChatMessageEntities({
     required this.id,
     required this.chatId,
     required this.senderId,
@@ -32,39 +35,36 @@ class ChatMessageEntities extends Equatable{
     this.text,
     this.mediaUrl,
     this.repliedMessageId,
-    this.editedAt
-    
-    
-
+    this.editedAt,
   });
 
   @override
   List<Object?> get props => [
-    id,
-    chatId,
-    senderId,
-    receiverId,
-    isEdited,
-    type,
-    status,
-    deletedBy,
-    createdAt,
-    updatedAt,
-    text,
-    mediaUrl,
-    repliedMessageId,
-    editedAt
-  ];
+        id,
+        chatId,
+        senderId,
+        receiverId,
+        isEdited,
+        type,
+        status,
+        deletedBy,
+        createdAt,
+        updatedAt,
+        text,
+        mediaUrl,
+        repliedMessageId,
+        editedAt,
+      ];
 }
 
-enum MessageStatus{
+enum MessageStatus {
   pending,
   sent,
   read,
-  failed
+  failed,
 }
 
-enum MessageType{
+enum MessageType {
   text,
   video,
   image,

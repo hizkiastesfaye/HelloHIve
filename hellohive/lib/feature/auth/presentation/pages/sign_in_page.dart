@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hellohive/core/utils/validators.dart';
 import 'package:hellohive/feature/auth/presentation/bloc/bloc/auth_bloc.dart';
+import 'package:hellohive/feature/chats/presentation/bloc/chats/chats_bloc.dart';
 import 'package:hellohive/feature/settings/presentation/bloc/user_profile_bloc_bloc.dart';
 
 class SignInPage extends StatefulWidget {
@@ -65,6 +66,7 @@ class _SignInPageState extends State<SignInPage> {
               else {
                 print('---------sign in is successful------------================');
                 context.read<UserProfileBlocBloc>().add(GetUserProfileEvent(state.authEntities.id));
+                // context.read<ChatsBloc>().add(ChatSyncEvent(state.authEntities.id));
                 Navigator.pushNamed(context, '/');
               }
             }

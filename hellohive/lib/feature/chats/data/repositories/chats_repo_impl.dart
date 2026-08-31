@@ -78,7 +78,7 @@ class ChatsRepoImpl implements ChatRepository {
   }
 
   @override
-  Future<Either<Failure, ChatsEntities?>> getChatById(String chatId) async {
+  Future<Either<Failure, ChatsEntities>> getChatById(String chatId) async {
     try {
       final result = await localDatasource.getChatById(chatId);
       return Right(result);

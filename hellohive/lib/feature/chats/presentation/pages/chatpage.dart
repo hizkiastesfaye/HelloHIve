@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hellohive/feature/chats/presentation/bloc/chats/chats_bloc.dart';
 import 'package:hellohive/feature/chats/presentation/pages/chat_friend_detail.dart';
+// import 'package:hellohive/feature/chats/presentation/pages/chat_message.dart';
 import 'package:hellohive/feature/chats/presentation/pages/chatsPage.dart';
+import 'package:hellohive/feature/chats/presentation/pages/message/chat_message_page.dart';
 import 'package:hellohive/feature/friends/presentation/widgets/friend_photo_display_widget.dart';
 
 class ChatPage extends StatefulWidget {
@@ -28,6 +30,13 @@ class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title:ElevatedButton(
+              onPressed: (){
+                Navigator.push(context,MaterialPageRoute(builder: (context)=>ChatsPage()));
+              }, 
+              child: Text('Go to Chatss chats')),
+      ),
       body: BlocBuilder<ChatsBloc, ChatsState>(
         builder: (context, state) {
           if (state is ChatsLoading) {
@@ -81,8 +90,15 @@ class _ChatPageState extends State<ChatPage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ChatFriendDetail(allChatInfo: chat),
+                          builder: (context) => ChatMessagePage(
+                            chatId:chat.chatId, 
+                            currentUserId: chat.currentUserId,
+                            receiverId:chat.friendId
+                            ),
                         ),
+                        // MaterialPageRoute(
+                        //   builder: (context) => ChatFriendDetail(allChatInfo: chat),
+                        // ),
                       );
                       // Navigator.push(
                       //   context, 

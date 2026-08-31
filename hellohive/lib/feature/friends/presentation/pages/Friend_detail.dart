@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hellohive/core/get_current_user_id.dart';
 
 import 'package:hellohive/feature/friends/domain/entities/friends_entities.dart';
 import 'package:hellohive/feature/friends/presentation/widgets/friend_photo_display_widget.dart';
@@ -17,6 +18,7 @@ class FriendDetailsPage extends StatefulWidget {
 
 class _FriendDetailsPageState extends State<FriendDetailsPage> {
   bool _isMuted = false;
+  String currentUserId = getCurrentUserId();
 
   FriendsEntities get friend => widget.friend;
 
@@ -39,7 +41,7 @@ class _FriendDetailsPageState extends State<FriendDetailsPage> {
   void _openChat() {
     context.read<ChatsBloc>().add(
       CreateChatEvent(
-        currentUserId: '', // Replace with the actual current user ID
+        currentUserId: currentUserId, // Replace with the actual current user ID
         userBId: friend.uId,
       ),
     );
@@ -117,7 +119,7 @@ class _FriendDetailsPageState extends State<FriendDetailsPage> {
         if(state is ChatCreated){
           context.read<ChatsBloc>().add(
             GetChatEvent(
-              currentUserId: '', // Replace with the actual current user ID
+              currentUserId: currentUserId, // Replace with the actual current user ID
               userBId: friend.uId, // Replace with the actual current user ID
             ),
           );
@@ -131,7 +133,7 @@ class _FriendDetailsPageState extends State<FriendDetailsPage> {
           Navigator.pushNamed(
             context,
             '/chatMessage',
-            arguments: state.chat.id, // Pass the chatId as an argument
+            arguments: state.chat.chatId, // Pass the chatId as an argument
           );
         }
       },

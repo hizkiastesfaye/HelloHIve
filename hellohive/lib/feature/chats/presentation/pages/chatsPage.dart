@@ -36,10 +36,10 @@ class __ChatsPageStateState extends State<ChatsPage>{
             ElevatedButton(
               onPressed: () {
                 // Navigator.pushNamed(context, '/tryChat');
-                context.read<ChatsBloc>().add(
+                // context.read<ChatsBloc>().add(
                   
-                  ChatSyncEvent('kFe0FXpgqsZDWLM6g45nCzm1Wnl1')
-                );
+                //   ChatSyncEvent('kFe0FXpgqsZDWLM6g45nCzm1Wnl1')
+                // );
 
                 Navigator.push(context, MaterialPageRoute(builder: (context) => TryChatPage()));
                 

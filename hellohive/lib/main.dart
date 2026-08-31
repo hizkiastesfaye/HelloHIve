@@ -6,6 +6,7 @@ import 'package:hellohive/feature/auth/presentation/pages/auth_verify_page.dart'
 import 'package:hellohive/feature/auth/presentation/pages/forgot_password_page.dart';
 import 'package:hellohive/feature/auth/presentation/pages/sign_in_page.dart';
 import 'package:hellohive/feature/auth/presentation/pages/sign_up_page.dart';
+import 'package:hellohive/feature/chats/data/models/chat_message_hive_model.dart';
 import 'package:hellohive/feature/chats/data/models/hive_model.dart';
 import 'package:hellohive/feature/chats/presentation/bloc/chats/chats_bloc.dart';
 import 'package:hellohive/feature/chats/presentation/pages/chat_message.dart';
@@ -41,6 +42,10 @@ void main() async {
   Hive.registerAdapter(ChatHiveModelAdapter());
 
   Hive.registerAdapter(ChatSyncOperationAdapter());
+
+  Hive.registerAdapter(MessageTypeAdapter());
+  Hive.registerAdapter(MessageStatusAdapter());
+  Hive.registerAdapter(ChatMessageHiveModelAdapter());
 
   await Hive.openBox<ChatHiveModel>('chatBox');
   await Hive.openBox<ChatSyncOperation>('operationsBox');

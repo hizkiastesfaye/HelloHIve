@@ -10,7 +10,7 @@ abstract class ChatRepository {
   Future<Either<Failure,ActionStatus>> createChat(UsersChatParams params);
   Future<Either<Failure,ChatsEntities>> getChat(UsersChatParams params);
   Future<Either<Failure,List<ChatsEntities>>> getChats(UserIdParams params);
-  Future<Either<Failure,ChatsEntities?>> getChatById(String chatId);
+  Future<Either<Failure,ChatsEntities>> getChatById(String chatId);
   Future<Either<Failure,ActionStatus>> updateChat(MostChatParams params);
   Stream<Either<Failure,List<ChatsEntities>>> watchChats(UserIdParams params);
 

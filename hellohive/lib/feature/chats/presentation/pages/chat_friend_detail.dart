@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hellohive/core/core_params.dart';
+import 'package:hellohive/core/get_current_user_id.dart';
 import 'package:hellohive/feature/chats/presentation/bloc/chats/chats_bloc.dart';
 
 import 'package:hellohive/feature/friends/domain/entities/friends_entities.dart';
@@ -19,10 +20,16 @@ class ChatFriendDetail extends StatefulWidget {
 }
 
 class _ChatFriendDetailsPageState extends State<ChatFriendDetail> {
-  bool _isMuted = false;
+  
 
   ALLChatsFriendsParams get friend => widget.allChatInfo;
-
+  late bool _isMuted;
+  String currentUserId = getCurrentUserId();
+  @override
+  void initState(){
+    super.initState();
+    _isMuted = widget.allChatInfo.mutedBy;
+  }
   String get fullName {
     return '${friend.firstName} ${friend.lastName}'.trim();
   }
@@ -114,36 +121,47 @@ class _ChatFriendDetailsPageState extends State<ChatFriendDetail> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
+    return BlocListener<ChatsBloc,ChatsState>(
+      listener: (context,state){
+        if(state is MuteChatEvent){
+          context.read<ChatsBloc>().add(
+            GetChatEvent(
+              currentUserId: friend.currentUserId, 
+              userBId: friend.friendId)
+          );
+        }
+      },
+      child: Scaffold(
         backgroundColor: Colors.white,
-        elevation: 0,
-        surfaceTintColor: Colors.transparent,
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.black,
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0,
+          surfaceTintColor: Colors.transparent,
+          leading: IconButton(
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Colors.black,
+            ),
+            onPressed: () => Navigator.pop(context),
           ),
-          onPressed: () => Navigator.pop(context),
         ),
-      ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            _buildProfileHeader(),
-            const SizedBox(height: 16),
-            _buildActionButtons(),
-            const SizedBox(height: 16),
-            const Divider(
-              height: 8,
-              thickness: 8,
-              color: Color(0xFFF2F2F2),
-            ),
-            Expanded(
-              child: _buildDetailsContent(),
-            ),
-          ],
+        body: SafeArea(
+          child: Column(
+            children: [
+              _buildProfileHeader(),
+              const SizedBox(height: 16),
+              _buildActionButtons(),
+              const SizedBox(height: 16),
+              const Divider(
+                height: 8,
+                thickness: 8,
+                color: Color(0xFFF2F2F2),
+              ),
+              Expanded(
+                child: _buildDetailsContent(),
+              ),
+            ],
+          ),
         ),
       ),
     );

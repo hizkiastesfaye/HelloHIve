@@ -36,6 +36,7 @@ class GetChatUseCase extends UseCase<ChatsEntities, UsersChatParams>{
 
   @override
   Future<Either<Failure,ChatsEntities>> call(UsersChatParams params){
+    print('getchatusecaseeeeeeeeeeeeeeeeeeeeeeeeeeeee');
     return chatRepository.getChat(params);
   }
 }
@@ -51,13 +52,13 @@ class GetChatsUseCase extends UseCase<List<ChatsEntities>, UserIdParams>{
   }
 }
 
-class GetChatByIdUseCase extends UseCase<ChatsEntities?, String>{
+class GetChatByIdUseCase extends UseCase<ChatsEntities, String>{
   final ChatRepository chatRepository;
 
   GetChatByIdUseCase(this.chatRepository);
 
   @override
-  Future<Either<Failure,ChatsEntities?>> call(String chatId){
+  Future<Either<Failure,ChatsEntities>> call(String chatId){
     return chatRepository.getChatById(chatId);
   }
 }

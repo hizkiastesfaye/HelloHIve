@@ -18,6 +18,8 @@ import 'package:hellohive/feature/chats/data/models/hive_model.dart';
 import 'package:hellohive/feature/chats/data/repositories/chats_repo_impl.dart';
 import 'package:hellohive/feature/chats/domain/repositories/chats_repositories.dart';
 import 'package:hellohive/feature/chats/domain/usecases/chats_usecases.dart';
+import 'package:hellohive/feature/chats/domain/usecases/message_usecases.dart';
+import 'package:hellohive/feature/chats/presentation/bloc/chat_messages/message_bloc.dart';
 import 'package:hellohive/feature/chats/presentation/bloc/chats/chats_bloc.dart';
 import 'package:hellohive/feature/friends/data/datasources/friends_local_DS.dart';
 import 'package:hellohive/feature/friends/data/datasources/friends_remote_DS.dart';
@@ -257,4 +259,24 @@ Future<void> init() async{
     remoteDatasource: sl(),
   ));
 
+  //! Features - ChatsMessage
+  //? MessageBloc
+  sl.registerFactory(()=>MessageBloc(
+    listenMessagesUseCase: sl(),
+    sendMessageUseCase: sl(),
+    editMessageUseCase: sl(),
+    deleteMessageUseCase: sl(),
+    markMessageAsReadUseCase: sl(),
+  ));
+
+  //?MessageUsecases
+  sl.registerLazySingleton(()=>SendMessageUseCase(sl()));
+  sl.registerLazySingleton(()=>ListenMessagesUseCase(sl()));
+  sl.registerLazySingleton(()=>GetLastMessageUseCase(sl()));
+  sl.registerLazySingleton(()=>EditMessageUseCase(sl()));
+  sl.registerLazySingleton(()=>DeleteMessageUseCase(sl()));
+  sl.registerLazySingleton(()=>MarkMessageAsReadUseCase(sl()));
+
+
 }
+

@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:hellohive/core/core_params.dart';
 import 'package:hellohive/core/errors/failure.dart';
+import 'package:hellohive/core/get_current_user_id.dart';
 import 'package:hellohive/core/relate_features/chats_friends.dart';
 import 'package:hellohive/feature/chats/chats_core/chats_core.dart';
 import 'package:hellohive/feature/chats/chats_core/conversion.dart';
@@ -65,14 +66,19 @@ class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
         
       );
     });
+    final currentUserId = getCurrentUserId();
 
     on<GetChatEvent>((event, emit) async{
+      print('ggggggggggggeeeeeeettttttteeeeeee');
       emit(ChatsLoading());
       final params = UsersChatParams(
         currentUserId: event.currentUserId,
         userBId: event.userBId,
       );
+      print('2gggggggggggggggggggeeeeeeeeeeeeeeeetttttttttttteeeeee');
       final result = await getChatUseCase(params);
+      print('3gggggggggggggggggggeeeeeeeeeeeeeeeetttttttttttteeeeee');
+
       if(result.isLeft()){
         final failure = result.fold(
           (failure) => failure,
@@ -82,7 +88,9 @@ class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
         return;
       }
       final chat = result.fold(
-        (_) => throw Exception('Unexpected error'),
+        (_) {
+          emit(ChatsError('user not found'));
+          throw Exception('Unexpected error');},
         (chat) => chat,
       );
       final friendId = chat.participants.firstWhere(
@@ -196,44 +204,64 @@ class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
       );
     });
 
-    // on<GetChatsEvent>((event, emit) async {
-    //   emit(ChatsLoading());
-    //   final params = UserIdParams(userId: event.userId);
-    //   final result = await getChatsUseCase(params);
-    //   result.fold(
-    //       (failure) => emit(ChatsError(_mapFailureToMessage(failure))),
-    //       (chats) {
-    //         if (chats.isEmpty){
-    //           return;
-    //         }
-    //         final friendsIds = getOtherUserIds(chats);
-    //         final friends = await getFriendsByListIdUsecases(
-    //           FriendsIdsParams(friendsIds: friendsIds)
-    //         );
-    //         friends.fold(
-    //           (failure)=> emit(ChatsError(_mapFailureToMessage(failure))),
-    //           (friends){
-    //             final finalResult=getChatsWithFriends(chats,friends);
-    //             emit(ChatsLoaded(finalResult));
-    //           }
-    //         );
-    //         }
-    //     );
-    // });
-
     on<GetChatByIdEvent>((event, emit) async {
       emit(ChatsLoading());
       final result = await getChatByIdUseCase(event.chatId);
-      result.fold(
-          (failure) => emit(ChatsError(_mapFailureToMessage(failure))),
-          (chat) {
-            if (chat != null) {
-              emit(ChatLoadedById(chat));
-            } else {
-              emit(ChatsError('Chat not found'));
-            }
-          },
+      if(result.isLeft()){
+        final failure = result.fold(
+          (failure)=> failure,
+        (_)=>null,
         );
+        emit(ChatsError(_mapFailureToMessage(failure!)));
+        return;
+      }
+      final chat = result.fold(
+        (_){
+          emit(ChatsError('user not found'));
+          throw Exception('unexpected error');
+        },
+      (chat)=>chat,
+      );
+      final friendId = chat.participants.firstWhere(
+        (id)=>id !=currentUserId,
+      );
+      final friendResult = await getFriendUseCases(
+        FriendParams(friendId: friendId)
+      );
+      friendResult.fold(
+        (failure) => emit(ChatsError(_mapFailureToMessage(failure))),
+        (friend) {
+          final String cu = chat.participants.firstWhere((id)=> id != friend.uId);
+          final chatWithFriend = ALLChatsFriendsParams(
+            chatId: chat.id,
+            currentUserId: currentUserId,
+            unreadCount: chat.unreadCount[cu] ?? 0,
+            mutedBy: chat.mutedBy[cu] ?? false,
+            deletedBy: chat.deletedBy,
+            createdAt: chat.createdAt,
+            updatedAt: chat.updatedAt,
+            lastMessageId: chat.lastMessageId,
+            lastMessageText: chat.lastMessageText,
+            friendId: friend.uId,
+            firstName: friend.firstName,
+            lastName: friend.lastName,
+            username: friend.username,
+            photoUrl: friend.photoUrl,
+            description: friend.description,
+          );
+          emit(ChatLoaded(chatWithFriend));
+        },
+      );
+      // result.fold(
+      //     (failure) => emit(ChatsError(_mapFailureToMessage(failure))),
+      //     (chat) {
+      //       if (chat != null) {
+      //         emit(ChatLoadedById(chat));
+      //       } else {
+      //         emit(ChatsError('Chat not found'));
+      //       }
+      //     },
+      //   );
     });
 
     on<WatchChatsEvent>((event, emit) async{
@@ -336,6 +364,7 @@ class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
       );
     });
   }
+
 
   String _mapFailureToMessage(Failure failure) {
     switch (failure.runtimeType) {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hellohive/core/get_current_user_id.dart';
 import 'package:hellohive/feature/settings/presentation/bloc/user_profile_bloc_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -11,6 +12,7 @@ class AddProfilePages extends StatefulWidget {
 
 class _AddProfilePageState extends State<AddProfilePages> {
   String _errorMessage = '';
+  String currentUserId = getCurrentUserId();
 
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
@@ -44,7 +46,7 @@ class _AddProfilePageState extends State<AddProfilePages> {
     }
     context.read<UserProfileBlocBloc>().add(
       AddUserProfileEvent(
-        uId: '',
+        uId: currentUserId,
         firstName: firstName,
         lastName: lastName,
         username: username,
@@ -118,7 +120,7 @@ class _AddProfilePageState extends State<AddProfilePages> {
       body: BlocConsumer<UserProfileBlocBloc, UserProfileBlocState>(
         listener: (context, state) {
           if(state is UserProfileAdded){
-            context.read<UserProfileBlocBloc>().add(GetUserProfileEvent('uId'));
+            context.read<UserProfileBlocBloc>().add(GetUserProfileEvent(currentUserId));
             Navigator.pushNamed(context, '/');
           }
           else if(state is UserProfileAddError){
