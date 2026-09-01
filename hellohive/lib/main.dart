@@ -8,6 +8,7 @@ import 'package:hellohive/feature/auth/presentation/pages/sign_in_page.dart';
 import 'package:hellohive/feature/auth/presentation/pages/sign_up_page.dart';
 import 'package:hellohive/feature/chats/data/models/chat_message_hive_model.dart';
 import 'package:hellohive/feature/chats/data/models/hive_model.dart';
+import 'package:hellohive/feature/chats/presentation/bloc/chat_messages/message_bloc.dart';
 import 'package:hellohive/feature/chats/presentation/bloc/chats/chats_bloc.dart';
 import 'package:hellohive/feature/chats/presentation/pages/chat_message.dart';
 import 'package:hellohive/feature/chats/presentation/pages/trypage.dart';
@@ -39,16 +40,18 @@ import 'login.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
-  Hive.registerAdapter(ChatHiveModelAdapter());
 
+  Hive.registerAdapter(ChatHiveModelAdapter());
   Hive.registerAdapter(ChatSyncOperationAdapter());
 
-  Hive.registerAdapter(MessageTypeAdapter());
-  Hive.registerAdapter(MessageStatusAdapter());
   Hive.registerAdapter(ChatMessageHiveModelAdapter());
+  Hive.registerAdapter(MessageSyncOperationAdapter());
 
   await Hive.openBox<ChatHiveModel>('chatBox');
   await Hive.openBox<ChatSyncOperation>('operationsBox');
+
+  await Hive.openBox<ChatMessageHiveModel>('chatMessageBox');
+  await Hive.openBox<MessageSyncOperation>('messageOperationsBox');
 
 
   Hive.registerAdapter(FriendsHiveModelAdapter());
@@ -79,6 +82,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create:(context) => di.sl<UserProfileBlocBloc>()),
         BlocProvider(create: (context) => di.sl<FriendsBloc>()),
         BlocProvider(create: (context) => di.sl<ChatsBloc>()),
+        BlocProvider(create: (context)=> di.sl<MessageBloc>()),
       ],
       child: MaterialApp(
         // title: 'Hello Hive',
