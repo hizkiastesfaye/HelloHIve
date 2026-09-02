@@ -10,7 +10,7 @@ import 'package:hellohive/feature/chats/data/models/chat_message_hive_model.dart
 import 'package:hellohive/feature/chats/data/models/hive_model.dart';
 import 'package:hellohive/feature/chats/presentation/bloc/chat_messages/message_bloc.dart';
 import 'package:hellohive/feature/chats/presentation/bloc/chats/chats_bloc.dart';
-import 'package:hellohive/feature/chats/presentation/pages/chat_message.dart';
+import 'package:hellohive/feature/chats/presentation/pages/message/chat_message_page.dart';
 import 'package:hellohive/feature/chats/presentation/pages/trypage.dart';
 import 'package:hellohive/feature/friends/data/models/friends_hive_model.dart';
 import 'package:hellohive/feature/settings/presentation/pages/add_profile_pages.dart';
@@ -131,7 +131,7 @@ class MyApp extends StatelessWidget {
           '/resetPassword' :(context)=> const ForgotPasswordPage(),
           '/userProfile':(context) => UserProfilePage(),
           '/addUserProfile':(context)=> AddProfilePages(),
-          '/chatMessage':(context)=>ChatMessagePage(),
+          // '/chatMessage':(context)=>ChatMessagePage(),
           // '/tryChat':(context) => TryChatPage(),
         },
       ),

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hellohive/core/core_params.dart';
 import 'package:hellohive/feature/chats/domain/entities/message_entities.dart';
 import 'package:hellohive/feature/chats/presentation/bloc/chat_messages/message_bloc.dart';
 import 'package:hellohive/feature/chats/presentation/bloc/chat_messages/message_event.dart';
 import 'package:hellohive/feature/chats/presentation/bloc/chat_messages/message_state.dart';
+import 'package:hellohive/feature/chats/presentation/pages/chat_friend_detail.dart';
 
 import '../../../chats_core/chats_message_core.dart';
 import '../../widgets/messages/chat_message_bubble.dart';
@@ -11,15 +13,17 @@ import '../../widgets/messages/chat_message_input.dart';
 import '../../widgets/messages/message_action_bar.dart';
 
 class ChatMessagePage extends StatefulWidget {
-  final String chatId;
-  final String currentUserId;
-  final String receiverId;
+  // final String chatId;
+  // final String currentUserId;
+  // final String receiverId;
+  final ALLChatsFriendsParams allChatInfo;
 
   const ChatMessagePage({
     super.key,
-    required this.chatId,
-    required this.currentUserId,
-    required this.receiverId,
+    // required this.chatId,
+    // required this.currentUserId,
+    // required this.receiverId,
+    required this.allChatInfo,
   });
 
   @override
@@ -28,14 +32,22 @@ class ChatMessagePage extends StatefulWidget {
 
 class _ChatMessagePageState extends State<ChatMessagePage> {
   final Set<String> _selectedMessageIds = {};
+  late final ALLChatsFriendsParams allChatInfo1;
+  late final String chatId;
+  late final String currentUserId;
+  late final String receiverId;
 
   @override
   void initState() {
     super.initState();
+    allChatInfo1 = widget.allChatInfo;
+    chatId = allChatInfo1.chatId;
+    currentUserId = allChatInfo1.currentUserId;
+    receiverId = allChatInfo1.friendId;
 
     context.read<MessageBloc>().add(
           ListenMessagesEvent(
-            chatId: widget.chatId,
+            chatId: chatId,
           ),
         );
   }
@@ -111,9 +123,9 @@ class _ChatMessagePageState extends State<ChatMessagePage> {
 
           if (!hasSelection)
             ChatMessageInput(
-              chatId: widget.chatId,
-              currentUserId: widget.currentUserId,
-              receiverId: widget.receiverId,
+              chatId: chatId,
+              currentUserId: currentUserId,
+              receiverId: receiverId,
             ),
         ],
       ),
@@ -127,14 +139,34 @@ class _ChatMessagePageState extends State<ChatMessagePage> {
   PreferredSizeWidget _buildNormalAppBar() {
     return AppBar(
       titleSpacing: 0,
-      title: const Row(
+      title: Row(
         children: [
           CircleAvatar(
             radius: 20,
             child: Icon(Icons.person),
           ),
           SizedBox(width: 10),
-          Text('Friend'),
+          TextButton(
+            onPressed: () {
+              // Navigate to friend's profile or chat details
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ChatFriendDetail(
+                    allChatInfo: allChatInfo1,
+                  ),
+                ),
+              );
+            },
+            child: Text(
+              '${allChatInfo1.firstName} ${allChatInfo1.lastName}',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 20,
+              ),
+            ),
+          ),
+          // Text('${allChatInfo1.firstName} ${allChatInfo1.lastName}'),
         ],
       ),
       actions: [
@@ -172,7 +204,7 @@ class _ChatMessagePageState extends State<ChatMessagePage> {
         final message = messages[index];
 
         final isMe =
-            message.senderId == widget.currentUserId;
+            message.senderId == currentUserId;
 
         final isSelected =
             _selectedMessageIds.contains(message.id);
@@ -208,7 +240,7 @@ class _ChatMessagePageState extends State<ChatMessagePage> {
             DeleteMessageEvent(
               params: DeleteMessageParams(
               messageId: messageId,
-              userId: widget.currentUserId,)
+              userId: currentUserId,)
             ),
           );
     }

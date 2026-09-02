@@ -27,6 +27,15 @@ class MessageRemoteDSImpl implements MessageRemoteDS {
     SendMessageParams params,
   ) async {
     try {
+      print('message sent to remote datasource');
+      print('message sent to remote datasource');
+      print('message sent to remote datasource');
+      // print(params.chatId);
+      // print(params.text);
+      print('message sent to remote datasource');
+      print('message sent to remote datasource');
+      print('message sent to remote datasource');
+      print('message sent to remote datasource');
       final now = DateTime.now();
 
       final messageId = _generateMessageId(

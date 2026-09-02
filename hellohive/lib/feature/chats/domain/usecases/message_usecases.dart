@@ -16,6 +16,7 @@ class SendMessageUseCase
   Future<Either<Failure, ActionStatus>> call(
     SendMessageParams params,
   ) {
+    print('send usercaw4e');
     return messageRepo.sendMessage(params);
   }
 }

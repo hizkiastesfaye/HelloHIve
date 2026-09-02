@@ -148,6 +148,12 @@ class _ChatMessageInputState
                         ? _sendMessage
                         : () {
                             // Open voice recorder
+                            print('0000000000');
+                            print('0000000000');
+                            print('0000000000');
+                            print('no text');
+                            print('0000000000');
+                            print('0000000000');
                           },
                     icon: Icon(
                       hasText

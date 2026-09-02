@@ -28,14 +28,20 @@ class MessageRepoImpl implements MessageRepo {
     SendMessageParams params,
   ) async {
     try {
+      print('1message sent to repository');
       final message =
           await localDatasource.createPendingMessage(params);
+      print('2message sent to repository');
 
       if (!await networkInfo.isConnected) {
+      print('3message sent to repository');
+
         return const Right(ActionStatus.pending);
       }
 
       try {
+      print('4message sent to repository');
+
         await remoteDatasource.sendMessage(params);
 
         await localDatasource.markMessageAsSent(

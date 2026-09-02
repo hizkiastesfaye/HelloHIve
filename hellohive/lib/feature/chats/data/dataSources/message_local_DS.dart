@@ -105,6 +105,7 @@ class MessageLocalDSImpl implements MessageLocalDS {
     SendMessageParams params,
   ) async {
     try {
+      print('1sending message to pending');
       final now = DateTime.now();
 
       final message = ChatMessageModel(
@@ -125,11 +126,12 @@ class MessageLocalDSImpl implements MessageLocalDS {
         mediaUrl: params.mediaUrl,
         repliedMessageId: params.repliedMessageId,
       );
-
+      
       await messagesBox.put(
         message.id,
         message.toHive(),
       );
+      print('2sending message to pending');
 
       final operation = MessageSyncOperation(
         id: _generateOperationId(),
@@ -144,9 +146,16 @@ class MessageLocalDSImpl implements MessageLocalDS {
         operation.id,
         operation,
       );
+      
+
 
       return message;
     } catch (e) {
+      print('3sending message to pending');
+      print('3sending message to pending');
+      print(e.toString());
+      print('3sending message to pending');
+      print('3sending message to pending');
       throw CacheException(e.toString());
     }
   }

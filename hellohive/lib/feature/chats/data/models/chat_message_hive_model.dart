@@ -5,8 +5,41 @@ import 'package:hive/hive.dart';
 
 part 'chat_message_hive_model.g.dart';
 
+// @HiveType(typeId: 25)
+// enum MessageType {
+//   @HiveField(0)
+//   text,
+
+//   @HiveField(1)
+//   video,
+
+//   @HiveField(2)
+//   image,
+
+//   @HiveField(3)
+//   audio,
+
+//   @HiveField(4)
+//   file,
+// }
+
+// @HiveType(typeId: 26)
+// enum MessageStatus {
+//   @HiveField(0)
+//   pending,
+//   @HiveField(1)
+//   sent,
+
+//   @HiveField(2)
+//   read,
+
+//   @HiveField(3)
+//   failed,
+// }
+
+
 @HiveType(typeId: 30)
-class ChatMessageHiveModel extends ChatMessageModel {
+class ChatMessageHiveModel extends HiveObject {
   @HiveField(0)
   @override
   final String id;
@@ -29,11 +62,11 @@ class ChatMessageHiveModel extends ChatMessageModel {
 
   @HiveField(5)
   @override
-  final MessageType type;
+  final String type;
 
   @HiveField(6)
   @override
-  final MessageStatus status;
+  final String status;
 
   @HiveField(7)
   @override
@@ -78,35 +111,42 @@ class ChatMessageHiveModel extends ChatMessageModel {
     this.mediaUrl,
     this.repliedMessageId,
     this.editedAt,
-  }) : super(
-          id: id,
-          chatId: chatId,
-          senderId: senderId,
-          receiverId: receiverId,
-          isEdited: isEdited,
-          type: type,
-          status: status,
-          deletedBy: deletedBy,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-          text: text,
-          mediaUrl: mediaUrl,
-          repliedMessageId: repliedMessageId,
-          editedAt: editedAt,
-        );
+  });
+  // : super(
+  //         id: id,
+  //         chatId: chatId,
+  //         senderId: senderId,
+  //         receiverId: receiverId,
+  //         isEdited: isEdited,
+  //         type: type,
+  //         status: status,
+  //         deletedBy: deletedBy,
+  //         createdAt: createdAt,
+  //         updatedAt: updatedAt,
+  //         text: text,
+  //         mediaUrl: mediaUrl,
+  //         repliedMessageId: repliedMessageId,
+  //         editedAt: editedAt,
+  //       );
 }
 
 
 extension ChatMessageHiveModelMapper on ChatMessageHiveModel {
   ChatMessageModel toModel() {
+    // print('hive model to model');
+    // print('hive model to model');
+    // print('hive model to model');
+    // print('hive model to model');
+    // print('hive model to model');
+    // print('${id}, ${chatId}, ${senderId}, ${receiverId}, ${isEdited}, ${type}, ${status}, ${deletedBy}, ${createdAt}, ${updatedAt}, ${text}, ${mediaUrl}, ${repliedMessageId}, ${editedAt}');
     return ChatMessageModel(
       id: id,
       chatId: chatId,
       senderId: senderId,
       receiverId: receiverId,
       isEdited: isEdited,
-      type: type,
-      status: status,
+      type: MessageType.values.byName(type),
+      status: MessageStatus.values.byName(status),
       deletedBy: Map<String, bool>.from(deletedBy),
       createdAt: createdAt,
       updatedAt: updatedAt,
@@ -126,8 +166,8 @@ extension ChatMessageModelMapper on ChatMessageModel {
       senderId: senderId,
       receiverId: receiverId,
       isEdited: isEdited,
-      type: type,
-      status: status,
+      type: type.name,
+      status: status.name,
       deletedBy: Map<String, bool>.from(deletedBy),
       createdAt: createdAt,
       updatedAt: updatedAt,
@@ -138,39 +178,6 @@ extension ChatMessageModelMapper on ChatMessageModel {
     );
   }
 }
-
-
-
-// class MessageTypeAdapter extends TypeAdapter<MessageType> {
-//   @override
-//   final int typeId = 31;
-
-//   @override
-//   MessageType read(BinaryReader reader) {
-//     return MessageType.values[reader.readByte()];
-//   }
-
-//   @override
-//   void write(BinaryWriter writer, MessageType obj) {
-//     writer.writeByte(obj.index);
-//   }
-// }
-
-
-// class MessageStatusAdapter extends TypeAdapter<MessageStatus> {
-//   @override
-//   final int typeId = 32;
-
-//   @override
-//   MessageStatus read(BinaryReader reader) {
-//     return MessageStatus.values[reader.readByte()];
-//   }
-
-//   @override
-//   void write(BinaryWriter writer, MessageStatus obj) {
-//     writer.writeByte(obj.index);
-//   }
-// }
 
 
 @HiveType(typeId: 33)

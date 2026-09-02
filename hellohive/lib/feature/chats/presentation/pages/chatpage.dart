@@ -91,9 +91,7 @@ class _ChatPageState extends State<ChatPage> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => ChatMessagePage(
-                            chatId:chat.chatId, 
-                            currentUserId: chat.currentUserId,
-                            receiverId:chat.friendId
+                            allChatInfo:chat,
                             ),
                         ),
                         // MaterialPageRoute(

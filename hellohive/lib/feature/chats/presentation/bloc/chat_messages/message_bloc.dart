@@ -90,6 +90,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
     SendMessageEvent event,
     Emitter<MessageState> emit,
   ) async {
+
     emit(
       state.copyWith(
         sending: true,

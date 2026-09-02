@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
-class ChatMessagePage extends StatefulWidget {
+class ChatMessagePage1 extends StatefulWidget {
   
 
-  const ChatMessagePage({
+  const ChatMessagePage1({
     super.key,
   });
 
   @override
-  State<ChatMessagePage> createState() => _ChatMessagePageState();
+  State<ChatMessagePage1> createState() => _ChatMessagePageState();
 }
 
-class _ChatMessagePageState extends State<ChatMessagePage> {
+class _ChatMessagePageState extends State<ChatMessagePage1> {
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   final String userName = 'Bharath'; // Replace with the actual user name
