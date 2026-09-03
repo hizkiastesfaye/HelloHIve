@@ -169,6 +169,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
     DeleteMessageEvent event,
     Emitter<MessageState> emit,
   ) async {
+    print('bloc Deleting message with ID: ${event.params.messageId} for user: ${event.params.userId}');
     emit(
       state.copyWith(
         deleting: true,
@@ -179,6 +180,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
     final result = await deleteMessageUseCase(
       event.params,
     );
+    print('1bloc Delete message result');
 
     result.fold(
       (failure) {

@@ -140,20 +140,30 @@ class MessageRepoImpl implements MessageRepo {
     DeleteMessageParams params,
   ) async {
     try {
+      print('1message repo delete message');
       await localDatasource.deleteMessage(params);
 
       if (!await networkInfo.isConnected) {
+      print('2message repo delete message');
+
         return const Right(ActionStatus.pending);
       }
 
       try {
+      print('3message repo delete message');
+
         await remoteDatasource.deleteMessage(params);
+      print('4message repo delete message');
 
         return const Right(ActionStatus.success);
       } catch (_) {
+      print('5message repo delete message');
+
         return const Right(ActionStatus.pending);
       }
     } catch (e) {
+      print('6message repo delete message');
+
       return Left(CacheFailure(e.toString()));
     }
   }

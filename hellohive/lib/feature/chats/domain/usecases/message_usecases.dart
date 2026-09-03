@@ -75,6 +75,7 @@ class DeleteMessageUseCase
   Future<Either<Failure, ActionStatus>> call(
     DeleteMessageParams params,
   ) {
+    print('delete message Usecase');
     return messageRepo.deleteMessage(params);
   }
 }

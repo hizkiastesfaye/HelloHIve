@@ -27,15 +27,11 @@ class MessageRemoteDSImpl implements MessageRemoteDS {
     SendMessageParams params,
   ) async {
     try {
-      print('message sent to remote datasource');
-      print('message sent to remote datasource');
-      print('message sent to remote datasource');
+      // print('1message sent to remote datasource');
       // print(params.chatId);
       // print(params.text);
-      print('message sent to remote datasource');
-      print('message sent to remote datasource');
-      print('message sent to remote datasource');
-      print('message sent to remote datasource');
+      // print('message sent to remote datasource');
+
       final now = DateTime.now();
 
       final messageId = _generateMessageId(
@@ -58,13 +54,19 @@ class MessageRemoteDSImpl implements MessageRemoteDS {
         mediaUrl: params.mediaUrl,
         repliedMessageId: params.repliedMessageId,
       );
-
+      print('2message sent to remote datasource');
       await messages
           .doc(messageId)
           .set(message.toJson());
+      print('3message sent to remote datasource');
 
       return ActionStatus.success;
     } on FirebaseException catch (e) {
+      print('Remote message Failed to send message');
+      print('Remote message Failed to send message');
+      print(e.toString());
+      print('Remote message Failed to send message');
+      print('Remote message Failed to send message');
       throw ServerException(
         e.message ?? 'Failed to send message',
       );

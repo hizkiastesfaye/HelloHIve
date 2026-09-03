@@ -46,12 +46,14 @@ void main() async {
 
   Hive.registerAdapter(ChatMessageHiveModelAdapter());
   Hive.registerAdapter(MessageSyncOperationAdapter());
+  Hive.registerAdapter(MessageSyncOperationTypeAdapter());
 
   await Hive.openBox<ChatHiveModel>('chatBox');
   await Hive.openBox<ChatSyncOperation>('operationsBox');
 
   await Hive.openBox<ChatMessageHiveModel>('chatMessageBox');
   await Hive.openBox<MessageSyncOperation>('messageOperationsBox');
+  await Hive.openBox<MessageSyncOperationType>('messageSyncOperationTypeBox');
 
 
   Hive.registerAdapter(FriendsHiveModelAdapter());
